@@ -1,97 +1,12 @@
 {
-  "lastUpdate": "2026-05-04T15:00:00.000Z",
+  "lastUpdate": "2026-05-04T17:00:00.000Z",
   "players": [
-    {
-      "playerNick": "DU",
-      "playerId": "1311055",
-      "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    },
-    {
-      "playerNick": "Chavera",
-      "playerId": "13547",
-      "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    },
-    {
-      "playerNick": "Flavinho",
-      "playerId": "822519",
-      "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    },
-    {
-      "playerNick": "Chara",
-      "playerId": "chara",
-      "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    },
-    {
-      "playerNick": "Dukka",
-      "playerId": "24134",
-      "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    },
-    {
-      "playerNick": "Cq",
-      "playerId": "1489954",
-      "level": "21",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
-    }
+    {"playerNick":"DU","playerId":"1311055","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {"playerNick":"Chavera","playerId":"13547","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {"playerNick":"Flavinho","playerId":"822519","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {"playerNick":"Chara","playerId":"chara","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {"playerNick":"Dukka","playerId":"24134","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {"playerNick":"Cq","playerId":"1489954","level":"21","stats":{},"matches":0,"updatedAt":null}
   ],
-  "history": [
-    {
-      "date": "2026-05-04T15:00:00.000Z",
-      "map": "Mirage",
-      "result": "W",
-      "score": "13-9",
-      "players": {
-        "DU": { "rating": 1.18, "kd": 1.22, "adr": 84, "kast": 68, "hs": 42 },
-        "Chavera": { "rating": 0.96, "kd": 0.91, "adr": 71, "kast": 62, "hs": 38 },
-        "Flavinho": { "rating": 1.09, "kd": 1.05, "adr": 79, "kast": 66, "hs": 44 },
-        "Chara": { "rating": 1.26, "kd": 1.34, "adr": 91, "kast": 70, "hs": 47 },
-        "Dukka": { "rating": 0.88, "kd": 0.84, "adr": 65, "kast": 57, "hs": 36 },
-        "Cq": { "rating": 1.31, "kd": 1.41, "adr": 95, "kast": 73, "hs": 49 }
-      }
-    },
-    {
-      "date": "2026-05-03T23:10:00.000Z",
-      "map": "Inferno",
-      "result": "L",
-      "score": "10-13",
-      "players": {
-        "DU": { "rating": 1.02, "kd": 1.00, "adr": 75, "kast": 63, "hs": 40 },
-        "Chavera": { "rating": 0.82, "kd": 0.78, "adr": 60, "kast": 54, "hs": 34 },
-        "Flavinho": { "rating": 1.11, "kd": 1.13, "adr": 82, "kast": 65, "hs": 46 },
-        "Chara": { "rating": 1.08, "kd": 1.09, "adr": 80, "kast": 64, "hs": 43 },
-        "Dukka": { "rating": 0.93, "kd": 0.90, "adr": 69, "kast": 58, "hs": 35 },
-        "Cq": { "rating": 1.19, "kd": 1.24, "adr": 88, "kast": 69, "hs": 51 }
-      }
-    },
-    {
-      "date": "2026-05-03T21:40:00.000Z",
-      "map": "Anubis",
-      "result": "W",
-      "score": "13-6",
-      "players": {
-        "DU": { "rating": 1.24, "kd": 1.31, "adr": 90, "kast": 71, "hs": 45 },
-        "Chavera": { "rating": 0.91, "kd": 0.87, "adr": 67, "kast": 59, "hs": 37 },
-        "Flavinho": { "rating": 1.16, "kd": 1.18, "adr": 85, "kast": 68, "hs": 48 },
-        "Chara": { "rating": 1.33, "kd": 1.42, "adr": 97, "kast": 74, "hs": 50 },
-        "Dukka": { "rating": 0.97, "kd": 0.95, "adr": 72, "kast": 61, "hs": 39 },
-        "Cq": { "rating": 1.37, "kd": 1.46, "adr": 99, "kast": 76, "hs": 53 }
-      }
-    }
-  ]
+  "history": []
 }
