@@ -202,6 +202,80 @@ a,button{transition:color var(--transition),background var(--transition),border-
 .sk-stat{height:54px;border-radius:var(--radius-md);}.sk-bar{height:6px;border-radius:var(--radius-full);margin-top:1rem;}
 .footer{text-align:center;padding:var(--space-8);font-size:var(--text-xs);color:var(--text-faint);border-top:1px solid var(--divider);}
 @media(max-width:640px){.header-inner{padding:var(--space-3) var(--space-4);}.main{padding:var(--space-5) var(--space-4);}.last-update{display:none;}.compare-table th,.compare-table td{padding:var(--space-2) var(--space-3);}}
+/* ===== BADGE DE FORMA ===== */
+.form-badge{display:flex;gap:3px;margin-top:var(--space-2);}
+.form-dot{width:18px;height:18px;border-radius:var(--radius-sm);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.form-dot.w{background:var(--green-bg);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
+.form-dot.l{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
+.form-dot.none{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border);}
+/* ===== ACHIEVEMENTS ===== */
+.achievements-section{margin-bottom:var(--space-10);}
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:var(--space-4);}
+.achievement-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4);display:flex;gap:var(--space-3);align-items:flex-start;box-shadow:var(--shadow-sm);transition:box-shadow var(--transition);}
+.achievement-card:hover{box-shadow:var(--shadow-md);}
+.achievement-card.locked{opacity:.45;filter:grayscale(1);}
+.achievement-icon{font-size:32px;flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius-lg);border:1px solid var(--border);}
+.achievement-info{flex:1;min-width:0;}
+.achievement-name{font-weight:700;font-size:var(--text-sm);}
+.achievement-desc{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
+.achievement-holder{font-size:var(--text-xs);color:var(--accent);font-weight:600;margin-top:4px;}
+.achievement-card.unlocked .achievement-icon{background:var(--gold-bg);border-color:rgba(251,191,36,0.3);}
+/* ===== ANÁLISE DE HORÁRIO ===== */
+.heatmap-section{margin-bottom:var(--space-10);}
+.heatmap-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
+.heatmap-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:var(--space-4);}
+.heatmap-cell{aspect-ratio:1;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:700;cursor:default;position:relative;}
+.heatmap-cell:hover .heatmap-tooltip{display:block;}
+.heatmap-tooltip{display:none;position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:4px 8px;font-size:10px;white-space:nowrap;z-index:10;box-shadow:var(--shadow-md);}
+.heatmap-labels{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:4px;}
+.heatmap-label{text-align:center;font-size:9px;color:var(--text-faint);}
+.heatmap-legend{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-3);font-size:var(--text-xs);color:var(--text-muted);}
+.heatmap-legend-bar{display:flex;gap:2px;}
+.heatmap-legend-cell{width:12px;height:12px;border-radius:2px;}
+/* ===== CARTA FIFA ===== */
+.fifa-section{margin-bottom:var(--space-10);}
+.fifa-cards-grid{display:flex;flex-wrap:wrap;gap:var(--space-5);justify-content:center;}
+.fifa-card{width:180px;height:260px;border-radius:16px;position:relative;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;flex-shrink:0;font-family:var(--font-body);}
+.fifa-card:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.fifa-card-inner{width:100%;height:100%;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 10px 10px;}
+.fifa-bg-elite{background:linear-gradient(160deg,#b8860b,#ffd700,#b8860b);}
+.fifa-bg-great{background:linear-gradient(160deg,#1a472a,#2d8a4e,#1a472a);}
+.fifa-bg-good{background:linear-gradient(160deg,#1e3a5f,#2563eb,#1e3a5f);}
+.fifa-bg-average{background:linear-gradient(160deg,#374151,#6b7280,#374151);}
+.fifa-bg-below{background:linear-gradient(160deg,#7f1d1d,#dc2626,#7f1d1d);}
+.fifa-rating{font-size:28px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.5);line-height:1;align-self:flex-start;}
+.fifa-pos{font-size:10px;font-weight:700;color:rgba(255,255,255,0.8);align-self:flex-start;margin-top:2px;}
+.fifa-avatar-wrap{width:90px;height:90px;margin:4px 0;position:relative;}
+.fifa-avatar-wrap img,.fifa-avatar-emoji{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.4);}
+.fifa-avatar-emoji{display:flex;align-items:center;justify-content:center;font-size:40px;background:rgba(255,255,255,0.15);}
+.fifa-nick{font-size:13px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.6);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+.fifa-country{font-size:16px;margin:2px 0;}
+.fifa-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;margin-top:4px;}
+.fifa-stat{text-align:center;background:rgba(0,0,0,0.2);border-radius:6px;padding:3px 2px;}
+.fifa-stat-val{font-size:13px;font-weight:900;color:#fff;line-height:1;}
+.fifa-stat-key{font-size:7px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:1px;}
+.fifa-share-btn{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-full);padding:4px 8px;font-size:10px;color:#fff;font-weight:600;}
+.fifa-share-btn:hover{background:rgba(0,0,0,0.5);}
+/* ===== IA ANÁLISE ===== */
+.ai-section{margin-bottom:var(--space-10);}
+.ai-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
+.ai-header{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-5);}
+.ai-icon{width:36px;height:36px;background:var(--purple-bg);border:1px solid rgba(167,139,250,0.3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ai-title{font-weight:700;font-size:var(--text-base);}
+.ai-subtitle{font-size:var(--text-xs);color:var(--text-muted);}
+.ai-match-select{padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:var(--text-sm);width:100%;margin-bottom:var(--space-4);}
+.ai-analysis{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);font-size:var(--text-sm);line-height:1.8;color:var(--text);}
+.ai-analysis .ai-highlight{color:var(--accent);font-weight:700;}
+.ai-analysis .ai-good{color:var(--green);font-weight:700;}
+.ai-analysis .ai-bad{color:var(--red);font-weight:700;}
+.ai-analysis .ai-gold{color:var(--gold);font-weight:700;}
+.ai-paragraph{margin-bottom:var(--space-3);}
+.ai-paragraph:last-child{margin-bottom:0;}
+.ai-badge-row{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3);}
+.ai-badge{padding:3px var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;}
+.ai-badge-win{background:var(--green-bg);color:var(--green);}
+.ai-badge-loss{background:var(--red-bg);color:var(--red);}
+.ai-badge-neutral{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);}
 </style>
 </head>
 <body>
@@ -244,7 +318,7 @@ a,button{transition:color var(--transition),background var(--transition),border-
     <div class="filter-group" id="map-filters"></div>
   </div>
 
-  <h2 class="section-title">Raking Velhos 2026</h2>
+  <h2 class="section-title">Squad CS2</h2>
   <div class="squad-grid" id="squad-grid">
     <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
     <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
@@ -288,9 +362,43 @@ a,button{transition:color var(--transition),background var(--transition),border-
     <h2 class="section-title">📋 Histórico de Partidas</h2>
     <div class="history-list" id="history-list"></div>
   </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="achievements-section" id="achievements-section" style="display:none">
+    <h2 class="section-title">🏅 Conquistas do Squad</h2>
+    <div class="achievements-grid" id="achievements-grid"></div>
+  </div>
+
+  <!-- HEATMAP HORÁRIO -->
+  <div class="heatmap-section" id="heatmap-section" style="display:none">
+    <h2 class="section-title">🕐 Análise de Horário</h2>
+    <div class="heatmap-wrap">
+      <div style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-2)">Cada célula mostra o WinRate (%) por horário. Verde = boa performance, Vermelho = dificuldades.</div>
+      <div id="heatmap-content"></div>
+    </div>
+  </div>
+
+  <!-- CARTA FIFA -->
+  <div class="fifa-section" id="fifa-section" style="display:none">
+    <h2 class="section-title">🃏 Carta de Jogador</h2>
+    <div class="fifa-cards-grid" id="fifa-cards-grid"></div>
+  </div>
+
+  <!-- IA ANÁLISE -->
+  <div class="ai-section" id="ai-section" style="display:none">
+    <h2 class="section-title">🤖 Análise da Partida</h2>
+    <div class="ai-wrap">
+      <div class="ai-header">
+        <div class="ai-icon">🤖</div>
+        <div><div class="ai-title">Coach IA</div><div class="ai-subtitle">Análise automática gerada com base nas stats</div></div>
+      </div>
+      <select class="ai-match-select" id="ai-match-select" onchange="onAISelectChange(this)"></select>
+      <div class="ai-analysis" id="ai-analysis"></div>
+    </div>
+  </div>
 </main>
 
-<footer class="footer">CS Velharada Dashboard 2026</footer>
+<footer class="footer">CS Velharada Dashboard · GC Rating: K/D 35% + ADR 30% + KAST 20% + HS% 15% · Atualizado via prints</footer>
 
 <div class="modal-overlay hidden" id="profile-modal" onclick="closeModal(event)">
   <div class="modal" id="modal-content"></div>
@@ -392,6 +500,16 @@ function calcStdDev(vals){
   return Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
 }
 
+/* ===== BADGE DE FORMA ===== */
+function getFormBadge(nick,history){
+  const matches=[...history].filter(m=>m.players&&m.players[nick]).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  while(matches.length<5)matches.push(null);
+  return'<div class="form-badge">'+matches.map(m=>{
+    if(!m)return'<div class="form-dot none">·</div>';
+    return`<div class="form-dot ${m.result==='W'?'w':'l'}">${m.result==='W'?'W':'L'}</div>`;
+  }).join('')+'</div>';
+}
+
 function renderCard(p,isMvp,records,delay=0){
   const nick=p.playerNick||p.nick||'?';
   const cfg=PLAYER_CONFIG[nick]||{gcNick:'',id:'',level:'?',emoji:'🎮'};
@@ -436,6 +554,7 @@ function renderCard(p,isMvp,records,delay=0){
       <div class="rating-bar-header"><span>GC Rating ${rEmoji(r)}</span><strong style="color:var(--text)">${rD}</strong></div>
       <div class="rating-bar-track"><div class="rating-bar-fill" style="width:0%;background:${rColor(rC)}" data-target="${rPct(r)}"></div></div>
     </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-2)"><span style="font-size:var(--text-xs);color:var(--text-faint)">Forma recente</span>${_allData?.history?getFormBadge(nick,_allData.history):''}</div>
     <div class="player-footer">
       <a class="player-link" href="https://gamersclub.com.br/player/${cfg.id||p.playerId||''}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Ver perfil GC ↗</a>
       <span class="player-updated">${upd}</span>
@@ -678,67 +797,42 @@ function rerender(){
   const h=_allData.history||[];
   document.getElementById('chart-filters').innerHTML='';
   _activeChartNicks=new Set();
-  renderMeta(h);renderMvpHistory(h);renderMapWinrate(h);renderChart(h);renderFavMaps(h);renderHistory(h);
+  renderMeta(h);renderMvpHistory(h);renderMapWinrate(h);renderChart(h);renderFavMaps(h);renderHistory(h);renderAchievements(h);renderHeatmap(h);renderAISection(h);
 }
 function animateBars(){document.querySelectorAll('.rating-bar-fill[data-target]').forEach(el=>setTimeout(()=>el.style.width=el.getAttribute('data-target')+'%',120));}
 
-async function loadData(){
-  const grid=document.getElementById('squad-grid'),badge=document.getElementById('status-badge');
-  const msg=document.getElementById('status-msg'),upd=document.getElementById('last-update-text');
-  try{
-    const res=await fetch('./data.json?t='+Date.now());
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    _allData=data;
-    const history=data.history||[];
-    const allEmpty=data.players.every(p=>!p.stats||!Object.keys(p.stats).length);
-    const hasHistory=Array.isArray(history)&&history.length>0;
-    if(allEmpty&&!hasHistory){
-      grid.innerHTML=`<div class="empty-state"><div class="ei">📭</div><h3>Aguardando primeira partida</h3><p>Após cada jogo, o dono do squad envia o print e os dados são atualizados aqui.</p></div>`;
-      badge.className='badge badge-muted';badge.textContent='● Aguardando dados';
-      msg.textContent='Nenhuma partida registrada ainda.';return;
-    }
-    if(hasHistory){
-      document.getElementById('global-filters').style.display='';
-      buildMapFilters(history);
-      const recs=calcRecords(history);
-      checkRecords(history);
-      if(!allEmpty){
-        const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
-        const maxR=Math.max(...ratings.filter(r=>r!==null));
-        grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,recs,i*60)).join('');
-        renderRanking(data.players);animateBars();
-      }else{grid.innerHTML='';}
-      renderMeta(history);renderMvpHistory(history);renderMapWinrate(history);renderChart(history);renderFavMaps(history);renderHistory(history);
-      const cmpA=document.getElementById('cmp-a'),cmpB=document.getElementById('cmp-b');
-      if(cmpA&&!cmpA.innerHTML){
-        const nicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
-        const opts=nicks.map(n=>`<option value="${n}">${n}</option>`).join('');
-        cmpA.innerHTML=opts;cmpB.innerHTML=opts;
-        if(nicks.length>1)cmpB.selectedIndex=1;
-        document.getElementById('compare-section').style.display='';
-        renderComparator();
-      }
-    }else if(!allEmpty){
-      const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
-      const maxR=Math.max(...ratings.filter(r=>r!==null));
-      grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,{},i*60)).join('');
-      renderRanking(data.players);animateBars();
-    }
-    badge.className='badge badge-green';badge.textContent='● Ao vivo';
-    if(data.lastUpdate){
-      const d=new Date(data.lastUpdate);
-      upd.textContent='Atualizado: '+d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-      const total=data.players.reduce((acc,p)=>acc+(p.matches||0),0);
-      msg.textContent=`${data.players.length} jogadores · ${total} partidas · GC Rating ativo`;
-    }
-  }catch(e){
-    badge.className='badge badge-muted';badge.textContent='● Erro';
-    msg.textContent='Erro ao carregar data.json';
-    grid.innerHTML=`<div class="empty-state"><div class="ei">⚠️</div><h3>Erro</h3><p>${e.message}</p></div>`;
-  }
+/* ===== ACHIEVEMENTS ===== */
+const ACHIEVEMENTS=[
+  {id:'clutch_king',icon:'🎯',name:'Clutch King',desc:'Maior K/D médio do squad',check:(nick,data)=>{const avgs=data.map(n=>({nick:n.nick,avg:n.kdVals.length?n.kdVals.reduce((a,b)=>a+b,0)/n.kdVals.length:0}));const best=avgs.sort((a,b)=>b.avg-a.avg)[0];return best?.nick===nick;}},
+  {id:'spray_master',icon:'🔫',name:'Spray Master',desc:'Maior HS% médio do squad',check:(nick,data)=>{const avgs=data.map(n=>({nick:n.nick,avg:n.hsVals.length?n.hsVals.reduce((a,b)=>a+b,0)/n.hsVals.length:0}));const best=avgs.sort((a,b)=>b.avg-a.avg)[0];return best?.nick===nick;}},
+  {id:'consistent',icon:'📊',name:'Consistente',desc:'Menor desvio padrão de rating',check:(nick,data)=>{const devs=data.map(n=>({nick:n.nick,dev:n.ratings.length>=2?calcStdDev(n.ratings):99}));const best=devs.sort((a,b)=>a.dev-b.dev)[0];return best?.nick===nick&&best.dev<99;}},
+  {id:'adr_machine',icon:'💥',name:'ADR Machine',desc:'Maior ADR médio do squad',check:(nick,data)=>{const avgs=data.map(n=>({nick:n.nick,avg:n.adrVals.length?n.adrVals.reduce((a,b)=>a+b,0)/n.adrVals.length:0}));const best=avgs.sort((a,b)=>b.avg-a.avg)[0];return best?.nick===nick;}},
+  {id:'mvp_legend',icon:'👑',name:'MVP Legend',desc:'Mais vezes MVP no squad',check:(nick,data)=>{const counts={};(_allData?.history||[]).forEach(m=>{const entries=Object.entries(m.players||{}).map(([n,s])=>({nick:n,r:s.rating||0}));const mvp=entries.sort((a,b)=>b.r-a.r)[0]?.nick;if(mvp)counts[mvp]=(counts[mvp]||0)+1;});const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];return best?.[0]===nick;}},
+  {id:'win_machine',icon:'🏆',name:'Win Machine',desc:'Maior % de vitórias',check:(nick,data)=>{const wrs=data.map(n=>({nick:n.nick,wr:n.wins+n.losses>0?n.wins/(n.wins+n.losses):0}));const best=wrs.sort((a,b)=>b.wr-a.wr)[0];return best?.nick===nick&&best.wr>0;}},
+  {id:'night_owl',icon:'🦉',name:'Night Owl',desc:'Mais partidas jogadas depois das 22h',check:(nick,data)=>{const counts={};(_allData?.history||[]).forEach(m=>{const h=new Date(m.date).getHours();if(h>=22&&m.players[nick])counts[nick]=(counts[nick]||0)+1;});if(!counts[nick])return false;const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];return best?.[0]===nick;}},
+  {id:'rating_elite',icon:'🔥',name:'Elite Rating',desc:'Rating médio ≥ 1.40',check:(nick,data)=>{const nd=data.find(n=>n.nick===nick);if(!nd||!nd.ratings.length)return false;return nd.ratings.reduce((a,b)=>a+b,0)/nd.ratings.length>=1.40;}},
+];
+function renderAchievements(history){
+  if(!history||!history.length)return;
+  document.getElementById('achievements-section').style.display='';
+  const allNicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
+  const playerData=allNicks.map(nick=>{
+    const matches=history.filter(m=>m.players[nick]);
+    return{nick,ratings:matches.map(m=>m.players[nick].rating||0),kdVals:matches.map(m=>m.players[nick].kd||0),adrVals:matches.map(m=>m.players[nick].adr||0),hsVals:matches.map(m=>m.players[nick].hs||0),wins:matches.filter(m=>m.result==='W').length,losses:matches.filter(m=>m.result!=='W').length};
+  });
+  document.getElementById('achievements-grid').innerHTML=ACHIEVEMENTS.map(ach=>{
+    const holder=allNicks.find(nick=>ach.check(nick,playerData));
+    const unlocked=!!holder;
+    return`<div class="achievement-card ${unlocked?'unlocked':'locked'}"><div class="achievement-icon">${ach.icon}</div><div class="achievement-info"><div class="achievement-name">${ach.name}</div><div class="achievement-desc">${ach.desc}</div>${unlocked?`<div class="achievement-holder">🏅 ${holder}</div>`:'<div class="achievement-holder" style="color:var(--text-faint)">Bloqueado</div>'}</div></div>`;
+  }).join('');
 }
-loadData();setInterval(loadData,30000);
-</script>
-</body>
-</html>
+
+/* ===== ANÁLISE DE HORÁRIO ===== */
+function renderHeatmap(history){
+  if(!history||!history.length)return;
+  document.getElementById('heatmap-section').style.display='';
+  const fh=filterHistory(history);
+  const hours=Array.from({length:24},(_,i)=>({h:i,total:0,wins:0}));
+  fh.forEach(m=>{const h=new Date(m.date).getHours();hours[h].total++;if(m.result==='W')hours[h].wins++;});
+  const shown=[...hours.slice(10),...hours.slice(0,10)];
+  const maxTotal
