@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GC Squad Dashboard</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font-body: 'Satoshi', 'Inter', sans-serif;
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;
+  --radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+}
+:root,[data-theme="light"]{
+  --bg:#f0f2f5;--surface:#fff;--surface-2:#f7f8fa;
+  --border:rgba(0,0,0,0.08);--divider:rgba(0,0,0,0.06);
+  --text:#111827;--text-muted:#6b7280;--text-faint:#9ca3af;
+  --accent:#ff6b35;--accent-h:#e55a26;--accent-bg:rgba(255,107,53,0.1);
+  --green:#16a34a;--green-bg:rgba(22,163,74,0.1);
+  --blue:#2563eb;--blue-bg:rgba(37,99,235,0.1);
+  --gold:#d97706;--gold-bg:rgba(217,119,6,0.1);
+  --red:#dc2626;--red-bg:rgba(220,38,38,0.1);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.1);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.12);
+}
+[data-theme="dark"]{
+  --bg:#0d0f12;--surface:#161a20;--surface-2:#1c2028;
+  --border:rgba(255,255,255,0.07);--divider:rgba(255,255,255,0.04);
+  --text:#e5e7eb;--text-muted:#9ca3af;--text-faint:#4b5563;
+  --accent:#ff6b35;--accent-h:#ff8255;--accent-bg:rgba(255,107,53,0.12);
+  --green:#4ade80;--green-bg:rgba(74,222,128,0.1);
+  --blue:#60a5fa;--blue-bg:rgba(96,165,250,0.1);
+  --gold:#fbbf24;--gold-bg:rgba(251,191,36,0.1);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.1);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.1);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{font-family:var(--font-body);font-size:var(--text-base);color:var(--text);background:var(--bg);min-height:100dvh;line-height:1.6;}
+button{cursor:pointer;font:inherit;background:none;border:none;color:inherit;}
+img{display:block;max-width:100%;}
+a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),box-shadow var(--transition);}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.header-inner{max-width:1400px;margin:0 auto;padding:var(--space-4) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);}
+.logo{display:flex;align-items:center;gap:var(--space-3);}
+.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-md);display:grid;place-items:center;font-size:18px;flex-shrink:0;}
+.logo-text{font-weight:700;font-size:var(--text-lg);color:var(--text);}
+.logo-text span{color:var(--accent);}
+.header-meta{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;}
+.badge{display:inline-flex;align-items:center;gap:var(--space-1);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500;}
+.badge-green{background:var(--green-bg);color:var(--green);}
+.badge-muted{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border);}
+.last-update{font-size:var(--text-xs);color:var(--text-muted);}
+.theme-toggle{width:36px;height:36px;border-radius:var(--radius-md);display:grid;place-items:center;color:var(--text-muted);border:1px solid var(--border);}
+.theme-toggle:hover{background:var(--surface-2);color:var(--text);}
+
+.main{max-width:1400px;margin:0 auto;padding:var(--space-8) var(--space-6);}
+
+.status-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-5);margin-bottom:var(--space-6);display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:var(--text-muted);}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+
+.ranking-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5) var(--space-6);margin-bottom:var(--space-8);overflow-x:auto;}
+.ranking-title{font-size:var(--text-sm);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--space-4);}
+.ranking-list{display:flex;gap:var(--space-3);min-width:max-content;}
+.ranking-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--surface-2);border-radius:var(--radius-lg);border:1px solid var(--border);min-width:180px;}
+.ranking-item.rank-1{border-color:var(--gold);background:var(--gold-bg);}
+.ranking-item.rank-2{border-color:rgba(156,163,175,0.4);}
+.ranking-item.rank-3{border-color:rgba(180,120,60,0.4);}
+.rank-pos{font-size:var(--text-lg);line-height:1;width:28px;text-align:center;}
+.rank-nick{font-weight:700;font-size:var(--text-sm);color:var(--text);}
+.rank-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
+.rank-rating{font-weight:700;font-size:var(--text-base);color:var(--accent);margin-left:auto;font-variant-numeric:tabular-nums;}
+
+.section-title{font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-5);display:flex;align-items:center;gap:var(--space-3);color:var(--text);}
+.section-title::after{content:'';flex:1;height:1px;background:var(--divider);}
+
+.squad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:var(--space-5);margin-bottom:var(--space-10);}
+
+.player-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition),transform var(--transition);position:relative;overflow:hidden;}
+.player-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity var(--transition);}
+.player-card:hover::before,.player-card.mvp::before{opacity:1;}
+.player-card.mvp{border-color:rgba(251,191,36,0.4);}
+.player-card.mvp::before{background:linear-gradient(90deg,var(--gold),var(--accent));}
+
+.no-data-card{background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:var(--space-2);min-height:180px;}
+.no-data-card .nd-icon{font-size:32px;}
+.no-data-card .nd-nick{font-weight:700;font-size:var(--text-base);color:var(--text);}
+.no-data-card .nd-msg{font-size:var(--text-xs);color:var(--text-muted);}
+
+.player-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5);}
+.player-avatar{width:52px;height:52px;border-radius:var(--radius-lg);border:2px solid var(--border);display:grid;place-items:center;font-size:22px;flex-shrink:0;background:var(--surface-2);}
+.player-info{flex:1;min-width:0;}
+.player-nick{font-size:var(--text-lg);font-weight:700;line-height:1.2;}
+.player-gc-nick{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
+.player-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
+.player-level{background:var(--accent-bg);color:var(--accent);border-radius:var(--radius-sm);padding:2px var(--space-2);font-size:var(--text-xs);font-weight:700;}
+.matches-badge{font-size:var(--text-xs);color:var(--text-faint);}
+
+.gc-rating-wrap{display:flex;flex-direction:column;align-items:center;}
+.gc-rating-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-bottom:1px;}
+.gc-rating-value{font-size:var(--text-xl);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+.elite{color:var(--gold)!important;}
+.great{color:var(--green)!important;}
+.good{color:var(--blue)!important;}
+.average{color:var(--text-muted)!important;}
+.below{color:var(--red)!important;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-4);}
+.stat-item{text-align:center;background:var(--surface-2);border-radius:var(--radius-md);padding:var(--space-3) var(--space-2);}
+.stat-value{font-size:var(--text-lg);font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;}
+.stat-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1);font-weight:500;}
+
+.rating-bar-wrap{margin-top:var(--space-2);}
+.rating-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2);font-size:var(--text-xs);color:var(--text-muted);}
+.rating-bar-track{height:6px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
+.rating-bar-fill{height:100%;border-radius:var(--radius-full);transition:width .8s cubic-bezier(0.16,1,0.3,1);}
+
+.kast-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-4);}
+.kast-item{text-align:center;background:var(--accent-bg);border:1px solid rgba(255,107,53,0.15);border-radius:var(--radius-md);padding:var(--space-2);}
+.kast-value{font-size:var(--text-base);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;}
+.kast-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
+
+.player-footer{display:flex;align-items:center;justify-content:space-between;padding-top:var(--space-4);border-top:1px solid var(--divider);margin-top:var(--space-4);}
+.player-link{font-size:var(--text-xs);color:var(--accent);text-decoration:none;font-weight:500;}
+.player-link:hover{color:var(--accent-h);}
+.player-updated{font-size:var(--text-xs);color:var(--text-faint);}
+
+.empty-state{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-12) var(--space-8);text-align:center;}
+.empty-state .ei{font-size:48px;margin-bottom:var(--space-4);}
+.empty-state h3{font-size:var(--text-lg);margin-bottom:var(--space-2);}
+.empty-state p{color:var(--text-muted);font-size:var(--text-sm);max-width:42ch;margin:0 auto;}
+
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:var(--radius-sm);}
+.sk-avatar{width:52px;height:52px;border-radius:var(--radius-lg);}
+.sk-title{height:20px;width:60%;}
+.sk-sub{height:14px;width:40%;margin-top:8px;}
+.sk-stat{height:54px;border-radius:var(--radius-md);}
+.sk-bar{height:6px;border-radius:var(--radius-full);margin-top:1rem;}
+
+.footer{text-align:center;padding:var(--space-8);font-size:var(--text-xs);color:var(--text-faint);border-top:1px solid var(--divider);}
+
+@media(max-width:640px){
+  .header-inner{padding:var(--space-3) var(--space-4);}
+  .main{padding:var(--space-5) var(--space-4);}
+  .last-update{display:none;}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🎯</div>
+      <span class="logo-text">GC <span>Squad</span></span>
+    </div>
+    <div class="header-meta">
+      <span class="badge badge-green" id="status-badge">● Ao vivo</span>
+      <span class="last-update" id="last-update-text">Carregando...</span>
+      <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="status-bar">
+    <div class="pulse"></div>
+    <span id="status-msg">Carregando dados...</span>
+  </div>
+
+  <div class="ranking-banner" id="ranking-banner" style="display:none">
+    <div class="ranking-title">🏆 Ranking GC Rating</div>
+    <div class="ranking-list" id="ranking-list"></div>
+  </div>
+
+  <h2 class="section-title">Squad CS2</h2>
+  <div class="squad-grid" id="squad-grid">
+    <!-- skeletons -->
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton" style="margin-top:8px"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+  </div>
+</main>
+
+<footer class="footer">
+  GC Squad Dashboard · GC Rating com K/D + ADR + KAST + HS% · Atualizado via prints manuais
+</footer>
+
+<script>
+// === TEMA ===
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',d);
+  const icon=m=>m==='dark'
+    ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+    :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  if(t){t.innerHTML=icon(d);t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);t.innerHTML=icon(d);});}
+})();
+
+const AVATARS={DU:'🎮',Chavera:'🔫',Flavinho:'💥',Chara:'⚡',Dukka:'🎯',Cq:'🏆'};
+const GC_NICKS={DU:'H34D5H07M4CH1N3',Chavera:'SKILLZ-',Flavinho:'dEM0N666',Chara:'apEX paulista',Dukka:'ROTTWAGNER',Cq:'TREMBOLIZADO'};
+const GC_IDS={DU:'1311055',Chavera:'13547',Flavinho:'822519',Chara:'chara',Dukka:'24134',Cq:'1489954'};
+
+// === GC RATING (K/D 35% + ADR 30% + KAST 20% + HS% 15%) ===
+function calcGCRating(s){
+  const kd   = parseFloat((s.KDR||s.KD||s['K/D']||'0')+'') || 0;
+  const adr  = parseFloat((s.ADR||'0')+'') || 0;
+  const kast = parseFloat((s.KAST||'0')+''.replace('%','')) || 0;
+  const hs   = parseFloat((s.HS||s['HS%']||'0')+''.replace('%','')) || 0;
+  if(kd===0 && adr===0) return null;
+  const r = (kd*0.35) + (Math.min(adr/100,2.5)*0.30) + ((kast/100)*0.20) + ((hs/100)*0.15);
+  return Math.round(r*100)/100;
+}
+function rClass(r){
+  if(r===null)return'average';
+  if(r>=1.40)return'elite';if(r>=1.15)return'great';
+  if(r>=0.95)return'good';if(r>=0.75)return'average';
+  return'below';
+}
+function rEmoji(r){
+  if(r===null)return'';
+  if(r>=1.40)return'🔥';if(r>=1.15)return'✅';
+  if(r>=0.95)return'👍';if(r>=0.75)return'😐';
+  return'💀';
+}
+function rPct(r){return r===null?0:Math.min(Math.round((r/2.0)*100),100);}
+function rFillClass(c){
+  return c==='elite'?'var(--gold)':c==='great'?'var(--green)':c==='good'?'var(--blue)':c==='below'?'var(--red)':'var(--text-muted)';
+}
+
+function fmt(v,suffix=''){
+  if(v===undefined||v===null||v===''||v===0)return'—';
+  return v+suffix;
+}
+
+function renderCard(p, isMvp){
+  const nick = p.playerNick||p.nick||'?';
+  const s    = p.stats||{};
+  const r    = calcGCRating(s);
+  const rC   = rClass(r);
+  const rD   = r!==null?r.toFixed(2):'—';
+  const em   = AVATARS[nick]||'🎮';
+  const gcN  = GC_NICKS[nick]||'';
+  const pid  = GC_IDS[nick]||p.playerId||'';
+  const upd  = p.updatedAt
+    ? new Date(p.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
+    : '—';
+
+  const hasStats = s.KDR||s.KD||s.ADR;
+
+  if(!hasStats){
+    return `<div class="no-data-card">
+      <div class="nd-icon">${em}</div>
+      <div class="nd-nick">${nick}</div>
+      <div class="nd-msg">Aguardando dados da primeira partida</div>
+    </div>`;
+  }
+
+  const kd  = fmt(s.KDR||s.KD);
+  const adr = fmt(s.ADR);
+  const hs  = fmt(s.HS||s['HS%'],'');
+  const kast= fmt(s.KAST,'');
+  const kills=fmt(s.kills||s.Kills);
+  const mk  = fmt(s.MK||s['MULTI KILLS']);
+  const fk  = fmt(s.FK||s['FIRST KILLS']);
+
+  const kdN = parseFloat(kd)||0;
+  const kdC = kdN>=1.2?'var(--green)':kdN>=0.9?'var(--blue)':'var(--red)';
+  const adrN= parseFloat(adr)||0;
+  const adrC= adrN>=90?'var(--green)':adrN>=70?'var(--blue)':'var(--text)';
+  const kastN=parseFloat(kast)||0;
+  const kastC=kastN>=65?'var(--green)':kastN>=50?'var(--blue)':'var(--text)';
+
+  return `<div class="player-card${isMvp?' mvp':''}">
+    <div class="player-header">
+      <div class="player-avatar">${em}</div>
+      <div class="player-info">
+        <div class="player-nick">${nick}${isMvp?' 👑':''}</div>
+        ${gcN?`<div class="player-gc-nick">${gcN}</div>`:''}
+      </div>
+      <div class="player-meta">
+        <div class="player-level">LVL ${p.level||'?'}</div>
+        <div class="matches-badge">${p.matches||0} partidas</div>
+        ${r!==null?`<div class="gc-rating-wrap"><div class="gc-rating-label">Rating</div><div class="gc-rating-value ${rC}">${rD}</div></div>`:''}
+      </div>
+    </div>
+
+    <div class="kast-row">
+      <div class="kast-item"><div class="kast-value" style="color:${kastC}">${kast||'—'}%</div><div class="kast-label">KAST</div></div>
+      <div class="kast-item"><div class="kast-value">${kills}</div><div class="kast-label">Kills</div></div>
+      <div class="kast-item"><div class="kast-value">${fmt(s.RP)}</div><div class="kast-label">RP</div></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-value" style="color:${kdC}">${kd}</div><div class="stat-label">K/D</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:${adrC}">${adr}</div><div class="stat-label">ADR</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${hs}%</div><div class="stat-label">HS%</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--purple)">${mk}</div><div class="stat-label">Multi-K</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${fk}</div><div class="stat-label">First K</div></div>
+      <div class="stat-item"><div class="stat-value">${fmt(s.assists||s.A)}</div><div class="stat-label">Assists</div></div>
+    </div>
+
+    <div class="rating-bar-wrap">
+      <div class="rating-bar-header">
+        <span>GC Rating ${rEmoji(r)}</span>
+        <strong style="color:var(--text)">${rD}</strong>
+      </div>
+      <div class="rating-bar-track">
+        <div class="rating-bar-fill" style="width:0%;background:${rFillClass(rC)}" data-target="${rPct(r)}"></div>
+      </div>
+    </div>
+
+    <div class="player-footer">
+      <a class="player-link" href="https://gamersclub.com.br/player/${pid}" target="_blank" rel="noopener noreferrer">Ver perfil ↗</a>
+      <span class="player-updated">${upd}</span>
+    </div>
+  </div>`;
+}
+
+function renderRanking(players){
+  const ranked=players
+    .map(p=>({nick:p.playerNick||p.nick,r:calcGCRating(p.stats||{})}))
+    .filter(p=>p.r!==null).sort((a,b)=>b.r-a.r);
+  if(!ranked.length)return;
+  const medals=['🥇','🥈','🥉'];
+  document.getElementById('ranking-banner').style.display='';
+  document.getElementById('ranking-list').innerHTML=ranked.map((p,i)=>`
+    <div class="ranking-item ${i<3?'rank-'+(i+1):''}">
+      <span class="rank-pos">${medals[i]||'#'+(i+1)}</span>
+      <div>
+        <div class="rank-nick">${AVATARS[p.nick]||''} ${p.nick}</div>
+        <div class="rank-label">GC Rating</div>
+      </div>
+      <div class="rank-rating">${p.r.toFixed(2)}</div>
+    </div>`).join('');
+}
+
+function animateBars(){
+  document.querySelectorAll('.rating-bar-fill[data-target]').forEach(el=>{
+    const t=el.getAttribute('data-target');
+    setTimeout(()=>el.style.width=t+'%',120);
+  });
+}
+
+async function loadData(){
+  const grid=document.getElementById('squad-grid');
+  const badge=document.getElementById('status-badge');
+  const msg=document.getElementById('status-msg');
+  const upd=document.getElementById('last-update-text');
+  try{
+    const res=await fetch('./data.json?t='+Date.now());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+
+    const allEmpty=data.players.every(p=>!p.stats||!Object.keys(p.stats).length);
+    if(allEmpty){
+      grid.innerHTML=`<div class="empty-state"><div class="ei">📭</div><h3>Aguardando primeira partida</h3><p>Após cada jogo, o dono do squad envia o print e os dados são atualizados aqui.</p></div>`;
+      badge.className='badge badge-muted';badge.textContent='● Aguardando dados';
+      msg.textContent='Nenhuma partida registrada ainda.';
+      return;
+    }
+
+    const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
+    const maxR=Math.max(...ratings.filter(r=>r!==null));
+    grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null)).join('');
+    renderRanking(data.players);
+    animateBars();
+
+    badge.className='badge badge-green';badge.textContent='● Ao vivo';
+    if(data.lastUpdate){
+      const d=new Date(data.lastUpdate);
+      upd.textContent='Atualizado: '+d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const total=data.players.reduce((acc,p)=>acc+(p.matches||0),0);
+      msg.textContent=`${data.players.length} jogadores · ${total} partidas registradas · GC Rating ativo`;
+    }
+  }catch(e){
+    badge.className='badge badge-muted';badge.textContent='● Erro';
+    msg.textContent='Erro ao carregar data.json — verifique o arquivo.';
+    grid.innerHTML=`<div class="empty-state"><div class="ei">⚠️</div><h3>Erro ao carregar dados</h3><p>${e.message}</p></div>`;
+  }
+}
+
+loadData();
+setInterval(loadData,30000);
+</script>
+</body>
+</html>
