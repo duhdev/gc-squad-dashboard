@@ -872,7 +872,7 @@ function renderHeatmap(history){
 /* ===== CARTA FIFA ===== */
 function renderFifaCards(players,history){
   if(!players||!players.length)return;
-  const hasData=players.some(p=>p.stats&&Object.keys(p.stats).length);
+  const hasData=players.some(p=>p.stats&&Object.keys(p.stats).length>0);
   if(!hasData)return;
   document.getElementById('fifa-section').style.display='';
   document.getElementById('fifa-cards-grid').innerHTML=players.map(p=>{
@@ -887,27 +887,36 @@ function renderFifaCards(players,history){
     const hs=parseFloat((s.HS||s['HS%']||'0')+''.replace('%',''))||0;
     const kast=parseFloat((s.KAST||'0')+''.replace('%',''))||0;
     const matchCount=history?history.filter(m=>m.players&&m.players[nick]).length:p.matches||0;
+    const ovrVal=r>=1.4?99:r>=1.15?85:r>=0.95?72:r>=0.75?60:50;
+    const kdDisplay=kd.toFixed(2);
+    const adrDisplay=adr.toFixed(0);
+    const hsDisplay=hs.toFixed(0)+'%';
+    const kastDisplay=kast.toFixed(0)+'%';
     const avatarContent=cfg.avatar
-      ?`<img src="${cfg.avatar}" alt="${nick}" width="90" height="90" onerror="this.parentElement.innerHTML='<div class=\\'fifa-avatar-emoji\\'>${cfg.emoji}</div>'">`
+      ?`<img src="${cfg.avatar}" alt="${nick}" width="100" height="100" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`+`<div class="fifa-avatar-emoji" style="display:none">${cfg.emoji}</div>`
       :`<div class="fifa-avatar-emoji">${cfg.emoji}</div>`;
     return`<div class="fifa-card" id="fifa-${nick}">
       <div class="fifa-card-inner fifa-bg-${rC}">
-        <div style="display:flex;flex-direction:column;align-self:flex-start">
-          <div class="fifa-rating">${r.toFixed(0)}</div>
-          <div class="fifa-pos">CS2</div>
+        <button class="fifa-share-btn" onclick="shareFifaCard('${nick}',event)">📤</button>
+        <div class="fifa-top-row">
+          <div class="fifa-pos-block">
+            <div class="fifa-rating">${r.toFixed(2)}</div>
+            <div class="fifa-pos">CS2</div>
+          </div>
+          <div class="fifa-ovr-badge">OVR ${ovrVal}</div>
         </div>
         <div class="fifa-avatar-wrap">${avatarContent}</div>
         <div class="fifa-nick">${nick}</div>
         <div class="fifa-country">🇧🇷</div>
+        <div class="fifa-divider"></div>
         <div class="fifa-stats">
-          <div class="fifa-stat"><div class="fifa-stat-val">${(kd*10).toFixed(0)}</div><div class="fifa-stat-key">K/D</div></div>
-          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(adr/1.3))}</div><div class="fifa-stat-key">ADR</div></div>
-          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(hs*1.2))}</div><div class="fifa-stat-key">HS</div></div>
-          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(kast))}</div><div class="fifa-stat-key">KST</div></div>
-          <div class="fifa-stat"><div class="fifa-stat-val">${matchCount}</div><div class="fifa-stat-key">JGS</div></div>
-          <div class="fifa-stat"><div class="fifa-stat-val">${r>=1.4?99:r>=1.15?85:r>=0.95?72:60}</div><div class="fifa-stat-key">OVR</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${kdDisplay}</div><div class="fifa-stat-key">K/D</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${adrDisplay}</div><div class="fifa-stat-key">ADR</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${hsDisplay}</div><div class="fifa-stat-key">HS%</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${kastDisplay}</div><div class="fifa-stat-key">KAST</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${matchCount}</div><div class="fifa-stat-key">JOGOS</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${ovrVal}</div><div class="fifa-stat-key">OVR</div></div>
         </div>
-        <button class="fifa-share-btn" onclick="shareFifaCard('${nick}',event)">📤</button>
       </div>
     </div>`;
   }).join('');
