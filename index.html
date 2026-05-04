@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CS Velharada — Squad Dashboard</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
   --font-body: 'Satoshi', 'Inter', sans-serif;
@@ -139,6 +140,43 @@ a,button{transition:color var(--transition),background var(--transition),border-
 .player-link:hover{color:var(--accent-h);}
 .player-updated{font-size:var(--text-xs);color:var(--text-faint);}
 
+/* ===== HISTÓRICO ===== */
+.history-section{margin-bottom:var(--space-10);}
+.history-list{display:flex;flex-direction:column;gap:var(--space-3);}
+.history-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4) var(--space-5);box-shadow:var(--shadow-sm);}
+.history-card.win{border-left:4px solid var(--green);}
+.history-card.loss{border-left:4px solid var(--red);}
+.history-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-3);flex-wrap:wrap;}
+.history-result{font-size:var(--text-sm);font-weight:700;padding:2px var(--space-3);border-radius:var(--radius-full);}
+.history-result.win{background:var(--green-bg);color:var(--green);}
+.history-result.loss{background:var(--red-bg);color:var(--red);}
+.history-map{font-weight:700;font-size:var(--text-base);color:var(--text);}
+.history-score{font-size:var(--text-sm);color:var(--text-muted);font-variant-numeric:tabular-nums;}
+.history-date{font-size:var(--text-xs);color:var(--text-faint);margin-left:auto;}
+.history-players{display:flex;flex-wrap:wrap;gap:var(--space-2);}
+.history-player{display:flex;align-items:center;gap:var(--space-2);background:var(--surface-2);border-radius:var(--radius-md);padding:var(--space-1) var(--space-3);font-size:var(--text-xs);}
+.history-player-nick{font-weight:700;color:var(--text);}
+.history-player-rating{font-weight:700;font-variant-numeric:tabular-nums;}
+.history-mvp-badge{font-size:9px;background:var(--gold-bg);color:var(--gold);padding:1px 6px;border-radius:var(--radius-full);font-weight:700;margin-left:4px;}
+
+/* ===== GRÁFICO EVOLUÇÃO ===== */
+.chart-section{margin-bottom:var(--space-10);}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
+.chart-filters{display:flex;gap:var(--space-2);margin-bottom:var(--space-5);flex-wrap:wrap;}
+.chart-filter-btn{padding:var(--space-1) var(--space-4);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;border:1px solid var(--border);color:var(--text-muted);background:var(--surface-2);}
+.chart-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.chart-filter-btn:hover:not(.active){background:var(--border);color:var(--text);}
+.chart-container{position:relative;height:280px;}
+
+/* ===== MAPA FAVORITO ===== */
+.map-section{margin-bottom:var(--space-10);}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:var(--space-4);}
+.map-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);text-align:center;}
+.map-card-nick{font-weight:700;font-size:var(--text-base);margin-bottom:var(--space-2);}
+.map-card-map{font-size:var(--text-xl);margin-bottom:var(--space-1);}
+.map-card-name{font-size:var(--text-sm);font-weight:700;color:var(--accent);margin-bottom:var(--space-1);}
+.map-card-stat{font-size:var(--text-xs);color:var(--text-muted);}
+
 .empty-state{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-12) var(--space-8);text-align:center;}
 .empty-state .ei{font-size:48px;margin-bottom:var(--space-4);}
 .empty-state h3{font-size:var(--text-lg);margin-bottom:var(--space-2);}
@@ -177,19 +215,40 @@ a,button{transition:color var(--transition),background var(--transition),border-
     <div class="pulse"></div>
     <span id="status-msg">Carregando dados...</span>
   </div>
+
   <div class="ranking-banner" id="ranking-banner" style="display:none">
     <div class="ranking-title">🏆 Ranking GC Rating</div>
     <div class="ranking-list" id="ranking-list"></div>
   </div>
+
   <h2 class="section-title">Squad CS2</h2>
   <div class="squad-grid" id="squad-grid">
     <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
     <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
     <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
   </div>
+
+  <!-- GRÁFICO EVOLUÇÃO -->
+  <div class="chart-section" id="chart-section" style="display:none">
+    <h2 class="section-title">📈 Evolução do Rating</h2>
+    <div class="chart-wrap">
+      <div class="chart-filters" id="chart-filters"></div>
+      <div class="chart-container"><canvas id="ratingChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- MAPA FAVORITO -->
+  <div class="map-section" id="map-section" style="display:none">
+    <h2 class="section-title">🗺️ Mapa Favorito</h2>
+    <div class="map-grid" id="map-grid"></div>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div class="history-section" id="history-section" style="display:none">
+    <h2 class="section-title">📋 Histórico de Partidas</h2>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
 </main>
 
 <footer class="footer">
@@ -208,12 +267,17 @@ a,button{transition:color var(--transition),background var(--transition),border-
 })();
 
 const PLAYER_CONFIG = {
-  Cq:      { avatar:'./assets/avatars/cq.jpg',       emoji:'🏆', gcNick:'TREMBOLIZADO',    id:'1489954', level:'21' },
-  DU:      { avatar:'./assets/avatars/du.jpg',        emoji:'🎮', gcNick:'H34D5H07M4CH1N3', id:'1311055', level:'20' },
-  Flavinho:{ avatar:'./assets/avatars/flavinho.jpg',  emoji:'💥', gcNick:'dEM0N666',        id:'822519',  level:'20' },
-  Chara:   { avatar:'./assets/avatars/chara.jpg',     emoji:'⚡', gcNick:'apEX paulista',    id:'chara',   level:'20' },
-  Chavera: { avatar:null,                              emoji:'🔫', gcNick:'SKILLZ-',          id:'13547',   level:'20' },
-  Dukka:   { avatar:null,                              emoji:'🎯', gcNick:'ROTTWAGNER',       id:'24134',   level:'20' },
+  Cq:      { avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/cq.jpg',       emoji:'🏆', gcNick:'TREMBOLIZADO',    id:'1489954', level:'21', color:'#fbbf24' },
+  DU:      { avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/du.jpg',       emoji:'🎮', gcNick:'H34D5H07M4CH1N3', id:'1311055', level:'20', color:'#60a5fa' },
+  Flavinho:{ avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/flavinho.jpg', emoji:'💥', gcNick:'dEM0N666',        id:'822519',  level:'20', color:'#f87171' },
+  Chara:   { avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/chara.jpg',    emoji:'⚡', gcNick:'apEX paulista',    id:'chara',   level:'20', color:'#4ade80' },
+  Chavera: { avatar:null, emoji:'🔫', gcNick:'SKILLZ-',   id:'13547', level:'20', color:'#a78bfa' },
+  Dukka:   { avatar:null, emoji:'🎯', gcNick:'ROTTWAGNER', id:'24134', level:'20', color:'#fb923c' },
+};
+
+const MAP_EMOJIS = {
+  Mirage:'🏜️', Inferno:'🔥', Nuke:'☢️', Ancient:'🏛️',
+  Anubis:'🐍', Dust2:'🌅', Vertigo:'🏙️', Train:'🚂', Overpass:'🌉'
 };
 
 function avatarHtml(nick,size=56,cls='player-avatar'){
@@ -250,7 +314,6 @@ function renderCard(p,isMvp){
   const rD=r!==null?r.toFixed(2):'—';
   const upd=p.updatedAt?new Date(p.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
   const hasStats=s.KDR||s.KD||s.ADR;
-
   if(!hasStats){
     return `<div class="no-data-card">
       ${avatarHtml(nick,64,'nd-avatar')}
@@ -258,24 +321,12 @@ function renderCard(p,isMvp){
       <div class="nd-msg">Aguardando dados da primeira partida</div>
     </div>`;
   }
-
-  const kd    =fmtV(s.KDR||s.KD);
-  const adr   =fmtV(s.ADR);
-  const hs    =fmtV(s.HS||s['HS%']);
-  const kast  =fmtV(s.KAST);
-  const kills =fmtV(s.kills||s.Kills);
-  const mk    =fmtV(s.MK||s['MULTI KILLS']);
-  const fk    =fmtV(s.FK||s['FIRST KILLS']);
-  const assists=fmtV(s.assists||s.A);
-  const rp    =fmtV(s.RP);
-
-  const kdN=parseFloat(kd)||0;
-  const kdC=kdN>=1.2?'var(--green)':kdN>=0.9?'var(--blue)':'var(--red)';
-  const adrN=parseFloat(adr)||0;
-  const adrC=adrN>=90?'var(--green)':adrN>=70?'var(--blue)':'var(--text)';
-  const kastN=parseFloat(kast)||0;
-  const kastC=kastN>=65?'var(--green)':kastN>=50?'var(--blue)':'var(--text)';
-
+  const kd=fmtV(s.KDR||s.KD);const adr=fmtV(s.ADR);const hs=fmtV(s.HS||s['HS%']);
+  const kast=fmtV(s.KAST);const kills=fmtV(s.kills||s.Kills);const mk=fmtV(s.MK||s['MULTI KILLS']);
+  const fk=fmtV(s.FK||s['FIRST KILLS']);const assists=fmtV(s.assists||s.A);const rp=fmtV(s.RP);
+  const kdN=parseFloat(kd)||0;const kdC=kdN>=1.2?'var(--green)':kdN>=0.9?'var(--blue)':'var(--red)';
+  const adrN=parseFloat(adr)||0;const adrC=adrN>=90?'var(--green)':adrN>=70?'var(--blue)':'var(--text)';
+  const kastN=parseFloat(kast)||0;const kastC=kastN>=65?'var(--green)':kastN>=50?'var(--blue)':'var(--text)';
   return `<div class="player-card${isMvp?' mvp':''}">
     <div class="player-header">
       ${avatarHtml(nick,56,'player-avatar')}
@@ -331,6 +382,124 @@ function renderRanking(players){
     </div>`).join('');
 }
 
+/* ===== HISTÓRICO ===== */
+function renderHistory(history){
+  if(!history||!history.length)return;
+  document.getElementById('history-section').style.display='';
+  const sorted=[...history].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('history-list').innerHTML=sorted.map(match=>{
+    const isWin=match.result==='W';
+    const date=new Date(match.date).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const players=match.players||{};
+    const ratings=Object.entries(players).map(([n,s])=>({nick:n,r:s.rating||0}));
+    const mvp=ratings.sort((a,b)=>b.r-a.r)[0]?.nick;
+    const playersHtml=Object.entries(players).map(([nick,s])=>{
+      const r=s.rating||0;
+      const rc=rClass(r);
+      const isMvp=nick===mvp;
+      return `<div class="history-player">
+        ${avatarHtml(nick,20,'rank-avatar')}
+        <span class="history-player-nick">${nick}</span>
+        <span class="history-player-rating ${rc}">${r.toFixed(2)}</span>
+        ${isMvp?'<span class="history-mvp-badge">MVP</span>':''}
+      </div>`;
+    }).join('');
+    return `<div class="history-card ${isWin?'win':'loss'}">
+      <div class="history-header">
+        <span class="history-result ${isWin?'win':'loss'}">${isWin?'VITÓRIA':'DERROTA'}</span>
+        <span class="history-map">${MAP_EMOJIS[match.map]||'🗺️'} ${match.map}</span>
+        <span class="history-score">${match.score||''}</span>
+        <span class="history-date">${date}</span>
+      </div>
+      <div class="history-players">${playersHtml}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ===== GRÁFICO EVOLUÇÃO ===== */
+let chartInstance=null;
+let activeNicks=new Set(Object.keys(PLAYER_CONFIG));
+function renderChart(history){
+  if(!history||!history.length)return;
+  document.getElementById('chart-section').style.display='';
+  const sorted=[...history].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const labels=sorted.map(m=>{
+    const d=new Date(m.date);
+    return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+m.map;
+  });
+  const allNicks=[...new Set(sorted.flatMap(m=>Object.keys(m.players||{})))];
+  const filtersEl=document.getElementById('chart-filters');
+  if(!filtersEl.innerHTML){
+    filtersEl.innerHTML=allNicks.map(n=>`
+      <button class="chart-filter-btn active" data-nick="${n}" onclick="toggleChartNick('${n}',this)">
+        ${PLAYER_CONFIG[n]?.emoji||'🎮'} ${n}
+      </button>`).join('');
+    activeNicks=new Set(allNicks);
+  }
+  buildChart(sorted,labels,allNicks);
+}
+function buildChart(sorted,labels,allNicks){
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const gridColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
+  const textColor=isDark?'#9ca3af':'#6b7280';
+  const datasets=allNicks.filter(n=>activeNicks.has(n)).map(nick=>{
+    const cfg=PLAYER_CONFIG[nick]||{color:'#aaa'};
+    const data=sorted.map(m=>(m.players[nick]?.rating||null));
+    return{label:nick,data,borderColor:cfg.color,backgroundColor:cfg.color+'22',
+      tension:0.4,pointRadius:5,pointHoverRadius:7,fill:false,borderWidth:2.5};
+  });
+  if(chartInstance)chartInstance.destroy();
+  const ctx=document.getElementById('ratingChart').getContext('2d');
+  chartInstance=new Chart(ctx,{type:'line',data:{labels,datasets},options:{
+    responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2)||'—'}`}}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:11}}},
+      y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:11}},min:0.5,max:1.8,
+        title:{display:true,text:'GC Rating',color:textColor,font:{size:11}}}
+    }
+  }});
+}
+window.toggleChartNick=function(nick,btn){
+  if(activeNicks.has(nick)){if(activeNicks.size===1)return;activeNicks.delete(nick);btn.classList.remove('active');}
+  else{activeNicks.add(nick);btn.classList.add('active');}
+  const sorted=[...window._historyCache].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const labels=sorted.map(m=>{const d=new Date(m.date);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+m.map;});
+  const allNicks=[...new Set(sorted.flatMap(m=>Object.keys(m.players||{})))];
+  buildChart(sorted,labels,allNicks);
+};
+
+/* ===== MAPA FAVORITO ===== */
+function renderFavMaps(history){
+  if(!history||!history.length)return;
+  document.getElementById('map-section').style.display='';
+  const allNicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
+  const mapGrid=document.getElementById('map-grid');
+  mapGrid.innerHTML=allNicks.map(nick=>{
+    const mapStats={};
+    history.forEach(m=>{
+      const p=m.players[nick];
+      if(!p)return;
+      if(!mapStats[m.map])mapStats[m.map]={total:0,ratingSum:0};
+      mapStats[m.map].total++;
+      mapStats[m.map].ratingSum+=p.rating||0;
+    });
+    const entries=Object.entries(mapStats);
+    if(!entries.length)return'';
+    const best=entries.sort((a,b)=>(b[1].ratingSum/b[1].total)-(a[1].ratingSum/a[1].total))[0];
+    const avgRating=(best[1].ratingSum/best[1].total).toFixed(2);
+    const rc=rClass(parseFloat(avgRating));
+    return `<div class="map-card">
+      ${avatarHtml(nick,40,'rank-avatar')}
+      <div class="map-card-nick" style="margin-top:8px">${nick}</div>
+      <div class="map-card-map">${MAP_EMOJIS[best[0]]||'🗺️'}</div>
+      <div class="map-card-name">${best[0]}</div>
+      <div class="map-card-stat ${rc}">Rating médio: ${avgRating}</div>
+      <div class="map-card-stat">${best[1].total} partida${best[1].total>1?'s':''}</div>
+    </div>`;
+  }).join('');
+}
+
 function animateBars(){
   document.querySelectorAll('.rating-bar-fill[data-target]').forEach(el=>{
     setTimeout(()=>el.style.width=el.getAttribute('data-target')+'%',120);
@@ -346,18 +515,34 @@ async function loadData(){
     const res=await fetch('./data.json?t='+Date.now());
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
+    window._historyCache=data.history||[];
+
     const allEmpty=data.players.every(p=>!p.stats||!Object.keys(p.stats).length);
-    if(allEmpty){
+    const hasHistory=Array.isArray(data.history)&&data.history.length>0;
+
+    if(allEmpty&&!hasHistory){
       grid.innerHTML=`<div class="empty-state"><div class="ei">📭</div><h3>Aguardando primeira partida</h3><p>Após cada jogo, o dono do squad envia o print e os dados são atualizados aqui.</p></div>`;
       badge.className='badge badge-muted';badge.textContent='● Aguardando dados';
       msg.textContent='Nenhuma partida registrada ainda.';
       return;
     }
-    const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
-    const maxR=Math.max(...ratings.filter(r=>r!==null));
-    grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null)).join('');
-    renderRanking(data.players);
-    animateBars();
+
+    if(!allEmpty){
+      const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
+      const maxR=Math.max(...ratings.filter(r=>r!==null));
+      grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null)).join('');
+      renderRanking(data.players);
+      animateBars();
+    } else {
+      grid.innerHTML='';
+    }
+
+    if(hasHistory){
+      renderChart(data.history);
+      renderFavMaps(data.history);
+      renderHistory(data.history);
+    }
+
     badge.className='badge badge-green';badge.textContent='● Ao vivo';
     if(data.lastUpdate){
       const d=new Date(data.lastUpdate);
