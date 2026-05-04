@@ -233,29 +233,34 @@ a,button{transition:color var(--transition),background var(--transition),border-
 .heatmap-legend-bar{display:flex;gap:2px;}
 .heatmap-legend-cell{width:12px;height:12px;border-radius:2px;}
 /* ===== CARTA FIFA ===== */
+/* ===== CARTA FIFA ===== */
 .fifa-section{margin-bottom:var(--space-10);}
-.fifa-cards-grid{display:flex;flex-wrap:wrap;gap:var(--space-5);justify-content:center;}
-.fifa-card{width:180px;height:260px;border-radius:16px;position:relative;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;flex-shrink:0;font-family:var(--font-body);}
-.fifa-card:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.fifa-card-inner{width:100%;height:100%;border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;padding:14px 10px 10px;}
-.fifa-bg-elite{background:linear-gradient(160deg,#b8860b,#ffd700,#b8860b);}
-.fifa-bg-great{background:linear-gradient(160deg,#1a472a,#2d8a4e,#1a472a);}
-.fifa-bg-good{background:linear-gradient(160deg,#1e3a5f,#2563eb,#1e3a5f);}
-.fifa-bg-average{background:linear-gradient(160deg,#374151,#6b7280,#374151);}
-.fifa-bg-below{background:linear-gradient(160deg,#7f1d1d,#dc2626,#7f1d1d);}
-.fifa-rating{font-size:28px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.5);line-height:1;align-self:flex-start;}
-.fifa-pos{font-size:10px;font-weight:700;color:rgba(255,255,255,0.8);align-self:flex-start;margin-top:2px;}
-.fifa-avatar-wrap{width:90px;height:90px;margin:4px 0;position:relative;}
-.fifa-avatar-wrap img,.fifa-avatar-emoji{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.4);}
-.fifa-avatar-emoji{display:flex;align-items:center;justify-content:center;font-size:40px;background:rgba(255,255,255,0.15);}
-.fifa-nick{font-size:13px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.6);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
-.fifa-country{font-size:16px;margin:2px 0;}
-.fifa-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:100%;margin-top:4px;}
-.fifa-stat{text-align:center;background:rgba(0,0,0,0.2);border-radius:6px;padding:3px 2px;}
-.fifa-stat-val{font-size:13px;font-weight:900;color:#fff;line-height:1;}
-.fifa-stat-key{font-size:7px;font-weight:700;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-top:1px;}
-.fifa-share-btn{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-full);padding:4px 8px;font-size:10px;color:#fff;font-weight:600;}
-.fifa-share-btn:hover{background:rgba(0,0,0,0.5);}
+.fifa-cards-grid{display:flex;flex-wrap:wrap;gap:var(--space-6);justify-content:center;}
+.fifa-card{width:210px;height:320px;border-radius:20px;position:relative;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;flex-shrink:0;font-family:var(--font-body);}
+.fifa-card:hover{transform:translateY(-8px) scale(1.04);box-shadow:0 24px 70px rgba(0,0,0,0.6);}
+.fifa-card-inner{width:100%;height:100%;border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;padding:16px 12px 12px;gap:0;}
+.fifa-bg-elite{background:linear-gradient(160deg,#7c5c00,#f5c518 40%,#b8860b 100%);}
+.fifa-bg-great{background:linear-gradient(160deg,#0a2e1a,#1db954 45%,#0d5c2a 100%);}
+.fifa-bg-good{background:linear-gradient(160deg,#0a1a3f,#1a56db 45%,#0d2d6e 100%);}
+.fifa-bg-average{background:linear-gradient(160deg,#1c1f26,#4b5563 50%,#1c1f26 100%);}
+.fifa-bg-below{background:linear-gradient(160deg,#3b0a0a,#dc2626 45%,#5c0f0f 100%);}
+.fifa-top-row{display:flex;justify-content:space-between;align-items:flex-start;width:100%;margin-bottom:6px;}
+.fifa-rating{font-size:32px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1;}
+.fifa-pos-block{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.fifa-pos{font-size:11px;font-weight:800;color:rgba(255,255,255,0.85);letter-spacing:.04em;}
+.fifa-ovr-badge{font-size:10px;font-weight:700;background:rgba(0,0,0,0.3);color:#fff;border-radius:6px;padding:1px 6px;}
+.fifa-avatar-wrap{width:100px;height:100px;margin:4px 0 6px;position:relative;flex-shrink:0;}
+.fifa-avatar-wrap img{width:100px;height:100px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid rgba(255,255,255,0.5);display:block;}
+.fifa-avatar-emoji{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;background:rgba(255,255,255,0.15);border:3px solid rgba(255,255,255,0.4);}
+.fifa-nick{font-size:14px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.7);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.fifa-country{font-size:18px;margin-bottom:6px;line-height:1;}
+.fifa-divider{width:80%;height:1px;background:rgba(255,255,255,0.2);margin-bottom:6px;flex-shrink:0;}
+.fifa-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;}
+.fifa-stat{text-align:center;background:rgba(0,0,0,0.25);border-radius:8px;padding:5px 3px;}
+.fifa-stat-val{font-size:14px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;}
+.fifa-stat-key{font-size:8px;font-weight:700;color:rgba(255,255,255,0.75);text-transform:uppercase;margin-top:2px;letter-spacing:.04em;}
+.fifa-share-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 9px;font-size:11px;color:#fff;font-weight:700;cursor:pointer;transition:background .2s;}
+.fifa-share-btn:hover{background:rgba(0,0,0,0.6);}
 /* ===== IA ANÁLISE ===== */
 .ai-section{margin-bottom:var(--space-10);}
 .ai-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
