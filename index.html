@@ -835,4 +835,236 @@ function renderHeatmap(history){
   const hours=Array.from({length:24},(_,i)=>({h:i,total:0,wins:0}));
   fh.forEach(m=>{const h=new Date(m.date).getHours();hours[h].total++;if(m.result==='W')hours[h].wins++;});
   const shown=[...hours.slice(10),...hours.slice(0,10)];
-  const maxTotal
+  const maxTotal=Math.max(...shown.map(h=>h.total),1);
+  const cells=shown.map(h=>{
+    const wr=h.total?Math.round((h.wins/h.total)*100):0;
+    const intensity=h.total/maxTotal;
+    const r=h.total===0?'var(--surface-2)':wr>=60?`rgba(74,222,128,${0.15+intensity*0.7})`:`rgba(248,113,113,${0.15+intensity*0.7})`;
+    const label=String(h.h).padStart(2,'0')+'h';
+    return`<div class="heatmap-cell" style="background:${r};border:1px solid var(--border)">
+      ${h.total>0?`<span style="font-size:10px;font-weight:700;color:var(--text)">${wr}%</span>`:''}
+      <div class="heatmap-tooltip">${label} · ${h.total} partidas · ${wr}% WR</div>
+    </div>`;
+  }).join('');
+  const labels=shown.map(h=>`<div class="heatmap-label">${String(h.h).padStart(2,'0')}</div>`).join('');
+  const bestHour=shown.filter(h=>h.total>0).sort((a,b)=>(b.wins/b.total)-(a.wins/a.total))[0];
+  const worstHour=shown.filter(h=>h.total>0).sort((a,b)=>(a.wins/a.total)-(b.wins/b.total))[0];
+  document.getElementById('heatmap-content').innerHTML=`
+    <div style="display:flex;gap:var(--space-6);flex-wrap:wrap;margin-bottom:var(--space-4)">
+      ${bestHour?`<div style="text-align:center"><div style="font-size:var(--text-xl);font-weight:700;color:var(--green)">${String(bestHour.h).padStart(2,'0')}h</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Melhor horário (${Math.round(bestHour.wins/bestHour.total*100)}% WR)</div></div>`:''}
+      ${worstHour&&worstHour.h!==bestHour?.h?`<div style="text-align:center"><div style="font-size:var(--text-xl);font-weight:700;color:var(--red)">${String(worstHour.h).padStart(2,'0')}h</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Pior horário (${Math.round(worstHour.wins/worstHour.total*100)}% WR)</div></div>`:''}
+    </div>
+    <div class="heatmap-grid">${cells}</div>
+    <div class="heatmap-labels">${labels}</div>
+    <div class="heatmap-legend">
+      <span>Legenda:</span>
+      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:rgba(74,222,128,0.8)"></div><span>Alta WR</span></div>
+      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:rgba(248,113,113,0.8)"></div><span>Baixa WR</span></div>
+      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:var(--surface-2);border:1px solid var(--border)"></div><span>Sem dados</span></div>
+    </div>`;
+}
+
+/* ===== CARTA FIFA ===== */
+function renderFifaCards(players,history){
+  if(!players||!players.length)return;
+  const hasData=players.some(p=>p.stats&&Object.keys(p.stats).length);
+  if(!hasData)return;
+  document.getElementById('fifa-section').style.display='';
+  document.getElementById('fifa-cards-grid').innerHTML=players.map(p=>{
+    const nick=p.playerNick||p.nick||'?';
+    const cfg=PLAYER_CONFIG[nick]||{emoji:'🎮'};
+    const s=p.stats||{};
+    const r=calcGCRating(s);
+    if(r===null)return'';
+    const rC=rClass(r);
+    const kd=parseFloat(s.KDR||s.KD||0)||0;
+    const adr=parseFloat(s.ADR||0)||0;
+    const hs=parseFloat((s.HS||s['HS%']||'0')+''.replace('%',''))||0;
+    const kast=parseFloat((s.KAST||'0')+''.replace('%',''))||0;
+    const matchCount=history?history.filter(m=>m.players&&m.players[nick]).length:p.matches||0;
+    const avatarContent=cfg.avatar
+      ?`<img src="${cfg.avatar}" alt="${nick}" width="90" height="90" onerror="this.parentElement.innerHTML='<div class=\\'fifa-avatar-emoji\\'>${cfg.emoji}</div>'">`
+      :`<div class="fifa-avatar-emoji">${cfg.emoji}</div>`;
+    return`<div class="fifa-card" id="fifa-${nick}">
+      <div class="fifa-card-inner fifa-bg-${rC}">
+        <div style="display:flex;flex-direction:column;align-self:flex-start">
+          <div class="fifa-rating">${r.toFixed(0)}</div>
+          <div class="fifa-pos">CS2</div>
+        </div>
+        <div class="fifa-avatar-wrap">${avatarContent}</div>
+        <div class="fifa-nick">${nick}</div>
+        <div class="fifa-country">🇧🇷</div>
+        <div class="fifa-stats">
+          <div class="fifa-stat"><div class="fifa-stat-val">${(kd*10).toFixed(0)}</div><div class="fifa-stat-key">K/D</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(adr/1.3))}</div><div class="fifa-stat-key">ADR</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(hs*1.2))}</div><div class="fifa-stat-key">HS</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${Math.min(99,Math.round(kast))}</div><div class="fifa-stat-key">KST</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${matchCount}</div><div class="fifa-stat-key">JGS</div></div>
+          <div class="fifa-stat"><div class="fifa-stat-val">${r>=1.4?99:r>=1.15?85:r>=0.95?72:60}</div><div class="fifa-stat-key">OVR</div></div>
+        </div>
+        <button class="fifa-share-btn" onclick="shareFifaCard('${nick}',event)">📤</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+window.shareFifaCard=function(nick,e){
+  e.stopPropagation();
+  const el=document.getElementById('fifa-'+nick);
+  if(!el||!window.html2canvas)return;
+  html2canvas(el,{scale:3,useCORS:true,backgroundColor:null}).then(canvas=>{
+    canvas.toBlob(blob=>{
+      const file=new File([blob],`${nick}-cs-velharada.png`,{type:'image/png'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:`${nick} — CS Velharada`});
+      }else{
+        const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${nick}-cs-velharada.png`;a.click();
+      }
+    });
+  });
+};
+
+/* ===== IA ANÁLISE ===== */
+function generateAIAnalysis(match){
+  if(!match)return'';
+  const isWin=match.result==='W';
+  const players=match.players||{};
+  const entries=Object.entries(players).map(([nick,s])=>({nick,r:s.rating||0,kd:s.kd||0,adr:s.adr||0,hs:s.hs||0}));
+  if(!entries.length)return'<p>Sem dados de jogadores para esta partida.</p>';
+  entries.sort((a,b)=>b.r-a.r);
+  const mvp=entries[0];
+  const worst=entries[entries.length-1];
+  const avgRating=(entries.reduce((a,b)=>a+b.r,0)/entries.length).toFixed(2);
+  const highADR=entries.filter(p=>p.adr>=90);
+  const mapEmoji=MAP_EMOJIS[match.map]||'🗺️';
+  let txt='';
+  txt+=`<div class="ai-paragraph">`;
+  txt+=isWin
+    ?`O squad <span class="ai-good">venceu</span> em ${mapEmoji} <span class="ai-highlight">${match.map}</span> com placar <strong>${match.score||'—'}</strong>. `
+    :`O squad <span class="ai-bad">perdeu</span> em ${mapEmoji} <span class="ai-highlight">${match.map}</span> com placar <strong>${match.score||'—'}</strong>. `;
+  txt+=`Rating médio do squad foi <strong>${avgRating}</strong> — ${parseFloat(avgRating)>=1.1?'uma performance sólida 💪':'tem espaço para melhora 📈'}.`;
+  txt+=`</div>`;
+  txt+=`<div class="ai-paragraph">`;
+  txt+=`<span class="ai-gold">👑 ${mvp.nick}</span> foi o destaque da partida com rating <span class="ai-gold">${mvp.r.toFixed(2)}</span>`;
+  txt+=mvp.kd>=1.5?`, dominando o K/D com <strong>${mvp.kd.toFixed(2)}</strong>`:'';
+  txt+=mvp.hs>=50?` e ${mvp.hs.toFixed(0)}% de headshots 🎯`:'';
+  txt+=`.`;
+  txt+=`</div>`;
+  if(highADR.length){
+    txt+=`<div class="ai-paragraph">`;
+    txt+=`${highADR.map(p=>`<span class="ai-highlight">${p.nick}</span>`).join(' e ')} ${highADR.length===1?'teve':'tiveram'} ADR acima de 90 — <strong>excelente pressão</strong> durante os rounds. 💥`;
+    txt+=`</div>`;
+  }
+  if(worst.kd<0.85){
+    txt+=`<div class="ai-paragraph">`;
+    txt+=`<span class="ai-bad">${worst.nick}</span> teve dificuldades no ${match.map} com K/D de <span class="ai-bad">${worst.kd.toFixed(2)}</span>. `;
+    txt+=isWin?'Apesar disso, o time conseguiu segurar o resultado. 👏':'Pode ter sido um fator decisivo na derrota.';
+    txt+=`</div>`;
+  }
+  txt+=`<div class="ai-paragraph">`;
+  const tips=[
+    `Foco em utilitário e flash-play pode elevar a consistência em ${match.map}.`,
+    `Coordenação nos retakes foi chave — manter essa comunicação no próximo jogo.`,
+    `Entradas mais rápidas nos sites podem aumentar o aproveitamento do squad.`,
+    `Trabalhar o mid-control em ${match.map} pode abrir mais rotas de ataque.`,
+  ];
+  txt+=`💡 <em>${tips[Math.abs(match.map.length+entries.length)%tips.length]}</em>`;
+  txt+=`</div>`;
+  txt+=`<div class="ai-badge-row">`;
+  txt+=`<span class="ai-badge ${isWin?'ai-badge-win':'ai-badge-loss'}">${isWin?'✅ Vitória':'❌ Derrota'}</span>`;
+  txt+=`<span class="ai-badge ai-badge-neutral">${mapEmoji} ${match.map}</span>`;
+  txt+=`<span class="ai-badge ai-badge-neutral">👑 MVP: ${mvp.nick}</span>`;
+  txt+=`<span class="ai-badge ai-badge-neutral">⭐ Rating médio: ${avgRating}</span>`;
+  txt+=`</div>`;
+  return txt;
+}
+function renderAISection(history){
+  if(!history||!history.length)return;
+  document.getElementById('ai-section').style.display='';
+  const sorted=[...history].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const sel=document.getElementById('ai-match-select');
+  sel.innerHTML=sorted.map((m,i)=>{
+    const d=new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return`<option value="${i}">${m.result==='W'?'✅':'❌'} ${m.map} · ${m.score||'—'} · ${d}</option>`;
+  }).join('');
+  window._aiHistory=sorted;
+  document.getElementById('ai-analysis').innerHTML=generateAIAnalysis(sorted[0]);
+}
+window.onAISelectChange=function(sel){
+  const idx=parseInt(sel.value);
+  if(window._aiHistory&&window._aiHistory[idx])
+    document.getElementById('ai-analysis').innerHTML=generateAIAnalysis(window._aiHistory[idx]);
+};
+
+async function loadData(){
+  const grid=document.getElementById('squad-grid'),badge=document.getElementById('status-badge');
+  const msg=document.getElementById('status-msg'),upd=document.getElementById('last-update-text');
+  try{
+    const res=await fetch('./data.json?t='+Date.now());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    _allData=data;
+    const history=data.history||[];
+    const allEmpty=data.players.every(p=>!p.stats||!Object.keys(p.stats).length);
+    const hasHistory=Array.isArray(history)&&history.length>0;
+    if(allEmpty&&!hasHistory){
+      grid.innerHTML=`<div class="empty-state"><div class="ei">📭</div><h3>Aguardando primeira partida</h3><p>Após cada jogo, o dono do squad envia o print e os dados são atualizados aqui.</p></div>`;
+      badge.className='badge badge-muted';badge.textContent='● Aguardando dados';
+      msg.textContent='Nenhuma partida registrada ainda.';return;
+    }
+    if(hasHistory){
+      document.getElementById('global-filters').style.display='';
+      buildMapFilters(history);
+      const recs=calcRecords(history);
+      checkRecords(history);
+      if(!allEmpty){
+        const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
+        const maxR=Math.max(...ratings.filter(r=>r!==null));
+        grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,recs,i*60)).join('');
+        renderRanking(data.players);
+        animateBars();
+      }else{grid.innerHTML='';}
+      renderMeta(history);
+      renderMvpHistory(history);
+      renderMapWinrate(history);
+      renderChart(history);
+      renderFavMaps(history);
+      renderHistory(history);
+      renderAchievements(history);
+      renderHeatmap(history);
+      renderAISection(history);
+      renderFifaCards(data.players,history);
+      const cmpA=document.getElementById('cmp-a'),cmpB=document.getElementById('cmp-b');
+      if(cmpA&&!cmpA.innerHTML){
+        const nicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
+        const opts=nicks.map(n=>`<option value="${n}">${n}</option>`).join('');
+        cmpA.innerHTML=opts;cmpB.innerHTML=opts;
+        if(nicks.length>1)cmpB.selectedIndex=1;
+        document.getElementById('compare-section').style.display='';
+        renderComparator();
+      }
+    }else if(!allEmpty){
+      const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
+      const maxR=Math.max(...ratings.filter(r=>r!==null));
+      grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,{},i*60)).join('');
+      renderRanking(data.players);
+      animateBars();
+      renderFifaCards(data.players,history);
+    }
+    badge.className='badge badge-green';badge.textContent='● Ao vivo';
+    if(data.lastUpdate){
+      const d=new Date(data.lastUpdate);
+      upd.textContent='Atualizado: '+d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const total=data.players.reduce((acc,p)=>acc+(p.matches||0),0);
+      msg.textContent=`${data.players.length} jogadores · ${total} partidas · GC Rating ativo`;
+    }
+  }catch(e){
+    badge.className='badge badge-muted';badge.textContent='● Erro';
+    msg.textContent='Erro ao carregar data.json';
+    grid.innerHTML=`<div class="empty-state"><div class="ei">⚠️</div><h3>Erro</h3><p>${e.message}</p></div>`;
+  }
+}
+loadData();
+setInterval(loadData,30000);
+</script>
+</body>
+</html>
