@@ -1,13 +1,18 @@
 {
-  "lastUpdate": null,
+  "lastUpdate": "2026-05-06T14:45:00.000Z",
   "players": [
     {
       "playerNick": "DU",
       "playerId": "1311055",
       "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "0.63",
+        "ADR": "60.95",
+        "KAST": "60.0%",
+        "HS": "0%"
+      },
+      "matches": 1,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     },
     {
       "playerNick": "Chavera",
@@ -21,42 +26,369 @@
       "playerNick": "Flavinho",
       "playerId": "822519",
       "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "1.59",
+        "ADR": "85.14",
+        "KAST": "73.1%",
+        "HS": "0%"
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     },
     {
       "playerNick": "Chara",
       "playerId": "chara",
       "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "1.41",
+        "ADR": "87.29",
+        "KAST": "77.0%",
+        "HS": "0%"
+      },
+      "matches": 6,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     },
     {
       "playerNick": "Dukka",
       "playerId": "24134",
       "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "0.88",
+        "ADR": "75.73",
+        "KAST": "69.0%",
+        "HS": "0%"
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     },
     {
       "playerNick": "Cq",
       "playerId": "1489954",
       "level": "21",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "1.9",
+        "ADR": "85.17",
+        "KAST": "66.3%",
+        "HS": "0%"
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     },
     {
       "playerNick": "Fluyr",
-      "playerId": "123456",
+      "playerId": "fluyr",
       "level": "20",
-      "stats": {},
-      "matches": 0,
-      "updatedAt": null
+      "stats": {
+        "KDR": "1.01",
+        "ADR": "77.65",
+        "KAST": "69.0%",
+        "HS": "0%"
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T14:45:00.000Z"
     }
   ],
-  "history": []
+  "history": [
+    {
+      "date": "2026-05-06T11:08:44",
+      "map": "Mirage",
+      "score": "13-11",
+      "result": "W",
+      "players": {
+        "Flavinho": {
+          "kd": 1.86,
+          "adr": 93.75,
+          "hs": 0,
+          "kast": 88,
+          "rating": 1.11
+        },
+        "Chara": {
+          "kd": 1.18,
+          "adr": 91.96,
+          "hs": 0,
+          "kast": 79,
+          "rating": 0.85
+        },
+        "Cq": {
+          "kd": 1.43,
+          "adr": 91.88,
+          "hs": 0,
+          "kast": 75,
+          "rating": 0.93
+        },
+        "Fluyr": {
+          "kd": 0.81,
+          "adr": 72.04,
+          "hs": 0,
+          "kast": 67,
+          "rating": 0.63
+        },
+        "Dukka": {
+          "kd": 0.88,
+          "adr": 70.96,
+          "hs": 0,
+          "kast": 67,
+          "rating": 0.65
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:08:51",
+      "map": "Inferno",
+      "score": "7-13",
+      "result": "L",
+      "players": {
+        "Flavinho": {
+          "kd": 1.29,
+          "adr": 80.1,
+          "hs": 0,
+          "kast": 75,
+          "rating": 0.84
+        },
+        "Fluyr": {
+          "kd": 0.63,
+          "adr": 77.1,
+          "hs": 0,
+          "kast": 60,
+          "rating": 0.57
+        },
+        "Dukka": {
+          "kd": 0.69,
+          "adr": 66.05,
+          "hs": 0,
+          "kast": 55,
+          "rating": 0.55
+        },
+        "DU": {
+          "kd": 0.63,
+          "adr": 60.95,
+          "hs": 0,
+          "kast": 60,
+          "rating": 0.52
+        },
+        "Cq": {
+          "kd": 0.63,
+          "adr": 52.0,
+          "hs": 0,
+          "kast": 40,
+          "rating": 0.46
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:09:38",
+      "map": "Nuke",
+      "score": "13-2",
+      "result": "W",
+      "players": {
+        "Fluyr": {
+          "kd": 2.0,
+          "adr": 111.53,
+          "hs": 0,
+          "kast": 100,
+          "rating": 1.23
+        },
+        "Cq": {
+          "kd": 6.33,
+          "adr": 102.73,
+          "hs": 0,
+          "kast": 87,
+          "rating": 2.7
+        },
+        "Chara": {
+          "kd": 1.63,
+          "adr": 101.53,
+          "hs": 0,
+          "kast": 93,
+          "rating": 1.06
+        },
+        "Flavinho": {
+          "kd": 1.78,
+          "adr": 88.27,
+          "hs": 0,
+          "kast": 80,
+          "rating": 1.05
+        },
+        "Dukka": {
+          "kd": 1.11,
+          "adr": 79.8,
+          "hs": 0,
+          "kast": 93,
+          "rating": 0.81
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:09:31",
+      "map": "Ancient",
+      "score": "5-13",
+      "result": "L",
+      "players": {
+        "Chara": {
+          "kd": 1.14,
+          "adr": 85.22,
+          "hs": 0,
+          "kast": 56,
+          "rating": 0.77
+        },
+        "Fluyr": {
+          "kd": 0.87,
+          "adr": 84.22,
+          "hs": 0,
+          "kast": 67,
+          "rating": 0.69
+        },
+        "Dukka": {
+          "kd": 0.5,
+          "adr": 84.72,
+          "hs": 0,
+          "kast": 56,
+          "rating": 0.54
+        },
+        "Cq": {
+          "kd": 0.5,
+          "adr": 48.61,
+          "hs": 0,
+          "kast": 50,
+          "rating": 0.42
+        },
+        "Flavinho": {
+          "kd": 0.31,
+          "adr": 40.06,
+          "hs": 0,
+          "kast": 50,
+          "rating": 0.33
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:08:58",
+      "map": "Anubis",
+      "score": "13-6",
+      "result": "W",
+      "players": {
+        "Flavinho": {
+          "kd": 3.22,
+          "adr": 123.79,
+          "hs": 0,
+          "kast": 74,
+          "rating": 1.65
+        },
+        "Dukka": {
+          "kd": 1.18,
+          "adr": 85.79,
+          "hs": 0,
+          "kast": 68,
+          "rating": 0.81
+        },
+        "Fluyr": {
+          "kd": 1.33,
+          "adr": 85.11,
+          "hs": 0,
+          "kast": 74,
+          "rating": 0.87
+        },
+        "Chara": {
+          "kd": 1.09,
+          "adr": 72.89,
+          "hs": 0,
+          "kast": 79,
+          "rating": 0.76
+        },
+        "Cq": {
+          "kd": 0.71,
+          "adr": 60.74,
+          "hs": 0,
+          "kast": 47,
+          "rating": 0.52
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:09:52",
+      "map": "Vertigo",
+      "score": "13-8",
+      "result": "W",
+      "players": {
+        "Cq": {
+          "kd": 1.71,
+          "adr": 120.38,
+          "hs": 0,
+          "kast": 86,
+          "rating": 1.13
+        },
+        "Flavinho": {
+          "kd": 1.54,
+          "adr": 99.14,
+          "hs": 0,
+          "kast": 71,
+          "rating": 0.98
+        },
+        "Dukka": {
+          "kd": 0.82,
+          "adr": 77.67,
+          "hs": 0,
+          "kast": 76,
+          "rating": 0.67
+        },
+        "Chara": {
+          "kd": 1.29,
+          "adr": 77.67,
+          "hs": 0,
+          "kast": 71,
+          "rating": 0.83
+        },
+        "Fluyr": {
+          "kd": 0.5,
+          "adr": 42.57,
+          "hs": 0,
+          "kast": 57,
+          "rating": 0.42
+        }
+      }
+    },
+    {
+      "date": "2026-05-06T11:09:24",
+      "map": "Dust2",
+      "score": "13-6",
+      "result": "W",
+      "players": {
+        "Cq": {
+          "kd": 2.0,
+          "adr": 119.84,
+          "hs": 0,
+          "kast": 79,
+          "rating": 1.22
+        },
+        "Chara": {
+          "kd": 2.11,
+          "adr": 94.47,
+          "hs": 0,
+          "kast": 84,
+          "rating": 1.19
+        },
+        "Fluyr": {
+          "kd": 0.92,
+          "adr": 70.95,
+          "hs": 0,
+          "kast": 58,
+          "rating": 0.65
+        },
+        "Flavinho": {
+          "kd": 1.1,
+          "adr": 70.84,
+          "hs": 0,
+          "kast": 74,
+          "rating": 0.75
+        },
+        "Dukka": {
+          "kd": 1.0,
+          "adr": 65.11,
+          "hs": 0,
+          "kast": 68,
+          "rating": 0.68
+        }
+      }
+    }
+  ]
 }
