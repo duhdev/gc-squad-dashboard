@@ -1,13 +1,186 @@
 {
-  "lastUpdate": "2026-05-04T17:00:00.000Z",
+  "lastUpdate": "2026-05-06T12:00:00.000Z",
   "players": [
-    {"playerNick":"DU","playerId":"1311055","level":"20","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Chavera","playerId":"13547","level":"20","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Flavinho","playerId":"822519","level":"20","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Chara","playerId":"chara","level":"20","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Dukka","playerId":"24134","level":"20","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Cq","playerId":"1489954","level":"21","stats":{},"matches":0,"updatedAt":null},
-    {"playerNick":"Fluyr","playerId":"fluyr","level":"20","stats":{},"matches":0,"updatedAt":null},
+    {
+      "playerNick": "DU",
+      "playerId": "1311055",
+      "level": "20",
+      "stats": {},
+      "matches": 0,
+      "updatedAt": null
+    },
+    {
+      "playerNick": "Chavera",
+      "playerId": "13547",
+      "level": "20",
+      "stats": {},
+      "matches": 0,
+      "updatedAt": null
+    },
+    {
+      "playerNick": "Flavinho",
+      "playerId": "822519",
+      "level": "20",
+      "stats": {
+        "KD": 1.47,
+        "ADR": 85.14,
+        "KAST": 73.14,
+        "kills": 125,
+        "assists": 24,
+        "deaths": 85,
+        "MK": 35,
+        "FK": 13,
+        "RP": 3.57
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T12:00:00.000Z"
+    },
+    {
+      "playerNick": "Chara",
+      "playerId": "chara",
+      "level": "20",
+      "stats": {
+        "KD": 1.34,
+        "ADR": 87.29,
+        "KAST": 77.00,
+        "kills": 98,
+        "assists": 29,
+        "deaths": 73,
+        "MK": 24,
+        "FK": 21,
+        "RP": 4.33
+      },
+      "matches": 6,
+      "updatedAt": "2026-05-06T12:00:00.000Z"
+    },
+    {
+      "playerNick": "Dukka",
+      "playerId": "24134",
+      "level": "20",
+      "stats": {
+        "KD": 0.84,
+        "ADR": 72.87,
+        "KAST": 69.00,
+        "kills": 85,
+        "assists": 46,
+        "deaths": 101,
+        "MK": 18,
+        "FK": 14,
+        "RP": 2.00
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T12:00:00.000Z"
+    },
+    {
+      "playerNick": "Cq",
+      "playerId": "1489954",
+      "level": "21",
+      "stats": {
+        "KD": 1.30,
+        "ADR": 85.17,
+        "KAST": 66.29,
+        "kills": 112,
+        "assists": 29,
+        "deaths": 86,
+        "MK": 28,
+        "FK": 10,
+        "RP": 2.71
+      },
+      "matches": 7,
+      "updatedAt": "2026-05-06T12:00:00.000Z"
+    }
   ],
-  "history": []
+  "history": [
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "W",
+      "score": "13-6",
+      "players": [
+        {"nick": "Cq", "K": 22, "A": 5, "D": 11, "ADR": 119.84, "KDR": 2.00, "KAST": 79, "MK": 6, "FK": 2, "RP": 14},
+        {"nick": "Chara", "K": 19, "A": 4, "D": 9, "ADR": 94.47, "KDR": 2.11, "KAST": 84, "MK": 5, "FK": 5, "RP": 13},
+        {"nick": "FLUFLU DELIRA", "K": 11, "A": 4, "D": 12, "ADR": 70.95, "KDR": 0.92, "KAST": 58, "MK": 4, "FK": 0, "RP": 9},
+        {"nick": "Flavinho", "K": 11, "A": 5, "D": 10, "ADR": 70.84, "KDR": 1.10, "KAST": 74, "MK": 1, "FK": 1, "RP": 10},
+        {"nick": "Dukka", "K": 14, "A": 5, "D": 14, "ADR": 65.11, "KDR": 1.00, "KAST": 68, "MK": 2, "FK": 2, "RP": 10}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "W",
+      "score": "13-8",
+      "players": [
+        {"nick": "Cq", "K": 24, "A": 7, "D": 14, "ADR": 120.38, "KDR": 1.71, "KAST": 86, "MK": 7, "FK": 3, "RP": 16},
+        {"nick": "Flavinho", "K": 20, "A": 4, "D": 13, "ADR": 99.14, "KDR": 1.54, "KAST": 71, "MK": 6, "FK": 0, "RP": 12},
+        {"nick": "Dukka", "K": 14, "A": 10, "D": 17, "ADR": 77.67, "KDR": 0.82, "KAST": 76, "MK": 4, "FK": 5, "RP": 13},
+        {"nick": "Chara", "K": 18, "A": 2, "D": 14, "ADR": 77.67, "KDR": 1.29, "KAST": 71, "MK": 4, "FK": 2, "RP": 7},
+        {"nick": "FLUFLU DELIRA", "K": 7, "A": 3, "D": 14, "ADR": 42.57, "KDR": 0.50, "KAST": 57, "MK": 1, "FK": 0, "RP": 7}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "W",
+      "score": "13-2",
+      "players": [
+        {"nick": "FLUFLU DELIRA", "K": 14, "A": 7, "D": 7, "ADR": 111.53, "KDR": 2.00, "KAST": 100, "MK": 2, "FK": 4, "RP": 12},
+        {"nick": "Cq", "K": 19, "A": 2, "D": 3, "ADR": 102.73, "KDR": 6.33, "KAST": 87, "MK": 5, "FK": 1, "RP": 14},
+        {"nick": "Chara", "K": 13, "A": 6, "D": 8, "ADR": 101.53, "KDR": 1.63, "KAST": 93, "MK": 3, "FK": 4, "RP": 8},
+        {"nick": "Flavinho", "K": 16, "A": 3, "D": 9, "ADR": 88.27, "KDR": 1.78, "KAST": 80, "MK": 4, "FK": 1, "RP": 9},
+        {"nick": "Dukka", "K": 10, "A": 7, "D": 9, "ADR": 79.80, "KDR": 1.11, "KAST": 93, "MK": 1, "FK": 2, "RP": 9}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "W",
+      "score": "13-11",
+      "players": [
+        {"nick": "Flavinho", "K": 26, "A": 4, "D": 14, "ADR": 93.75, "KDR": 1.86, "KAST": 88, "MK": 9, "FK": 5, "RP": 12},
+        {"nick": "Chara", "K": 20, "A": 11, "D": 17, "ADR": 91.96, "KDR": 1.18, "KAST": 79, "MK": 4, "FK": 2, "RP": 6},
+        {"nick": "Cq", "K": 20, "A": 7, "D": 14, "ADR": 91.88, "KDR": 1.43, "KAST": 75, "MK": 6, "FK": 1, "RP": 11},
+        {"nick": "FLUFLU DELIRA", "K": 13, "A": 6, "D": 16, "ADR": 72.04, "KDR": 0.81, "KAST": 67, "MK": 4, "FK": 2, "RP": 8},
+        {"nick": "Dukka", "K": 14, "A": 7, "D": 16, "ADR": 70.96, "KDR": 0.88, "KAST": 67, "MK": 3, "FK": 1, "RP": 6}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "L",
+      "score": "5-13",
+      "players": [
+        {"nick": "Chara", "K": 16, "A": 2, "D": 14, "ADR": 85.22, "KDR": 1.14, "KAST": 56, "MK": 6, "FK": 2, "RP": -14},
+        {"nick": "FLUFLU DELIRA", "K": 13, "A": 6, "D": 15, "ADR": 84.22, "KDR": 0.87, "KAST": 67, "MK": 4, "FK": 2, "RP": -11},
+        {"nick": "Dukka", "K": 9, "A": 3, "D": 18, "ADR": 64.72, "KDR": 0.50, "KAST": 56, "MK": 1, "FK": 1, "RP": -21},
+        {"nick": "Cq", "K": 7, "A": 4, "D": 14, "ADR": 48.61, "KDR": 0.50, "KAST": 50, "MK": 0, "FK": 0, "RP": -24},
+        {"nick": "Flavinho", "K": 5, "A": 4, "D": 16, "ADR": 40.06, "KDR": 0.31, "KAST": 50, "MK": 2, "FK": 2, "RP": -25}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "W",
+      "score": "13-6",
+      "players": [
+        {"nick": "Flavinho", "K": 29, "A": 2, "D": 9, "ADR": 123.79, "KDR": 3.22, "KAST": 74, "MK": 9, "FK": 3, "RP": 15},
+        {"nick": "Dukka", "K": 13, "A": 8, "D": 11, "ADR": 85.79, "KDR": 1.18, "KAST": 68, "MK": 4, "FK": 1, "RP": 10},
+        {"nick": "FLUFLU DELIRA", "K": 12, "A": 6, "D": 9, "ADR": 85.11, "KDR": 1.33, "KAST": 74, "MK": 2, "FK": 2, "RP": 11},
+        {"nick": "Chara", "K": 12, "A": 4, "D": 11, "ADR": 72.89, "KDR": 1.09, "KAST": 79, "MK": 2, "FK": 6, "RP": 6},
+        {"nick": "Cq", "K": 10, "A": 4, "D": 14, "ADR": 60.74, "KDR": 0.71, "KAST": 47, "MK": 3, "FK": 2, "RP": 7}
+      ]
+    },
+    {
+      "date": "2026-05-06T12:00:00",
+      "map": "Desconhecido",
+      "result": "L",
+      "score": "7-13",
+      "players": [
+        {"nick": "Flavinho", "K": 18, "A": 2, "D": 14, "ADR": 80.10, "KDR": 1.29, "KAST": 75, "MK": 4, "FK": 1, "RP": -8},
+        {"nick": "FLUFLU DELIRA", "K": 10, "A": 6, "D": 16, "ADR": 77.10, "KDR": 0.63, "KAST": 60, "MK": 2, "FK": 2, "RP": -12},
+        {"nick": "Dukka", "K": 11, "A": 6, "D": 16, "ADR": 66.05, "KDR": 0.69, "KAST": 55, "MK": 3, "FK": 2, "RP": -13},
+        {"nick": "H34D5H07M4CH1N3", "K": 10, "A": 3, "D": 16, "ADR": 60.95, "KDR": 0.63, "KAST": 60, "MK": 1, "FK": 1, "RP": -16},
+        {"nick": "Cq", "K": 10, "A": 0, "D": 16, "ADR": 52.00, "KDR": 0.63, "KAST": 40, "MK": 1, "FK": 1, "RP": -19}
+      ]
+    }
+  ]
 }
