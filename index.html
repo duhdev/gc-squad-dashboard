@@ -3,1136 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CS Velharada — Squad Dashboard</title>
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<title>GC Squad Dashboard - Velha Rada</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
 <style>
-:root{--font-body:'Satoshi','Inter',sans-serif;--text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);--text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);--text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);--space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;--transition:180ms cubic-bezier(0.16,1,0.3,1);}
-:root,[data-theme="light"]{--bg:#f0f2f5;--surface:#fff;--surface-2:#f7f8fa;--border:rgba(0,0,0,0.08);--divider:rgba(0,0,0,0.06);--text:#111827;--text-muted:#6b7280;--text-faint:#9ca3af;--accent:#ff6b35;--accent-h:#e55a26;--accent-bg:rgba(255,107,53,0.1);--green:#16a34a;--green-bg:rgba(22,163,74,0.1);--blue:#2563eb;--blue-bg:rgba(37,99,235,0.1);--gold:#d97706;--gold-bg:rgba(217,119,6,0.1);--red:#dc2626;--red-bg:rgba(220,38,38,0.1);--purple:#7c3aed;--purple-bg:rgba(124,58,237,0.1);--shadow-sm:0 1px 3px rgba(0,0,0,0.06);--shadow-md:0 4px 16px rgba(0,0,0,0.08);--shadow-lg:0 12px 40px rgba(0,0,0,0.12);}
-[data-theme="dark"]{--bg:#0d0f12;--surface:#161a20;--surface-2:#1c2028;--border:rgba(255,255,255,0.07);--divider:rgba(255,255,255,0.04);--text:#e5e7eb;--text-muted:#9ca3af;--text-faint:#4b5563;--accent:#ff6b35;--accent-h:#ff8255;--accent-bg:rgba(255,107,53,0.12);--green:#4ade80;--green-bg:rgba(74,222,128,0.1);--blue:#60a5fa;--blue-bg:rgba(96,165,250,0.1);--gold:#fbbf24;--gold-bg:rgba(251,191,36,0.1);--red:#f87171;--red-bg:rgba(248,113,113,0.1);--purple:#a78bfa;--purple-bg:rgba(167,139,250,0.1);--shadow-sm:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 16px rgba(0,0,0,0.4);--shadow-lg:0 12px 40px rgba(0,0,0,0.5);}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
-body{font-family:var(--font-body);font-size:var(--text-base);color:var(--text);background:var(--bg);min-height:100dvh;line-height:1.6;}
-button{cursor:pointer;font:inherit;background:none;border:none;color:inherit;}
-img{display:block;max-width:100%;height:auto;}
-a,button{transition:color var(--transition),background var(--transition),border-color var(--transition),box-shadow var(--transition);}
-.header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
-.header-inner{max-width:1400px;margin:0 auto;padding:var(--space-4) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);}
-.logo{display:flex;align-items:center;gap:var(--space-3);}
-.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-md);display:grid;place-items:center;font-size:18px;flex-shrink:0;}
-.logo-text{font-weight:700;font-size:var(--text-lg);color:var(--text);}
-.logo-text span{color:var(--accent);}
-.header-meta{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap;}
-.badge{display:inline-flex;align-items:center;gap:var(--space-1);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500;}
-.badge-green{background:var(--green-bg);color:var(--green);}
-.badge-muted{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border);}
-.last-update{font-size:var(--text-xs);color:var(--text-muted);}
-.theme-toggle{width:36px;height:36px;border-radius:var(--radius-md);display:grid;place-items:center;color:var(--text-muted);border:1px solid var(--border);}
-.theme-toggle:hover{background:var(--surface-2);color:var(--text);}
-.main{max-width:1400px;margin:0 auto;padding:var(--space-8) var(--space-6);}
-.status-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-5);margin-bottom:var(--space-6);display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:var(--text-muted);}
-.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
-.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:var(--space-4);margin-bottom:var(--space-8);}
-.meta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);text-align:center;}
-.meta-card-icon{font-size:28px;margin-bottom:var(--space-2);}
-.meta-card-value{font-size:var(--text-xl);font-weight:700;line-height:1;}
-.meta-card-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1);}
-.streak-win{color:var(--green)!important;}
-.streak-loss{color:var(--red)!important;}
-.ranking-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5) var(--space-6);margin-bottom:var(--space-8);overflow-x:auto;}
-.ranking-title{font-size:var(--text-sm);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:var(--space-4);}
-.ranking-list{display:flex;gap:var(--space-3);min-width:max-content;}
-.ranking-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--surface-2);border-radius:var(--radius-lg);border:1px solid var(--border);min-width:190px;}
-.ranking-item.rank-1{border-color:var(--gold);background:var(--gold-bg);}
-.ranking-item.rank-2{border-color:rgba(156,163,175,0.4);}
-.ranking-item.rank-3{border-color:rgba(180,120,60,0.4);}
-.rank-pos{font-size:var(--text-lg);line-height:1;width:28px;text-align:center;}
-.rank-avatar{width:32px;height:32px;border-radius:var(--radius-full);border:2px solid var(--border);background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;}
-.rank-avatar img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius-full);}
-.rank-nick{font-weight:700;font-size:var(--text-sm);color:var(--text);}
-.rank-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.rank-rating{font-weight:700;font-size:var(--text-base);color:var(--accent);margin-left:auto;font-variant-numeric:tabular-nums;}
-.section-title{font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-5);display:flex;align-items:center;gap:var(--space-3);color:var(--text);}
-.section-title::after{content:'';flex:1;height:1px;background:var(--divider);}
-.global-filters{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-6);align-items:center;}
-.filter-group{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center;}
-.filter-label{font-size:var(--text-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
-.filter-btn{padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;border:1px solid var(--border);color:var(--text-muted);background:var(--surface-2);}
-.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.filter-btn:hover:not(.active){background:var(--border);color:var(--text);}
-.squad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(360px,100%),1fr));gap:var(--space-5);margin-bottom:var(--space-10);}
-.player-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition),transform var(--transition);position:relative;overflow:hidden;cursor:pointer;}
-.player-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
-.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);opacity:0;transition:opacity var(--transition);}
-.player-card:hover::before,.player-card.mvp::before{opacity:1;}
-.player-card.mvp{border-color:rgba(251,191,36,0.4);}
-.player-card.mvp::before{background:linear-gradient(90deg,var(--gold),var(--accent));}
-.player-card.card-enter{animation:cardEnter .5s cubic-bezier(0.16,1,0.3,1) both;}
-@keyframes cardEnter{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.no-data-card{background:var(--surface-2);border:1px dashed var(--border);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:var(--space-2);min-height:200px;}
-.no-data-card .nd-avatar{width:64px;height:64px;border-radius:var(--radius-full);border:3px solid var(--border);margin-bottom:var(--space-2);background:var(--surface);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;}
-.no-data-card .nd-avatar img{width:100%;height:100%;object-fit:cover;}
-.no-data-card .nd-nick{font-weight:700;font-size:var(--text-base);color:var(--text);}
-.no-data-card .nd-msg{font-size:var(--text-xs);color:var(--text-muted);}
-.player-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5);}
-.player-avatar{width:56px;height:56px;border-radius:var(--radius-full);border:3px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;background:var(--surface-2);overflow:hidden;}
-.player-card.mvp .player-avatar{border-color:var(--gold);}
-.player-avatar img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius-full);}
-.player-info{flex:1;min-width:0;}
-.player-nick{font-size:var(--text-lg);font-weight:700;line-height:1.2;}
-.player-gc-nick{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.player-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-.player-level{background:var(--accent-bg);color:var(--accent);border-radius:var(--radius-sm);padding:2px var(--space-2);font-size:var(--text-xs);font-weight:700;}
-.matches-badge{font-size:var(--text-xs);color:var(--text-faint);}
-.gc-rating-wrap{display:flex;flex-direction:column;align-items:center;}
-.gc-rating-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-faint);margin-bottom:1px;}
-.gc-rating-value{font-size:var(--text-xl);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
-.elite{color:var(--gold)!important;}.great{color:var(--green)!important;}.good{color:var(--blue)!important;}.average{color:var(--text-muted)!important;}.below{color:var(--red)!important;}
-.kast-row{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-4);}
-.kast-item{text-align:center;background:var(--accent-bg);border:1px solid rgba(255,107,53,0.15);border-radius:var(--radius-md);padding:var(--space-2);}
-.kast-value{font-size:var(--text-base);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;}
-.kast-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-4);}
-.stat-item{text-align:center;background:var(--surface-2);border-radius:var(--radius-md);padding:var(--space-3) var(--space-2);position:relative;}
-.stat-value{font-size:var(--text-lg);font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;}
-.stat-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:var(--space-1);font-weight:500;}
-.stat-record{position:absolute;top:4px;right:4px;font-size:9px;background:var(--gold-bg);color:var(--gold);padding:1px 5px;border-radius:var(--radius-full);font-weight:700;}
-.rating-bar-wrap{margin-top:var(--space-2);}
-.rating-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2);font-size:var(--text-xs);color:var(--text-muted);}
-.rating-bar-track{height:6px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
-.rating-bar-fill{height:100%;border-radius:var(--radius-full);transition:width .8s cubic-bezier(0.16,1,0.3,1);}
-.consistency-bar{margin-top:var(--space-2);}
-.consistency-label{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--text-muted);margin-bottom:4px;}
-.consistency-track{height:4px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
-.consistency-fill{height:100%;border-radius:var(--radius-full);background:var(--purple);}
-.player-footer{display:flex;align-items:center;justify-content:space-between;padding-top:var(--space-4);border-top:1px solid var(--divider);margin-top:var(--space-4);}
-.player-link{font-size:var(--text-xs);color:var(--accent);text-decoration:none;font-weight:500;}
-.player-link:hover{color:var(--accent-h);}
-.player-updated{font-size:var(--text-xs);color:var(--text-faint);}
-.mvp-section{margin-bottom:var(--space-10);}
-.mvp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(160px,100%),1fr));gap:var(--space-4);}
-.mvp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4);text-align:center;box-shadow:var(--shadow-sm);}
-.mvp-card.top{border-color:var(--gold);background:var(--gold-bg);}
-.mvp-count{font-size:var(--text-xl);font-weight:700;color:var(--gold);}
-.mvp-nick{font-weight:700;font-size:var(--text-sm);margin-top:4px;}
-.mvp-label{font-size:var(--text-xs);color:var(--text-muted);}
-.mapwr-section{margin-bottom:var(--space-10);}
-.mapwr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:var(--space-4);}
-.mapwr-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4);box-shadow:var(--shadow-sm);}
-.mapwr-map{font-size:22px;margin-bottom:4px;}
-.mapwr-name{font-weight:700;font-size:var(--text-sm);}
-.mapwr-rate{font-size:var(--text-lg);font-weight:700;margin-top:4px;}
-.mapwr-detail{font-size:var(--text-xs);color:var(--text-muted);}
-.mapwr-bar-track{height:5px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;margin-top:6px;}
-.mapwr-bar-fill{height:100%;border-radius:var(--radius-full);}
-.chart-section{margin-bottom:var(--space-10);}
-.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
-.chart-filters{display:flex;gap:var(--space-2);margin-bottom:var(--space-5);flex-wrap:wrap;}
-.chart-filter-btn{padding:var(--space-1) var(--space-4);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;border:1px solid var(--border);color:var(--text-muted);background:var(--surface-2);}
-.chart-filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.chart-filter-btn:hover:not(.active){background:var(--border);color:var(--text);}
-.chart-container{position:relative;height:280px;}
-.map-section{margin-bottom:var(--space-10);}
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:var(--space-4);}
-.map-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);text-align:center;}
-.map-card-nick{font-weight:700;font-size:var(--text-base);margin-bottom:var(--space-2);}
-.map-card-map{font-size:var(--text-xl);margin-bottom:var(--space-1);}
-.map-card-name{font-size:var(--text-sm);font-weight:700;color:var(--accent);margin-bottom:var(--space-1);}
-.map-card-stat{font-size:var(--text-xs);color:var(--text-muted);}
-.history-section{margin-bottom:var(--space-10);}
-.history-list{display:flex;flex-direction:column;gap:var(--space-3);}
-.history-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4) var(--space-5);box-shadow:var(--shadow-sm);}
-.history-card.win{border-left:4px solid var(--green);}
-.history-card.loss{border-left:4px solid var(--red);}
-.history-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-3);flex-wrap:wrap;}
-.history-result{font-size:var(--text-sm);font-weight:700;padding:2px var(--space-3);border-radius:var(--radius-full);}
-.history-result.win{background:var(--green-bg);color:var(--green);}
-.history-result.loss{background:var(--red-bg);color:var(--red);}
-.history-map{font-weight:700;font-size:var(--text-base);}
-.history-score{font-size:var(--text-sm);color:var(--text-muted);}
-.history-date{font-size:var(--text-xs);color:var(--text-faint);margin-left:auto;}
-.history-actions{display:flex;gap:var(--space-2);align-items:center;}
-.share-btn{font-size:var(--text-xs);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);background:var(--accent-bg);color:var(--accent);border:1px solid rgba(255,107,53,0.2);font-weight:600;}
-.share-btn:hover{background:var(--accent);color:#fff;}
-.history-players{display:flex;flex-wrap:wrap;gap:var(--space-2);}
-.history-player{display:flex;align-items:center;gap:var(--space-2);background:var(--surface-2);border-radius:var(--radius-md);padding:var(--space-1) var(--space-3);font-size:var(--text-xs);}
-.history-player-nick{font-weight:700;}
-.history-player-rating{font-weight:700;font-variant-numeric:tabular-nums;}
-.history-mvp-badge{font-size:9px;background:var(--gold-bg);color:var(--gold);padding:1px 6px;border-radius:var(--radius-full);font-weight:700;margin-left:4px;}
-.compare-section{margin-bottom:var(--space-10);}
-.compare-selects{display:flex;gap:var(--space-4);margin-bottom:var(--space-5);flex-wrap:wrap;align-items:center;}
-.compare-select{padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:var(--text-sm);}
-.compare-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-sm);}
-.compare-table table{width:100%;border-collapse:collapse;}
-.compare-table th,.compare-table td{padding:var(--space-3) var(--space-5);text-align:center;font-size:var(--text-sm);border-bottom:1px solid var(--divider);}
-.compare-table th{background:var(--surface-2);font-weight:700;color:var(--text-muted);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.05em;}
-.compare-table tr:last-child td{border-bottom:none;}
-.compare-winner{color:var(--green);font-weight:700;}
-.compare-stat-label{text-align:left!important;color:var(--text-muted);font-weight:600;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:var(--space-4);backdrop-filter:blur(4px);}
-.modal-overlay.hidden{display:none;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);}
-.modal-header{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-6);border-bottom:1px solid var(--divider);}
-.modal-close{margin-left:auto;width:32px;height:32px;border-radius:var(--radius-md);display:grid;place-items:center;color:var(--text-muted);border:1px solid var(--border);font-size:18px;}
-.modal-close:hover{background:var(--surface-2);}
-.modal-body{padding:var(--space-6);}
-.modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
-.modal-history{display:flex;flex-direction:column;gap:var(--space-2);}
-.modal-history-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);background:var(--surface-2);border-radius:var(--radius-md);font-size:var(--text-xs);}
-.modal-records{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
-.modal-record-item{background:var(--gold-bg);border:1px solid rgba(251,191,36,0.2);border-radius:var(--radius-md);padding:var(--space-3);text-align:center;}
-.modal-record-val{font-size:var(--text-lg);font-weight:700;color:var(--gold);}
-.modal-record-label{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.notif-toast{position:fixed;bottom:var(--space-6);right:var(--space-6);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4) var(--space-5);box-shadow:var(--shadow-lg);z-index:300;display:flex;align-items:center;gap:var(--space-3);max-width:340px;transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(0.16,1,0.3,1);}
-.notif-toast.show{transform:translateY(0);opacity:1;}
-.notif-icon{font-size:24px;flex-shrink:0;}
-.notif-text{font-size:var(--text-sm);}
-.notif-title{font-weight:700;}
-.notif-msg{color:var(--text-muted);font-size:var(--text-xs);}
-.empty-state{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-12) var(--space-8);text-align:center;}
-.empty-state .ei{font-size:48px;margin-bottom:var(--space-4);}
-.empty-state h3{font-size:var(--text-lg);margin-bottom:var(--space-2);}
-.empty-state p{color:var(--text-muted);font-size:var(--text-sm);max-width:42ch;margin:0 auto;}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
-.skeleton{background:linear-gradient(90deg,var(--surface-2) 25%,var(--border) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.5s ease-in-out infinite;border-radius:var(--radius-sm);}
-.sk-avatar{width:56px;height:56px;border-radius:var(--radius-full);}
-.sk-title{height:20px;width:60%;}.sk-sub{height:14px;width:40%;margin-top:8px;}
-.sk-stat{height:54px;border-radius:var(--radius-md);}.sk-bar{height:6px;border-radius:var(--radius-full);margin-top:1rem;}
-.footer{text-align:center;padding:var(--space-8);font-size:var(--text-xs);color:var(--text-faint);border-top:1px solid var(--divider);}
-@media(max-width:640px){.header-inner{padding:var(--space-3) var(--space-4);}.main{padding:var(--space-5) var(--space-4);}.last-update{display:none;}.compare-table th,.compare-table td{padding:var(--space-2) var(--space-3);}}
-/* BADGE DE FORMA */
-.form-badge{display:flex;gap:3px;margin-top:var(--space-2);}
-.form-dot{width:18px;height:18px;border-radius:var(--radius-sm);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.form-dot.w{background:var(--green-bg);color:var(--green);border:1px solid rgba(74,222,128,0.3);}
-.form-dot.l{background:var(--red-bg);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
-.form-dot.none{background:var(--surface-2);color:var(--text-faint);border:1px solid var(--border);}
-/* ACHIEVEMENTS */
-.achievements-section{margin-bottom:var(--space-10);}
-.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:var(--space-4);}
-.achievement-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4);display:flex;gap:var(--space-3);align-items:flex-start;box-shadow:var(--shadow-sm);}
-.achievement-card.locked{opacity:.45;filter:grayscale(1);}
-.achievement-icon{font-size:32px;flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:var(--radius-lg);border:1px solid var(--border);}
-.achievement-info{flex:1;min-width:0;}
-.achievement-name{font-weight:700;font-size:var(--text-sm);}
-.achievement-desc{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.achievement-holder{font-size:var(--text-xs);color:var(--accent);font-weight:600;margin-top:4px;}
-.achievement-card.unlocked .achievement-icon{background:var(--gold-bg);border-color:rgba(251,191,36,0.3);}
-/* HEATMAP */
-.heatmap-section{margin-bottom:var(--space-10);}
-.heatmap-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
-.heatmap-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:var(--space-4);}
-.heatmap-cell{aspect-ratio:1;border-radius:var(--radius-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:700;cursor:default;position:relative;}
-.heatmap-cell:hover .heatmap-tooltip{display:block;}
-.heatmap-tooltip{display:none;position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:4px 8px;font-size:10px;white-space:nowrap;z-index:10;box-shadow:var(--shadow-md);}
-.heatmap-labels{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:4px;}
-.heatmap-label{text-align:center;font-size:9px;color:var(--text-faint);}
-.heatmap-legend{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-3);font-size:var(--text-xs);color:var(--text-muted);}
-.heatmap-legend-bar{display:flex;gap:2px;}
-.heatmap-legend-cell{width:12px;height:12px;border-radius:2px;}
-/* CARTA FIFA — NOVA VERSÃO COM FLIP */
-.fifa-section{margin-bottom:var(--space-10);}
-.fifa-cards-grid{display:flex;flex-wrap:wrap;gap:var(--space-6);justify-content:center;}
-.fifa-card{width:210px;height:320px;border-radius:20px;position:relative;cursor:pointer;flex-shrink:0;perspective:1000px;}
-.fifa-card-flipper{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(0.175,0.885,0.32,1.275);}
-.fifa-card.flipped .fifa-card-flipper{transform:rotateY(180deg);}
-.fifa-card-front,.fifa-card-back{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
-.fifa-card-back{transform:rotateY(180deg);background:var(--surface-2);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-5);}
-.fifa-card-back-title{font-weight:900;font-size:var(--text-sm);color:var(--text);text-align:center;}
-.fifa-card-back-stats{width:100%;display:flex;flex-direction:column;gap:var(--space-2);}
-.fifa-back-row{display:flex;justify-content:space-between;align-items:center;font-size:var(--text-xs);padding:4px var(--space-2);background:var(--surface);border-radius:var(--radius-sm);}
-.fifa-back-label{color:var(--text-muted);font-weight:600;}
-.fifa-back-val{font-weight:700;color:var(--text);}
-.fifa-card-inner{width:100%;height:100%;border-radius:20px;overflow:hidden;position:relative;display:flex;flex-direction:column;align-items:center;padding:16px 12px 12px;gap:0;}
-.fifa-bg-elite{background:linear-gradient(160deg,#7c5c00,#f5c518 40%,#b8860b 100%);}
-.fifa-bg-great{background:linear-gradient(160deg,#0a2e1a,#1db954 45%,#0d5c2a 100%);}
-.fifa-bg-good{background:linear-gradient(160deg,#0a1a3f,#1a56db 45%,#0d2d6e 100%);}
-.fifa-bg-average{background:linear-gradient(160deg,#1c1f26,#4b5563 50%,#1c1f26 100%);}
-.fifa-bg-below{background:linear-gradient(160deg,#3b0a0a,#dc2626 45%,#5c0f0f 100%);}
-.fifa-top-row{display:flex;justify-content:space-between;align-items:flex-start;width:100%;margin-bottom:6px;}
-.fifa-rating{font-size:32px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1;}
-.fifa-pos-block{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
-.fifa-pos{font-size:11px;font-weight:800;color:rgba(255,255,255,0.85);letter-spacing:.04em;}
-.fifa-ovr-badge{font-size:10px;font-weight:700;background:rgba(0,0,0,0.3);color:#fff;border-radius:6px;padding:1px 6px;}
-.fifa-avatar-wrap{width:100px;height:100px;margin:4px 0 6px;position:relative;flex-shrink:0;}
-.fifa-avatar-wrap img{width:100px;height:100px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid rgba(255,255,255,0.5);display:block;}
-.fifa-avatar-emoji{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;background:rgba(255,255,255,0.15);border:3px solid rgba(255,255,255,0.4);}
-.fifa-nick{font-size:13px;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.7);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;width:100%;}
-.fifa-divider{width:80%;height:1px;background:rgba(255,255,255,0.2);margin-bottom:6px;flex-shrink:0;}
-.fifa-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;}
-.fifa-stat{text-align:center;background:rgba(0,0,0,0.25);border-radius:8px;padding:5px 3px;}
-.fifa-stat-val{font-size:14px;font-weight:900;color:#fff;line-height:1;font-variant-numeric:tabular-nums;}
-.fifa-stat-key{font-size:8px;font-weight:700;color:rgba(255,255,255,0.75);text-transform:uppercase;margin-top:2px;letter-spacing:.04em;}
-.fifa-share-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 9px;font-size:11px;color:#fff;font-weight:700;z-index:2;}
-.fifa-share-btn:hover{background:rgba(0,0,0,0.6);}
-.fifa-flip-hint{font-size:10px;color:rgba(255,255,255,0.5);position:absolute;bottom:8px;left:50%;transform:translateX(-50%);white-space:nowrap;}
-/* ANIMAÇÃO PACK OPENING */
-@keyframes packReveal{0%{opacity:0;transform:rotateY(-90deg) scale(0.8);}60%{transform:rotateY(10deg) scale(1.05);}100%{opacity:1;transform:rotateY(0deg) scale(1);}}
-.fifa-card.pack-open{animation:packReveal .7s cubic-bezier(0.175,0.885,0.32,1.275) both;}
-/* IA ANÁLISE */
-.ai-section{margin-bottom:var(--space-10);}
-.ai-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-sm);}
-.ai-header{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-5);}
-.ai-icon{width:36px;height:36px;background:var(--purple-bg);border:1px solid rgba(167,139,250,0.3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.ai-title{font-weight:700;font-size:var(--text-base);}
-.ai-subtitle{font-size:var(--text-xs);color:var(--text-muted);}
-.ai-match-select{padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:var(--text-sm);width:100%;margin-bottom:var(--space-4);}
-.ai-analysis{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);font-size:var(--text-sm);line-height:1.8;}
-.ai-analysis .ai-highlight{color:var(--accent);font-weight:700;}
-.ai-analysis .ai-good{color:var(--green);font-weight:700;}
-.ai-analysis .ai-bad{color:var(--red);font-weight:700;}
-.ai-analysis .ai-gold{color:var(--gold);font-weight:700;}
-.ai-paragraph{margin-bottom:var(--space-3);}
-.ai-paragraph:last-child{margin-bottom:0;}
-.ai-badge-row{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3);}
-.ai-badge{padding:3px var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;}
-.ai-badge-win{background:var(--green-bg);color:var(--green);}
-.ai-badge-loss{background:var(--red-bg);color:var(--red);}
-.ai-badge-neutral{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);}
-/* RATING POR MAPA */
-.maprating-section{margin-bottom:var(--space-10);}
-.maprating-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:var(--space-4);}
-.maprating-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);}
-.maprating-nick-row{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4);}
-.maprating-nick{font-weight:700;font-size:var(--text-base);}
-.maprating-maps{display:flex;flex-direction:column;gap:var(--space-2);}
-.maprating-row{display:flex;align-items:center;gap:var(--space-3);}
-.maprating-map-name{font-size:var(--text-xs);color:var(--text-muted);width:60px;flex-shrink:0;}
-.maprating-bar-track{flex:1;height:8px;background:var(--surface-2);border-radius:var(--radius-full);overflow:hidden;}
-.maprating-bar-fill{height:100%;border-radius:var(--radius-full);transition:width .8s cubic-bezier(0.16,1,0.3,1);}
-.maprating-val{font-size:var(--text-xs);font-weight:700;width:36px;text-align:right;font-variant-numeric:tabular-nums;}
-/* HALL DA FAMA */
-.halloffame-section{margin-bottom:var(--space-10);}
-.hof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:var(--space-4);}
-.hof-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);position:relative;overflow:hidden;}
-.hof-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--accent));}
-.hof-trophy{font-size:28px;margin-bottom:var(--space-2);}
-.hof-title{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px;}
-.hof-value{font-size:var(--text-xl);font-weight:900;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums;}
-.hof-nick{font-weight:700;font-size:var(--text-sm);margin-top:4px;}
-.hof-context{font-size:var(--text-xs);color:var(--text-muted);margin-top:2px;}
-.hof-badge{position:absolute;top:var(--space-4);right:var(--space-4);background:var(--gold-bg);color:var(--gold);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:700;padding:2px var(--space-2);}
-/* CLUTCH */
-.clutch-section{margin-bottom:var(--space-10);}
-.clutch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:var(--space-4);}
-.clutch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-4);text-align:center;box-shadow:var(--shadow-sm);}
-.clutch-card.top{border-color:var(--purple);background:var(--purple-bg);}
-.clutch-total{font-size:var(--text-xl);font-weight:700;color:var(--purple);}
-.clutch-nick{font-weight:700;font-size:var(--text-sm);margin-top:4px;}
-.clutch-breakdown{font-size:var(--text-xs);color:var(--text-muted);margin-top:4px;}
+:root {
+  --bg: #0a0a0a;
+  --bg-secondary: #111;
+  --text: #f0f0f0;
+  --text-secondary: #a0a0a0;
+  --accent: #00ff88;
+  --accent-secondary: #00cc6a;
+  --border: #222;
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --radius: 0.75rem;
+}
+[data-theme="light"] {
+  --bg: #f8f9fa;
+  --bg-secondary: #e9ecef;
+  --text: #212529;
+  --text-secondary: #6c757d;
+  --accent: #28a745;
+  --accent-secondary: #20c997;
+  --border: #dee2e6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Satoshi', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+.container { max-width: 1400px; margin: 0 auto; padding: var(--space-3); }
+.header { text-align: center; margin-bottom: var(--space-4); }
+.header h1 { font-size: clamp(2rem, 5vw, 3.5rem); background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: var(--space-1); }
+.theme-toggle { position: fixed; top: var(--space-2); right: var(--space-2); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 50%; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; z-index: 1000; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--space-3); margin-bottom: var(--space-4); }
+.card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-3); transition: all 0.3s ease; }
+.card:hover { border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,255,136,0.1); transform: translateY(-2px); }
+.card h3 { color: var(--accent); margin-bottom: var(--space-2); font-size: 1.25rem; }
+.empty-state { text-align: center; padding: var(--space-4); color: var(--text-secondary); }
+.empty-state svg { font-size: 4rem; margin-bottom: var(--space-2); opacity: 0.5; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: var(--space-1); margin-top: var(--space-2); }
+.stat { text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.fifa-card { position: relative; background: linear-gradient(135deg, #1a1a2e, #16213e); border: 2px solid var(--accent); border-radius: var(--radius); overflow: hidden; height: 420px; animation: cardSlideIn 0.6s ease-out; }
+@keyframes cardSlideIn { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.fifa-avatar { width: 100%; height: 200px; object-fit: cover; object-position: center top; }
+.fifa-info { padding: var(--space-3); text-align: center; }
+.fifa-nick { font-size: 1.4rem; font-weight: 900; color: var(--accent); margin-bottom: var(--space-1); text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.fifa-level { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: var(--space-2); }
+.fifa-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-1); font-size: 0.85rem; }
+.fifa-stat { display: flex; justify-content: space-between; padding: var(--space-1) 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.fifa-highlight { grid-column: 1 / -1; background: rgba(0,255,136,0.1); border-radius: var(--radius); padding: var(--space-2); margin-top: var(--space-1); border: 1px solid var(--accent); }
+.history-list { max-height: 400px; overflow-y: auto; }
+.history-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-2); margin-bottom: var(--space-1); display: flex; justify-content: space-between; align-items: center; }
+.history-result { font-weight: 700; font-size: 1.1rem; }
+.history-win { color: var(--accent); }
+.history-loss { color: #ff4444; }
+.comparator { display: grid; grid-template-columns: 1fr 60px 1fr; gap: var(--space-2); align-items: center; }
+.comparator-player { text-align: center; }
+.comparator-vs { font-size: 1.5rem; font-weight: 700; color: var(--accent); text-align: center; writing-mode: vertical-rl; }
+.comparator-stat { display: flex; align-items: center; justify-content: space-between; padding: var(--space-1); background: rgba(255,255,255,0.05); border-radius: 0.5rem; margin-bottom: var(--space-1); }
+.chart-container { height: 300px; }
+.coach-analysis { white-space: pre-wrap; line-height: 1.6; background: rgba(0,255,136,0.1); border-left: 4px solid var(--accent); padding: var(--space-2); border-radius: 0 var(--radius); }
+.last-update { text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-top: var(--space-3); }
+@media (max-width: 768px) { .comparator { grid-template-columns: 1fr; } .comparator-vs { writing-mode: horizontal-tb; } .stats-grid { grid-template-columns: repeat(2,1fr); } }
 </style>
 </head>
 <body>
-<header class="header">
-  <div class="header-inner">
-    <div class="logo"><div class="logo-icon">🎯</div><span class="logo-text">CS <span>Velharada</span></span></div>
-    <div class="header-meta">
-      <span class="badge badge-green" id="status-badge">● Ao vivo</span>
-      <span class="last-update" id="last-update-text">Carregando...</span>
-      <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema"></button>
-    </div>
+<button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+<div class="container">
+  <header class="header">
+    <h1>🎮 GC Squad Dashboard</h1>
+    <p>Velha Rada - Stats CS2 GamersClub</p>
+  </header>
+  
+  <div id="ranking" class="card"></div>
+  
+  <div class="grid">
+    <div id="fifa-cards" class="grid"></div>
   </div>
-</header>
-<main class="main">
-  <div class="status-bar"><div class="pulse"></div><span id="status-msg">Carregando dados...</span></div>
-  <div id="meta-section" style="display:none"><h2 class="section-title">📊 Visão Geral</h2><div class="meta-grid" id="meta-grid"></div></div>
-  <div class="ranking-banner" id="ranking-banner" style="display:none"><div class="ranking-title">🏆 Ranking GC Rating</div><div class="ranking-list" id="ranking-list"></div></div>
-  <div class="global-filters" id="global-filters" style="display:none">
-    <span class="filter-label">Período:</span>
-    <div class="filter-group" id="period-filters">
-      <button class="filter-btn active" data-period="all" onclick="setPeriod('all',this)">Tudo</button>
-      <button class="filter-btn" data-period="month" onclick="setPeriod('month',this)">30 dias</button>
-      <button class="filter-btn" data-period="week" onclick="setPeriod('week',this)">7 dias</button>
-    </div>
-    <span class="filter-label" style="margin-left:var(--space-4)">Mapa:</span>
-    <div class="filter-group" id="map-filters"></div>
+  
+  <div class="grid">
+    <div id="history" class="card"></div>
+    <div id="evolution" class="card"></div>
+    <div id="coach" class="card"></div>
   </div>
-  <h2 class="section-title">Squad CS2</h2>
-  <div class="squad-grid" id="squad-grid">
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
-    <div class="player-card"><div class="player-header"><div class="sk-avatar skeleton"></div><div style="flex:1"><div class="sk-title skeleton"></div><div class="sk-sub skeleton"></div></div></div><div class="stats-grid"><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div><div class="sk-stat skeleton"></div></div><div class="sk-bar skeleton"></div></div>
+  
+  <div class="grid">
+    <div id="comparator" class="card"></div>
+    <div id="maps" class="card"></div>
   </div>
-  <div class="compare-section" id="compare-section" style="display:none">
-    <h2 class="section-title">⚔️ Comparador de Jogadores</h2>
-    <div class="compare-selects">
-      <select class="compare-select" id="cmp-a" onchange="renderComparator()"></select>
-      <span style="font-size:var(--text-lg);color:var(--text-muted)">vs</span>
-      <select class="compare-select" id="cmp-b" onchange="renderComparator()"></select>
-    </div>
-    <div class="compare-table" id="compare-table"></div>
-  </div>
-  <div class="mvp-section" id="mvp-section" style="display:none"><h2 class="section-title">👑 MVP Histórico</h2><div class="mvp-grid" id="mvp-grid"></div></div>
-  <div class="clutch-section" id="clutch-section" style="display:none"><h2 class="section-title">🎯 Clutch Master</h2><div class="clutch-grid" id="clutch-grid"></div></div>
-  <div class="mapwr-section" id="mapwr-section" style="display:none"><h2 class="section-title">🗺️ WinRate por Mapa</h2><div class="mapwr-grid" id="mapwr-grid"></div></div>
-  <div class="chart-section" id="chart-section" style="display:none"><h2 class="section-title">📈 Evolução do Rating</h2><div class="chart-wrap"><div class="chart-filters" id="chart-filters"></div><div class="chart-container"><canvas id="ratingChart"></canvas></div></div></div>
-  <div class="map-section" id="map-section" style="display:none"><h2 class="section-title">⭐ Mapa Favorito por Jogador</h2><div class="map-grid" id="map-grid"></div></div>
-  <div class="maprating-section" id="maprating-section" style="display:none"><h2 class="section-title">📍 Rating por Mapa</h2><div class="maprating-grid" id="maprating-grid"></div></div>
-  <div class="history-section" id="history-section" style="display:none"><h2 class="section-title">📋 Histórico de Partidas</h2><div class="history-list" id="history-list"></div></div>
-  <div class="achievements-section" id="achievements-section" style="display:none"><h2 class="section-title">🏅 Conquistas do Squad</h2><div class="achievements-grid" id="achievements-grid"></div></div>
-  <div class="halloffame-section" id="halloffame-section" style="display:none"><h2 class="section-title">🏛️ Hall da Fama</h2><div class="hof-grid" id="hof-grid"></div></div>
-  <div class="heatmap-section" id="heatmap-section" style="display:none"><h2 class="section-title">🕐 Análise de Horário</h2><div class="heatmap-wrap"><div style="font-size:var(--text-sm);color:var(--text-muted);margin-bottom:var(--space-2)">Verde = boa performance · Vermelho = dificuldades</div><div id="heatmap-content"></div></div></div>
-  <div class="fifa-section" id="fifa-section" style="display:none"><h2 class="section-title">🃏 Carta de Jogador <span style="font-size:var(--text-xs);color:var(--text-muted);font-weight:400;margin-left:8px">Clique para virar · 📤 para compartilhar</span></h2><div class="fifa-cards-grid" id="fifa-cards-grid"></div></div>
-  <div class="ai-section" id="ai-section" style="display:none"><h2 class="section-title">🤖 Análise da Partida</h2><div class="ai-wrap"><div class="ai-header"><div class="ai-icon">🤖</div><div><div class="ai-title">Coach IA</div><div class="ai-subtitle">Análise automática gerada com base nas stats</div></div></div><select class="ai-match-select" id="ai-match-select" onchange="onAISelectChange(this)"></select><div class="ai-analysis" id="ai-analysis"></div></div></div>
-</main>
-<footer class="footer">CS Velharada Dashboard · GC Rating: K/D 35% + ADR 30% + KAST 20% + HS% 15%</footer>
-<div class="modal-overlay hidden" id="profile-modal" onclick="closeModal(event)"><div class="modal" id="modal-content"></div></div>
-<div class="notif-toast" id="notif-toast"><div class="notif-icon" id="notif-icon"></div><div class="notif-text"><div class="notif-title" id="notif-title"></div><div class="notif-msg" id="notif-msg"></div></div></div>
+  
+  <div class="last-update" id="lastUpdate"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-(function(){
-  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
-  const h=parseInt(new Date().getHours());
-  const auto=h>=7&&h<18?'light':'dark';
-  let d=localStorage.getItem('theme')||auto;
-  r.setAttribute('data-theme',d);
-  const icon=m=>m==='dark'
-    ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
-    :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  if(t){t.innerHTML=icon(d);t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);localStorage.setItem('theme',d);t.innerHTML=icon(d);});}
-})();
+let playersData = [], historyData = [], charts = {};
+const playerMap = {}; // Mapeia ID para nick
 
-const PLAYER_CONFIG={
-  Cq:      {avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/cq.jpg',       emoji:'🏆',gcNick:'TREMBOLIZADO',   id:'1489954',level:'21',color:'#fbbf24'},
-  DU:      {avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/du.jpg',       emoji:'🎮',gcNick:'H34D5H07M4CH1N3',id:'1311055',level:'20',color:'#60a5fa'},
-  Flavinho:{avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/flavinho.jpg', emoji:'💥',gcNick:'dEM0N666',       id:'822519', level:'20',color:'#f87171'},
-  Chara:   {avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/chara.jpg',    emoji:'⚡',gcNick:'apEX paulista',   id:'chara',  level:'20',color:'#4ade80'},
-  Chavera: {avatar:null,emoji:'🔫',gcNick:'SKILLZ-',   id:'13547',level:'20',color:'#a78bfa'},
-  Dukka:   {avatar:'https://raw.githubusercontent.com/duhdev/gc-squad-dashboard/main/dukka.jpeg',emoji:'🎯',gcNick:'ROTTWAGNER',id:'24134',level:'20',color:'#fb923c'},
-  Fluyr: {avatar:null, emoji:'🌀', gcNick:'fluyr', id:'fluyr', level:'20', color:'#22d3ee'},
-};
-const MAP_EMOJIS={Mirage:'🏜️',Inferno:'🔥',Nuke:'☢️',Ancient:'🏛️',Anubis:'🐍',Dust2:'🌅',Vertigo:'🏙️',Train:'🚂',Overpass:'🌉'};
-
-let _allData=null,_activePeriod='all',_activeMap='all',_activeChartNicks=new Set(),_chartInstance=null,_prevRecords={};
-
-function avatarHtml(nick,size=56,cls='player-avatar'){
-  const cfg=PLAYER_CONFIG[nick]||{avatar:null,emoji:'🎮'};
-  if(cfg.avatar)return`<div class="${cls}" style="width:${size}px;height:${size}px"><img src="${cfg.avatar}" alt="${nick}" width="${size}" height="${size}" loading="lazy" onerror="this.parentElement.innerHTML='${cfg.emoji}';this.parentElement.style.fontSize='${Math.round(size*0.45)}px'"></div>`;
-  return`<div class="${cls}" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.45)}px">${cfg.emoji}</div>`;
-}
-function calcGCRating(s){
-  const kd=parseFloat((s.KDR||s.KD||s['K/D']||'0')+'')||0;
-  const adr=parseFloat((s.ADR||'0')+'')||0;
-  const kast=parseFloat(((s.KAST||'0')+'').replace('%',''))||0;
-  const hs=parseFloat(((s.HS||s['HS%']||'0')+'').replace('%',''))||0;
-  if(kd===0&&adr===0)return null;
-  return Math.round(((kd*0.35)+(Math.min(adr/100,2.5)*0.30)+((kast/100)*0.20)+((hs/100)*0.15))*100)/100;
-}
-function rClass(r){if(r===null)return'average';if(r>=1.40)return'elite';if(r>=1.15)return'great';if(r>=0.95)return'good';if(r>=0.75)return'average';return'below';}
-function rEmoji(r){if(r===null)return'';if(r>=1.40)return'🔥';if(r>=1.15)return'✅';if(r>=0.95)return'👍';if(r>=0.75)return'😐';return'💀';}
-function rPct(r){return r===null?0:Math.min(Math.round((r/2.0)*100),100);}
-function rColor(c){return c==='elite'?'var(--gold)':c==='great'?'var(--green)':c==='good'?'var(--blue)':c==='below'?'var(--red)':'var(--text-muted)';}
-function fmtV(v){if(v===undefined||v===null||v==='')return'—';return v;}
-
-function filterHistory(history){
-  const now=Date.now();
-  return history.filter(m=>{
-    const d=new Date(m.date).getTime();
-    if(_activePeriod==='week'&&now-d>7*86400000)return false;
-    if(_activePeriod==='month'&&now-d>30*86400000)return false;
-    if(_activeMap!=='all'&&m.map!==_activeMap)return false;
-    return true;
-  });
+async function loadData() {
+  try {
+    const res = await fetch('data.json');
+    if (!res.ok) throw new Error('Erro no data.json');
+    const data = await res.json();
+    playersData = data.players || [];
+    historyData = data.history || [];
+    
+    // Constrói mapa de nicks por ID
+    playersData.forEach(p => playerMap[p.playerId] = p.playerNick);
+    
+    document.getElementById('lastUpdate').textContent = `Atualizado: ${new Date(data.lastUpdate).toLocaleString('pt-BR')}`;
+    
+    renderRanking();
+    renderFifaCards();
+    renderHistory();
+    renderEvolution();
+    renderCoach();
+    renderComparator();
+    renderMaps();
+  } catch(e) {
+    console.error(e);
+    document.getElementById('ranking').innerHTML = '<div class="empty-state"><div class="ei">⚠️</div><h3>Erro ao carregar dados</h3><p>Verifique o data.json.</p></div>';
+  }
 }
 
-function renderMeta(history){
-  if(!history||!history.length)return;
-  document.getElementById('meta-section').style.display='';
-  const fh=filterHistory(history);
-  const total=fh.length,wins=fh.filter(m=>m.result==='W').length;
-  const wr=total?Math.round((wins/total)*100):0;
-  const sorted=[...fh].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  let streak=0,streakType='';
-  if(sorted.length){streakType=sorted[0].result;for(const m of sorted){if(m.result===streakType)streak++;else break;}}
-  document.getElementById('meta-grid').innerHTML=`
-    <div class="meta-card"><div class="meta-card-icon">🎮</div><div class="meta-card-value">${total}</div><div class="meta-card-label">Partidas</div></div>
-    <div class="meta-card"><div class="meta-card-icon">${wr>=50?'🏆':'💀'}</div><div class="meta-card-value" style="color:${wr>=50?'var(--green)':'var(--red)'}">${wr}%</div><div class="meta-card-label">WinRate (${wins}V/${total-wins}D)</div></div>
-    <div class="meta-card"><div class="meta-card-icon">${streakType==='W'?'🔥':'❄️'}</div><div class="meta-card-value ${streakType==='W'?'streak-win':'streak-loss'}">${streak}x ${streakType==='W'?'Vitória':'Derrota'}</div><div class="meta-card-label">Sequência atual</div></div>
-    <div class="meta-card"><div class="meta-card-icon">⚔️</div><div class="meta-card-value">${total>0?(fh.reduce((a,m)=>{const[ct,tr]=(m.score||'0-0').split('-').map(Number);return a+(ct+tr)},0)/total).toFixed(1):'—'}</div><div class="meta-card-label">Rounds médios/partida</div></div>`;
+function calculateRating(kdr, adr, kast, hs) {
+  return Math.round(((kdr * 0.35) + (adr/100 * 0.3) + (kast/100 * 0.2) + (hs/100 * 0.15)) * 100) / 100;
 }
 
-function calcRecords(history){
-  const records={};
-  history.forEach(m=>{
-    Object.entries(m.players||{}).forEach(([nick,s])=>{
-      if(!records[nick])records[nick]={kd:0,adr:0,hs:0,rating:0};
-      if((s.kd||0)>records[nick].kd)records[nick].kd=s.kd||0;
-      if((s.adr||0)>records[nick].adr)records[nick].adr=s.adr||0;
-      if((s.hs||0)>records[nick].hs)records[nick].hs=s.hs||0;
-      if((s.rating||0)>records[nick].rating)records[nick].rating=s.rating||0;
-    });
-  });
-  return records;
+function getColor(rating) {
+  if (rating >= 1.1) return '#00ff88';
+  if (rating >= 0.95) return '#ffdd00';
+  if (rating >= 0.8) return '#ff8800';
+  return '#ff4444';
 }
 
-function calcStdDev(vals){
-  if(vals.length<2)return 0;
-  const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
-  return Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
-}
-
-function getFormBadge(nick,history){
-  const matches=[...history].filter(m=>m.players&&m.players[nick]).sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
-  while(matches.length<5)matches.push(null);
-  return'<div class="form-badge">'+matches.map(m=>{
-    if(!m)return'<div class="form-dot none">·</div>';
-    return`<div class="form-dot ${m.result==='W'?'w':'l'}">${m.result==='W'?'W':'L'}</div>`;
-  }).join('')+'</div>';
-}
-
-function renderCard(p,isMvp,records,delay=0){
-  const nick=p.playerNick||p.nick||'?';
-  const cfg=PLAYER_CONFIG[nick]||{gcNick:'',id:'',level:'?',emoji:'🎮'};
-  const s=p.stats||{};
-  const r=calcGCRating(s);
-  const rC=rClass(r),rD=r!==null?r.toFixed(2):'—';
-  const upd=p.updatedAt?new Date(p.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
-  const hasStats=s.KDR||s.KD||s.ADR;
-  if(!hasStats)return`<div class="no-data-card" style="animation-delay:${delay}ms">${avatarHtml(nick,64,'nd-avatar')}<div class="nd-nick">${nick}</div><div class="nd-msg">Aguardando dados</div></div>`;
-  const kd=fmtV(s.KDR||s.KD),adr=fmtV(s.ADR),hs=fmtV(s.HS||s['HS%']);
-  const kast=fmtV(s.KAST),kills=fmtV(s.kills||s.Kills),mk=fmtV(s.MK||s['MULTI KILLS']);
-  const fk=fmtV(s.FK||s['FIRST KILLS']),assists=fmtV(s.assists||s.A),rp=fmtV(s.RP);
-  const kdN=parseFloat(kd)||0,kdC=kdN>=1.2?'var(--green)':kdN>=0.9?'var(--blue)':'var(--red)';
-  const adrN=parseFloat(adr)||0,adrC=adrN>=90?'var(--green)':adrN>=70?'var(--blue)':'var(--text)';
-  const kastN=parseFloat(kast)||0,kastC=kastN>=65?'var(--green)':kastN>=50?'var(--blue)':'var(--text)';
-  const rec=records[nick]||{};
-  const isKdRec=rec.kd&&parseFloat(kd)>=rec.kd,isAdrRec=rec.adr&&parseFloat(adr)>=rec.adr,isHsRec=rec.hs&&parseFloat(hs)>=rec.hs;
-  return`<div class="player-card card-enter${isMvp?' mvp':''}" style="animation-delay:${delay}ms" onclick="openProfile('${nick}')">
-    <div class="player-header">
-      ${avatarHtml(nick,56,'player-avatar')}
-      <div class="player-info"><div class="player-nick">${nick}${isMvp?' 👑':''}</div>${cfg.gcNick?`<div class="player-gc-nick">${cfg.gcNick}</div>`:''}</div>
-      <div class="player-meta">
-        <div class="player-level">LVL ${p.level||cfg.level||'?'}</div>
-        <div class="matches-badge">${p.matches||0} partidas</div>
-        ${r!==null?`<div class="gc-rating-wrap"><div class="gc-rating-label">Rating</div><div class="gc-rating-value ${rC}">${rD}</div></div>`:''}
-      </div>
-    </div>
-    <div class="kast-row">
-      <div class="kast-item"><div class="kast-value" style="color:${kastC}">${kast==='—'?'—':kast+'%'}</div><div class="kast-label">KAST</div></div>
-      <div class="kast-item"><div class="kast-value">${kills}</div><div class="kast-label">Kills</div></div>
-      <div class="kast-item"><div class="kast-value">${rp}</div><div class="kast-label">RP</div></div>
-    </div>
+function renderRanking() {
+  const container = document.getElementById('ranking');
+  if (playersData.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div>🏆</div><h3>Aguardando dados</h3><p>Primeira partida registra os ratings.</p></div>';
+    return;
+  }
+  
+  const ranked = playersData
+    .filter(p => p.stats.rating > 0)
+    .sort((a,b) => b.stats.rating - a.stats.rating)
+    .slice(0,3);
+  
+  if (ranked.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div>🏆</div><h3>Aguardando ratings</h3><p>Jogue uma partida!</p></div>';
+    return;
+  }
+  
+  container.innerHTML = `
+    <h3>🏆 Top 3 Rating</h3>
     <div class="stats-grid">
-      <div class="stat-item">${isKdRec?'<span class="stat-record">PB</span>':''}<div class="stat-value" style="color:${kdC}">${kd}</div><div class="stat-label">K/D</div></div>
-      <div class="stat-item">${isAdrRec?'<span class="stat-record">PB</span>':''}<div class="stat-value" style="color:${adrC}">${adr}</div><div class="stat-label">ADR</div></div>
-      <div class="stat-item">${isHsRec?'<span class="stat-record">PB</span>':''}<div class="stat-value" style="color:var(--gold)">${hs==='—'?'—':hs+'%'}</div><div class="stat-label">HS%</div></div>
-      <div class="stat-item"><div class="stat-value" style="color:var(--purple)">${mk}</div><div class="stat-label">Multi-K</div></div>
-      <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${fk}</div><div class="stat-label">First K</div></div>
-      <div class="stat-item"><div class="stat-value">${assists}</div><div class="stat-label">Assists</div></div>
-    </div>
-    <div class="rating-bar-wrap">
-      <div class="rating-bar-header"><span>GC Rating ${rEmoji(r)}</span><strong>${rD}</strong></div>
-      <div class="rating-bar-track"><div class="rating-bar-fill" style="width:0%;background:${rColor(rC)}" data-target="${rPct(r)}"></div></div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-2)"><span style="font-size:var(--text-xs);color:var(--text-faint)">Forma recente</span>${_allData?.history?getFormBadge(nick,_allData.history):''}</div>
-    <div class="player-footer">
-      <a class="player-link" href="https://gamersclub.com.br/player/${cfg.id||p.playerId||''}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Ver perfil GC ↗</a>
-      <span class="player-updated">${upd}</span>
-    </div>
-  </div>`;
-}
-
-function renderRanking(players){
-  const ranked=players.map(p=>({nick:p.playerNick||p.nick,r:calcGCRating(p.stats||{})})).filter(p=>p.r!==null).sort((a,b)=>b.r-a.r);
-  if(!ranked.length)return;
-  document.getElementById('ranking-banner').style.display='';
-  const medals=['🥇','🥈','🥉'];
-  document.getElementById('ranking-list').innerHTML=ranked.map((p,i)=>`
-    <div class="ranking-item ${i<3?'rank-'+(i+1):''}">
-      <span class="rank-pos">${medals[i]||'#'+(i+1)}</span>
-      <div class="rank-avatar">${PLAYER_CONFIG[p.nick]?.avatar?`<img src="${PLAYER_CONFIG[p.nick].avatar}" alt="${p.nick}" width="32" height="32" loading="lazy" onerror="this.parentElement.textContent='${PLAYER_CONFIG[p.nick]?.emoji||'🎮'}'">`:(PLAYER_CONFIG[p.nick]?.emoji||'🎮')}</div>
-      <div><div class="rank-nick">${p.nick}</div><div class="rank-label">GC Rating</div></div>
-      <div class="rank-rating">${p.r.toFixed(2)}</div>
-    </div>`).join('');
-}
-
-function renderMvpHistory(history){
-  if(!history||!history.length)return;
-  document.getElementById('mvp-section').style.display='';
-  const fh=filterHistory(history),counts={};
-  fh.forEach(m=>{
-    const entries=Object.entries(m.players||{}).map(([n,s])=>({nick:n,r:s.rating||0}));
-    const mvp=entries.sort((a,b)=>b.r-a.r)[0]?.nick;
-    if(mvp)counts[mvp]=(counts[mvp]||0)+1;
-  });
-  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]),max=sorted[0]?.[1]||1;
-  document.getElementById('mvp-grid').innerHTML=sorted.map(([nick,count])=>`
-    <div class="mvp-card ${count===max?'top':''}">
-      ${avatarHtml(nick,40,'rank-avatar')}
-      <div class="mvp-count">${count}x</div>
-      <div class="mvp-nick">${nick}</div>
-      <div class="mvp-label">MVP</div>
-    </div>`).join('');
-}
-
-/* ===== CLUTCH MASTER ===== */
-function renderClutch(history){
-  if(!history||!history.length)return;
-  const fh=filterHistory(history);
-  const clutchData={};
-  fh.forEach(m=>{
-    Object.entries(m.clutches||{}).forEach(([nick,c])=>{
-      if(!clutchData[nick])clutchData[nick]={'1v1':0,'1v2':0,'1v3':0,'1v4':0,'1v5':0};
-      Object.entries(c).forEach(([k,v])=>{if(clutchData[nick][k]!==undefined)clutchData[nick][k]+=v||0;});
-    });
-  });
-  const totals=Object.entries(clutchData).map(([nick,c])=>({nick,total:Object.values(c).reduce((a,b)=>a+b,0),c})).filter(x=>x.total>0).sort((a,b)=>b.total-a.total);
-  if(!totals.length)return;
-  document.getElementById('clutch-section').style.display='';
-  const max=totals[0].total;
-  document.getElementById('clutch-grid').innerHTML=totals.map(({nick,total,c})=>`
-    <div class="clutch-card ${total===max?'top':''}">
-      ${avatarHtml(nick,40,'rank-avatar')}
-      <div class="clutch-total">${total}</div>
-      <div class="clutch-nick">${nick}</div>
-      <div class="clutch-breakdown">${Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${k}: ${v}`).join(' · ')}</div>
-    </div>`).join('');
-}
-
-function renderMapWinrate(history){
-  if(!history||!history.length)return;
-  document.getElementById('mapwr-section').style.display='';
-  const fh=filterHistory(history),maps={};
-  fh.forEach(m=>{if(!maps[m.map])maps[m.map]={w:0,l:0};m.result==='W'?maps[m.map].w++:maps[m.map].l++;});
-  const sorted=Object.entries(maps).sort((a,b)=>(b[1].w+b[1].l)-(a[1].w+a[1].l));
-  document.getElementById('mapwr-grid').innerHTML=sorted.map(([map,s])=>{
-    const total=s.w+s.l,wr=Math.round((s.w/total)*100);
-    const col=wr>=50?'var(--green)':'var(--red)';
-    return`<div class="mapwr-card"><div class="mapwr-map">${MAP_EMOJIS[map]||'🗺️'}</div><div class="mapwr-name">${map}</div><div class="mapwr-rate" style="color:${col}">${wr}%</div><div class="mapwr-detail">${s.w}V ${s.l}D · ${total} jogadas</div><div class="mapwr-bar-track"><div class="mapwr-bar-fill" style="width:${wr}%;background:${col}"></div></div></div>`;
-  }).join('');
-}
-
-function renderChart(history){
-  if(!history||!history.length)return;
-  document.getElementById('chart-section').style.display='';
-  const fh=filterHistory(history);
-  const sorted=[...fh].sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const labels=sorted.map(m=>new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+m.map);
-  const allNicks=[...new Set(sorted.flatMap(m=>Object.keys(m.players||{})))];
-  const filtersEl=document.getElementById('chart-filters');
-  if(!filtersEl.innerHTML){
-    _activeChartNicks=new Set(allNicks);
-    filtersEl.innerHTML=allNicks.map(n=>`<button class="chart-filter-btn active" data-nick="${n}" onclick="toggleChartNick('${n}',this)">${PLAYER_CONFIG[n]?.emoji||'🎮'} ${n}</button>`).join('');
-  }
-  buildChart(sorted,labels,allNicks);
-}
-function buildChart(sorted,labels,allNicks){
-  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
-  const gridColor=isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.05)';
-  const textColor=isDark?'#9ca3af':'#6b7280';
-  const datasets=allNicks.filter(n=>_activeChartNicks.has(n)).map(nick=>{
-    const cfg=PLAYER_CONFIG[nick]||{color:'#aaa'};
-    return{label:nick,data:sorted.map(m=>m.players[nick]?.rating||null),borderColor:cfg.color,backgroundColor:cfg.color+'22',tension:0.4,pointRadius:5,pointHoverRadius:7,fill:false,borderWidth:2.5};
-  });
-  if(_chartInstance)_chartInstance.destroy();
-  _chartInstance=new Chart(document.getElementById('ratingChart').getContext('2d'),{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2)||'—'}`}}},scales:{x:{grid:{color:gridColor},ticks:{color:textColor,font:{size:11}}},y:{grid:{color:gridColor},ticks:{color:textColor,font:{size:11}},min:0.5,max:1.8,title:{display:true,text:'GC Rating',color:textColor,font:{size:11}}}}}});
-}
-window.toggleChartNick=function(nick,btn){
-  if(_activeChartNicks.has(nick)){if(_activeChartNicks.size===1)return;_activeChartNicks.delete(nick);btn.classList.remove('active');}
-  else{_activeChartNicks.add(nick);btn.classList.add('active');}
-  const fh=filterHistory(_allData.history||[]);
-  const sorted=[...fh].sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const labels=sorted.map(m=>new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+m.map);
-  const allNicks=[...new Set(sorted.flatMap(m=>Object.keys(m.players||{})))];
-  buildChart(sorted,labels,allNicks);
-};
-
-function renderFavMaps(history){
-  if(!history||!history.length)return;
-  document.getElementById('map-section').style.display='';
-  const fh=filterHistory(history);
-  const allNicks=[...new Set(fh.flatMap(m=>Object.keys(m.players||{})))];
-  document.getElementById('map-grid').innerHTML=allNicks.map(nick=>{
-    const mapStats={};
-    fh.forEach(m=>{const p=m.players[nick];if(!p)return;if(!mapStats[m.map])mapStats[m.map]={total:0,sum:0};mapStats[m.map].total++;mapStats[m.map].sum+=p.rating||0;});
-    const entries=Object.entries(mapStats);if(!entries.length)return'';
-    const best=entries.sort((a,b)=>(b[1].sum/b[1].total)-(a[1].sum/a[1].total))[0];
-    const avg=(best[1].sum/best[1].total).toFixed(2);
-    return`<div class="map-card">${avatarHtml(nick,40,'rank-avatar')}<div class="map-card-nick" style="margin-top:8px">${nick}</div><div class="map-card-map">${MAP_EMOJIS[best[0]]||'🗺️'}</div><div class="map-card-name">${best[0]}</div><div class="map-card-stat ${rClass(parseFloat(avg))}">Rating: ${avg}</div><div class="map-card-stat">${best[1].total} partida${best[1].total>1?'s':''}</div></div>`;
-  }).join('');
-}
-
-/* ===== RATING POR MAPA ===== */
-function renderMapRating(history){
-  if(!history||!history.length)return;
-  const fh=filterHistory(history);
-  const allNicks=[...new Set(fh.flatMap(m=>Object.keys(m.players||{})))];
-  const allMaps=[...new Set(fh.map(m=>m.map))];
-  const hasEnough=allNicks.some(nick=>allMaps.filter(map=>fh.some(m=>m.map===map&&m.players[nick])).length>=2);
-  if(!hasEnough)return;
-  document.getElementById('maprating-section').style.display='';
-  document.getElementById('maprating-grid').innerHTML=allNicks.map(nick=>{
-    const mapRatings={};
-    fh.forEach(m=>{const p=m.players[nick];if(!p)return;if(!mapRatings[m.map])mapRatings[m.map]=[];mapRatings[m.map].push(p.rating||0);});
-    const entries=Object.entries(mapRatings).filter(([,v])=>v.length>0).map(([map,vals])=>({map,avg:vals.reduce((a,b)=>a+b,0)/vals.length,games:vals.length})).sort((a,b)=>b.avg-a.avg);
-    if(entries.length<1)return'';
-    const maxAvg=entries[0].avg||1;
-    return`<div class="maprating-card">
-      <div class="maprating-nick-row">${avatarHtml(nick,32,'rank-avatar')}<span class="maprating-nick">${nick}</span></div>
-      <div class="maprating-maps">${entries.map(e=>`
-        <div class="maprating-row">
-          <span class="maprating-map-name">${MAP_EMOJIS[e.map]||'🗺️'} ${e.map}</span>
-          <div class="maprating-bar-track"><div class="maprating-bar-fill" style="width:${Math.round((e.avg/Math.max(maxAvg,1.5))*100)}%;background:${rColor(rClass(e.avg))}"></div></div>
-          <span class="maprating-val ${rClass(e.avg)}">${e.avg.toFixed(2)}</span>
-        </div>`).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderHistory(history){
-  if(!history||!history.length)return;
-  document.getElementById('history-section').style.display='';
-  const fh=filterHistory(history);
-  const sorted=[...fh].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  document.getElementById('history-list').innerHTML=sorted.map((match,idx)=>{
-    const isWin=match.result==='W';
-    const date=new Date(match.date).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    const players=match.players||{};
-    const entries=Object.entries(players).map(([n,s])=>({nick:n,r:s.rating||0}));
-    const mvp=entries.sort((a,b)=>b.r-a.r)[0]?.nick;
-    const playersHtml=Object.entries(players).map(([nick,s])=>`<div class="history-player">${avatarHtml(nick,20,'rank-avatar')}<span class="history-player-nick">${nick}</span><span class="history-player-rating ${rClass(s.rating||0)}">${(s.rating||0).toFixed(2)}</span>${nick===mvp?'<span class="history-mvp-badge">MVP</span>':''}</div>`).join('');
-    const clutchesHtml=match.clutches?`<div style="font-size:var(--text-xs);color:var(--purple);margin-top:var(--space-2)">${Object.entries(match.clutches).map(([nick,c])=>`${nick}: ${Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${v}x ${k}`).join(', ')}`).join(' · ')}</div>`:'';
-    return`<div class="history-card ${isWin?'win':'loss'}" id="match-${idx}">
-      <div class="history-header">
-        <span class="history-result ${isWin?'win':'loss'}">${isWin?'VITÓRIA':'DERROTA'}</span>
-        <span class="history-map">${MAP_EMOJIS[match.map]||'🗺️'} ${match.map}</span>
-        <span class="history-score">${match.score||''}</span>
-        <div class="history-actions">
-          <button class="share-btn" onclick="shareMatch(${idx})">📤 Compartilhar</button>
-          <span class="history-date">${date}</span>
+      ${ranked.map((p,i) => `
+        <div class="stat">
+          <div class="stat-value" style="color:${getColor(p.stats.rating)}">${p.stats.rating}</div>
+          <div class="stat-label">${playerMap[p.playerId] || p.playerNick}</div>
         </div>
-      </div>
-      <div class="history-players">${playersHtml}</div>
-      ${clutchesHtml}
-    </div>`;
-  }).join('');
-  window._sortedHistory=sorted;
-}
-
-window.shareMatch=function(idx){
-  const el=document.getElementById('match-'+idx);
-  if(!el||!window.html2canvas)return;
-  html2canvas(el,{backgroundColor:null,scale:2}).then(canvas=>{
-    canvas.toBlob(blob=>{
-      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[new File([blob],'partida.png',{type:'image/png'})]})){
-        navigator.share({files:[new File([blob],'partida.png',{type:'image/png'})],title:'CS Velharada'});
-      }else{
-        const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='partida-cs-velharada.png';a.click();
-      }
-    });
-  });
-};
-
-window.renderComparator=function(){
-  const a=document.getElementById('cmp-a').value,b=document.getElementById('cmp-b').value;
-  if(!a||!b||!_allData)return;
-  const fh=filterHistory(_allData.history||[]);
-  const getAvg=(nick,field)=>{const vals=fh.map(m=>m.players[nick]?.[field]).filter(v=>v!=null);return vals.length?vals.reduce((x,y)=>x+y,0)/vals.length:null;};
-  const fields=[{key:'rating',label:'GC Rating',fmt:v=>v?.toFixed(2)||'—'},{key:'kd',label:'K/D',fmt:v=>v?.toFixed(2)||'—'},{key:'adr',label:'ADR',fmt:v=>v?.toFixed(1)||'—'},{key:'hs',label:'HS%',fmt:v=>v?v.toFixed(1)+'%':'—'},{key:'kast',label:'KAST',fmt:v=>v?v.toFixed(1)+'%':'—'}];
-  const rows=fields.map(f=>{
-    const va=getAvg(a,f.key),vb=getAvg(b,f.key);
-    const aWin=va!=null&&vb!=null&&va>vb,bWin=va!=null&&vb!=null&&vb>va;
-    return`<tr><td class="compare-stat-label">${f.label}</td><td class="${aWin?'compare-winner':''}">${f.fmt(va)}</td><td class="${bWin?'compare-winner':''}">${f.fmt(vb)}</td></tr>`;
-  }).join('');
-  document.getElementById('compare-table').innerHTML=`<table><thead><tr><th>Stat</th><th>${a}</th><th>${b}</th></tr></thead><tbody>${rows}</tbody></table>`;
-};
-
-window.openProfile=function(nick){
-  if(!_allData)return;
-  const cfg=PLAYER_CONFIG[nick]||{};
-  const fh=filterHistory(_allData.history||[]);
-  const matches=fh.filter(m=>m.players[nick]);
-  const recs=calcRecords(fh),rec=recs[nick]||{};
-  const ratings=matches.map(m=>m.players[nick].rating||0);
-  const avgRating=ratings.length?(ratings.reduce((a,b)=>a+b,0)/ratings.length).toFixed(2):'—';
-  const stdDev=calcStdDev(ratings).toFixed(2);
-  const consistency=ratings.length?Math.max(0,Math.round((1-parseFloat(stdDev))*100)):0;
-  const histRows=matches.slice(0,5).sort((a,b)=>new Date(b.date)-new Date(a.date)).map(m=>{
-    const s=m.players[nick],isWin=m.result==='W';
-    return`<div class="modal-history-row"><span style="color:${isWin?'var(--green)':'var(--red)'};font-weight:700">${isWin?'W':'L'}</span><span>${MAP_EMOJIS[m.map]||'🗺️'} ${m.map}</span><span class="${rClass(s.rating||0)}" style="margin-left:auto;font-weight:700">${(s.rating||0).toFixed(2)}</span></div>`;
-  }).join('');
-  document.getElementById('modal-content').innerHTML=`
-    <div class="modal-header">${avatarHtml(nick,56,'player-avatar')}<div><div class="player-nick">${nick}</div><div class="player-gc-nick">${cfg.gcNick||''}</div></div><button class="modal-close" onclick="closeModal()">×</button></div>
-    <div class="modal-body">
-      <div style="font-weight:700;margin-bottom:var(--space-3)">🏅 RecordesPessoais</div>
-      <div class="modal-records">
-        <div class="modal-record-item"><div class="modal-record-val">${rec.rating?.toFixed(2)||'—'}</div><div class="modal-record-label">Melhor Rating</div></div>
-        <div class="modal-record-item"><div class="modal-record-val">${rec.kd?.toFixed(2)||'—'}</div><div class="modal-record-label">Melhor K/D</div></div>
-        <div class="modal-record-item"><div class="modal-record-val">${rec.adr?.toFixed(0)||'—'}</div><div class="modal-record-label">Melhor ADR</div></div>
-      </div>
-      <div style="font-weight:700;margin-bottom:var(--space-3)">📊 Médias (${matches.length} partidas)</div>
-      <div class="modal-stats">
-        <div class="stat-item"><div class="stat-value ${rClass(parseFloat(avgRating))}">${avgRating}</div><div class="stat-label">Rating médio</div></div>
-        <div class="stat-item"><div class="stat-value">${matches.length?(matches.reduce((a,m)=>a+(m.players[nick]?.adr||0),0)/matches.length).toFixed(1):'—'}</div><div class="stat-label">ADR médio</div></div>
-        <div class="stat-item"><div class="stat-value">${matches.length?(matches.reduce((a,m)=>a+(m.players[nick]?.kd||0),0)/matches.length).toFixed(2):'—'}</div><div class="stat-label">K/D médio</div></div>
-      </div>
-      <div style="font-weight:700;margin-bottom:var(--space-2)">🎯 Consistência</div>
-      <div class="consistency-bar">
-        <div class="consistency-label"><span>${consistency}%</span><span style="color:var(--text-faint)">Desvio: ${stdDev}</span></div>
-        <div class="consistency-track"><div class="consistency-fill" style="width:${consistency}%"></div></div>
-      </div>
-      ${histRows?`<div style="font-weight:700;margin-top:var(--space-5);margin-bottom:var(--space-3)">📋 Últimas partidas</div><div class="modal-history">${histRows}</div>`:''}
-      <div style="margin-top:var(--space-5);text-align:center"><a class="player-link" href="https://gamersclub.com.br/player/${cfg.id||''}" target="_blank" rel="noopener noreferrer">Ver perfil completo no GC ↗</a></div>
-    </div>`;
-  document.getElementById('profile-modal').classList.remove('hidden');
-};
-window.closeModal=function(e){if(!e||e.target===document.getElementById('profile-modal'))document.getElementById('profile-modal').classList.add('hidden');};
-
-function checkRecords(history){
-  const recs=calcRecords(history);
-  if(!Object.keys(_prevRecords).length){_prevRecords={...recs};return;}
-  Object.entries(recs).forEach(([nick,r])=>{
-    const prev=_prevRecords[nick]||{};
-    if(r.rating>(prev.rating||0))showToast('🔥',`${nick} bateu recorde!`,`Novo melhor rating: ${r.rating.toFixed(2)}`);
-    else if(r.kd>(prev.kd||0))showToast('🎯',`${nick} bateu recorde!`,`Novo melhor K/D: ${r.kd.toFixed(2)}`);
-  });
-  _prevRecords={...recs};
-}
-function showToast(icon,title,msg){
-  const t=document.getElementById('notif-toast');
-  document.getElementById('notif-icon').textContent=icon;
-  document.getElementById('notif-title').textContent=title;
-  document.getElementById('notif-msg').textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),4500);
-}
-
-window.setPeriod=function(p,btn){
-  _activePeriod=p;
-  document.querySelectorAll('[data-period]').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');rerender();
-};
-window.setMapFilter=function(m,btn){
-  _activeMap=m;
-  document.querySelectorAll('[data-mapf]').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');rerender();
-};
-function buildMapFilters(history){
-  const maps=[...new Set(history.map(m=>m.map))];
-  document.getElementById('map-filters').innerHTML=`<button class="filter-btn active" data-mapf="all" onclick="setMapFilter('all',this)">Todos</button>`+maps.map(m=>`<button class="filter-btn" data-mapf="${m}" onclick="setMapFilter('${m}',this)">${MAP_EMOJIS[m]||'🗺️'} ${m}</button>`).join('');
-}
-function rerender(){
-  if(!_allData)return;
-  const h=_allData.history||[];
-  document.getElementById('chart-filters').innerHTML='';
-  _activeChartNicks=new Set();
-  renderMeta(h);renderMvpHistory(h);renderClutch(h);renderMapWinrate(h);renderChart(h);renderFavMaps(h);renderMapRating(h);renderHistory(h);renderAchievements(h);renderHeatmap(h);renderAISection(h);renderHallOfFame(h);
-}
-function animateBars(){document.querySelectorAll('.rating-bar-fill[data-target]').forEach(el=>setTimeout(()=>el.style.width=el.getAttribute('data-target')+'%',120));}
-
-/* ===== ACHIEVEMENTS ===== */
-const ACHIEVEMENTS=[
-  {id:'clutch_king',icon:'🎯',name:'Clutch King',desc:'Maior total de clutches ganhos',check:(nick,data,history)=>{
-    const counts={};
-    (history||[]).forEach(m=>{Object.entries(m.clutches||{}).forEach(([n,c])=>{counts[n]=(counts[n]||0)+Object.values(c).reduce((a,b)=>a+b,0);});});
-    const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
-    return best?.[0]===nick&&best[1]>0;
-  }},
-  {id:'spray_master',icon:'🔫',name:'Spray Master',desc:'Maior HS% médio do squad',check:(nick,data)=>{const avgs=data.map(n=>({nick:n.nick,avg:n.hsVals.length?n.hsVals.reduce((a,b)=>a+b,0)/n.hsVals.length:0}));const best=avgs.sort((a,b)=>b.avg-a.avg)[0];return best?.nick===nick&&best.avg>0;}},
-  {id:'consistent',icon:'📊',name:'Consistente',desc:'Menor desvio padrão de rating',check:(nick,data)=>{const devs=data.map(n=>({nick:n.nick,dev:n.ratings.length>=2?calcStdDev(n.ratings):99}));const best=devs.sort((a,b)=>a.dev-b.dev)[0];return best?.nick===nick&&best.dev<99;}},
-  {id:'adr_machine',icon:'💥',name:'ADR Machine',desc:'Maior ADR médio do squad',check:(nick,data)=>{const avgs=data.map(n=>({nick:n.nick,avg:n.adrVals.length?n.adrVals.reduce((a,b)=>a+b,0)/n.adrVals.length:0}));const best=avgs.sort((a,b)=>b.avg-a.avg)[0];return best?.nick===nick;}},
-  {id:'mvp_legend',icon:'👑',name:'MVP Legend',desc:'Mais vezes MVP no squad',check:(nick,data,history)=>{const counts={};(history||[]).forEach(m=>{const entries=Object.entries(m.players||{}).map(([n,s])=>({nick:n,r:s.rating||0}));const mvp=entries.sort((a,b)=>b.r-a.r)[0]?.nick;if(mvp)counts[mvp]=(counts[mvp]||0)+1;});const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];return best?.[0]===nick;}},
-  {id:'win_machine',icon:'🏆',name:'Win Machine',desc:'Maior % de vitórias',check:(nick,data)=>{const wrs=data.map(n=>({nick:n.nick,wr:n.wins+n.losses>0?n.wins/(n.wins+n.losses):0}));const best=wrs.sort((a,b)=>b.wr-a.wr)[0];return best?.nick===nick&&best.wr>0;}},
-  {id:'night_owl',icon:'🦉',name:'Night Owl',desc:'Mais partidas depois das 22h',check:(nick,data,history)=>{const counts={};(history||[]).forEach(m=>{const h=new Date(m.date).getHours();if(h>=22&&m.players[nick])counts[nick]=(counts[nick]||0)+1;});if(!counts[nick])return false;const best=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];return best?.[0]===nick;}},
-  {id:'rating_elite',icon:'🔥',name:'Elite Rating',desc:'Rating médio ≥ 1.40',check:(nick,data)=>{const nd=data.find(n=>n.nick===nick);if(!nd||!nd.ratings.length)return false;return nd.ratings.reduce((a,b)=>a+b,0)/nd.ratings.length>=1.40;}},
-  {id:'clutch_master',icon:'💜',name:'Clutch Master',desc:'Ganhou um 1v3 ou mais',check:(nick,data,history)=>{return(history||[]).some(m=>{const c=m.clutches?.[nick]||{};return(c['1v3']||0)+(c['1v4']||0)+(c['1v5']||0)>0;});}},
-];
-function renderAchievements(history){
-  if(!history||!history.length)return;
-  document.getElementById('achievements-section').style.display='';
-  const allNicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
-  const playerData=allNicks.map(nick=>{
-    const matches=history.filter(m=>m.players[nick]);
-    return{nick,ratings:matches.map(m=>m.players[nick].rating||0),kdVals:matches.map(m=>m.players[nick].kd||0),adrVals:matches.map(m=>m.players[nick].adr||0),hsVals:matches.map(m=>m.players[nick].hs||0),wins:matches.filter(m=>m.result==='W').length,losses:matches.filter(m=>m.result!=='W').length};
-  });
-  document.getElementById('achievements-grid').innerHTML=ACHIEVEMENTS.map(ach=>{
-    const holder=allNicks.find(nick=>ach.check(nick,playerData,history));
-    const unlocked=!!holder;
-    return`<div class="achievement-card ${unlocked?'unlocked':'locked'}"><div class="achievement-icon">${ach.icon}</div><div class="achievement-info"><div class="achievement-name">${ach.name}</div><div class="achievement-desc">${ach.desc}</div>${unlocked?`<div class="achievement-holder">🏅 ${holder}</div>`:'<div class="achievement-holder" style="color:var(--text-faint)">Bloqueado</div>'}</div></div>`;
-  }).join('');
-}
-
-/* ===== HEATMAP ===== */
-function renderHeatmap(history){
-  if(!history||!history.length)return;
-  document.getElementById('heatmap-section').style.display='';
-  const fh=filterHistory(history);
-  const hours=Array.from({length:24},(_,i)=>({h:i,total:0,wins:0}));
-  fh.forEach(m=>{const h=new Date(m.date).getHours();hours[h].total++;if(m.result==='W')hours[h].wins++;});
-  const shown=[...hours.slice(10),...hours.slice(0,10)];
-  const maxTotal=Math.max(...shown.map(h=>h.total),1);
-  const cells=shown.map(h=>{
-    const wr=h.total?Math.round((h.wins/h.total)*100):0;
-    const intensity=h.total/maxTotal;
-    const r=h.total===0?'var(--surface-2)':wr>=60?`rgba(74,222,128,${0.15+intensity*0.7})`:`rgba(248,113,113,${0.15+intensity*0.7})`;
-    return`<div class="heatmap-cell" style="background:${r};border:1px solid var(--border)">${h.total>0?`<span style="font-size:10px;font-weight:700;color:var(--text)">${wr}%</span>`:''}<div class="heatmap-tooltip">${String(h.h).padStart(2,'0')}h · ${h.total} partidas · ${wr}% WR</div></div>`;
-  }).join('');
-  const labels=shown.map(h=>`<div class="heatmap-label">${String(h.h).padStart(2,'0')}</div>`).join('');
-  const bestHour=shown.filter(h=>h.total>0).sort((a,b)=>(b.wins/b.total)-(a.wins/a.total))[0];
-  const worstHour=shown.filter(h=>h.total>0).sort((a,b)=>(a.wins/a.total)-(b.wins/b.total))[0];
-  document.getElementById('heatmap-content').innerHTML=`
-    <div style="display:flex;gap:var(--space-6);flex-wrap:wrap;margin-bottom:var(--space-4)">
-      ${bestHour?`<div style="text-align:center"><div style="font-size:var(--text-xl);font-weight:700;color:var(--green)">${String(bestHour.h).padStart(2,'0')}h</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Melhor horário (${Math.round(bestHour.wins/bestHour.total*100)}% WR)</div></div>`:''}
-      ${worstHour&&worstHour.h!==bestHour?.h?`<div style="text-align:center"><div style="font-size:var(--text-xl);font-weight:700;color:var(--red)">${String(worstHour.h).padStart(2,'0')}h</div><div style="font-size:var(--text-xs);color:var(--text-muted)">Pior horário (${Math.round(worstHour.wins/worstHour.total*100)}% WR)</div></div>`:''}
+      `).join('')}
     </div>
-    <div class="heatmap-grid">${cells}</div>
-    <div class="heatmap-labels">${labels}</div>
-    <div class="heatmap-legend">
-      <span>Legenda:</span>
-      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:rgba(74,222,128,0.8)"></div><span>Alta WR</span></div>
-      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:rgba(248,113,113,0.8)"></div><span>Baixa WR</span></div>
-      <div class="heatmap-legend-bar"><div class="heatmap-legend-cell" style="background:var(--surface-2);border:1px solid var(--border)"></div><span>Sem dados</span></div>
-    </div>`;
+  `;
 }
 
-/* ===== CARTA FIFA COM FLIP ===== */
-function renderFifaCards(players,history){
-  if(!players||!players.length)return;
-  const hasData=players.some(p=>p.stats&&Object.keys(p.stats).length>0);
-  if(!hasData)return;
-  document.getElementById('fifa-section').style.display='';
-  document.getElementById('fifa-cards-grid').innerHTML=players.map((p,idx)=>{
-    const nick=p.playerNick||p.nick||'?';
-    const cfg=PLAYER_CONFIG[nick]||{emoji:'🎮'};
-    const s=p.stats||{};
-    const r=calcGCRating(s);
-    if(r===null)return'';
-    const rC=rClass(r);
-    const kd=parseFloat(s.KDR||s.KD||0)||0;
-    const adr=parseFloat(s.ADR||0)||0;
-    const hs=parseFloat((s.HS||s['HS%']||'0')+''.replace('%',''))||0;
-    const kast=parseFloat((s.KAST||'0')+''.replace('%',''))||0;
-    const matchCount=history?history.filter(m=>m.players&&m.players[nick]).length:p.matches||0;
-    const ovrVal=r>=1.4?99:r>=1.15?85:r>=0.95?72:r>=0.75?60:50;
-    const fh=history||[];
-    const nickMatches=fh.filter(m=>m.players[nick]);
-    const wins=nickMatches.filter(m=>m.result==='W').length;
-    const wr=matchCount?Math.round((wins/matchCount)*100):0;
-    const avgRating=nickMatches.length?(nickMatches.reduce((a,m)=>a+(m.players[nick].rating||0),0)/nickMatches.length).toFixed(2):'—';
-    const totalClutches=fh.reduce((a,m)=>{const c=m.clutches?.[nick]||{};return a+Object.values(c).reduce((x,y)=>x+y,0);},0);
-    const avatarContent=cfg.avatar
-      ?`<img src="${cfg.avatar}" alt="${nick}" width="100" height="100" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`+`<div class="fifa-avatar-emoji" style="display:none">${cfg.emoji}</div>`
-      :`<div class="fifa-avatar-emoji">${cfg.emoji}</div>`;
-    return`<div class="fifa-card pack-open" id="fifa-${nick}" style="animation-delay:${idx*120}ms" onclick="flipFifaCard('${nick}')">
-      <div class="fifa-card-flipper">
-        <div class="fifa-card-front">
-          <div class="fifa-card-inner fifa-bg-${rC}">
-            <button class="fifa-share-btn" onclick="shareFifaCard('${nick}',event)">📤</button>
-            <div class="fifa-top-row">
-              <div class="fifa-pos-block">
-                <div class="fifa-rating">${r.toFixed(2)}</div>
-                <div class="fifa-pos">CS2</div>
-              </div>
-              <div class="fifa-ovr-badge">OVR ${ovrVal}</div>
-            </div>
-            <div class="fifa-avatar-wrap">${avatarContent}</div>
-            <div class="fifa-nick">${nick}</div>
-            <div class="fifa-divider"></div>
-            <div class="fifa-stats">
-              <div class="fifa-stat"><div class="fifa-stat-val">${kd.toFixed(2)}</div><div class="fifa-stat-key">K/D</div></div>
-              <div class="fifa-stat"><div class="fifa-stat-val">${adr.toFixed(0)}</div><div class="fifa-stat-key">ADR</div></div>
-              <div class="fifa-stat"><div class="fifa-stat-val">${hs.toFixed(0)}%</div><div class="fifa-stat-key">HS%</div></div>
-              <div class="fifa-stat"><div class="fifa-stat-val">${kast.toFixed(0)}%</div><div class="fifa-stat-key">KAST</div></div>
-              <div class="fifa-stat"><div class="fifa-stat-val">${matchCount}</div><div class="fifa-stat-key">JOGOS</div></div>
-              <div class="fifa-stat"><div class="fifa-stat-val">${ovrVal}</div><div class="fifa-stat-key">OVR</div></div>
-            </div>
-            <div class="fifa-flip-hint">Clique para virar ↩</div>
+function renderFifaCards() {
+  const container = document.getElementById('fifa-cards');
+  container.innerHTML = playersData.map(p => {
+    const rating = p.stats.rating || 0;
+    const stats = p.stats;
+    return `
+      <div class="fifa-card">
+        <img class="fifa-avatar" src="https://api.gamersclub.com.br/v1/players/${p.playerId}/avatar?size=512" alt="${p.playerNick}" onerror="this.src='https://via.placeholder.com/300x200/333/aaa?text=GC'">
+        <div class="fifa-info">
+          <div class="fifa-nick">${playerMap[p.playerId] || p.playerNick}</div>
+          <div class="fifa-level">LVL ${p.level} • ${p.matches || 0} partidas</div>
+          <div class="fifa-stats">
+            <div class="fifa-stat"><span>K/D</span><span>${stats.kdr || '-'}</span></div>
+            <div class="fifa-stat"><span>ADR</span><span>${stats.adr || '-'}</span></div>
+            <div class="fifa-stat"><span>KAST</span><span>${stats.kast || '-'}</span></div>
+            <div class="fifa-stat"><span>HS%</span><span>${stats.hs || '-'}</span></div>
+            ${rating > 0 ? `<div class="fifa-highlight">
+              <div style="font-size:1.4rem;font-weight:900;color:${getColor(rating)}">${rating}</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary)">GC Rating</div>
+            </div>` : ''}
           </div>
         </div>
-        <div class="fifa-card-back">
-          <div class="fifa-card-back-title">${nick}</div>
-          <div class="fifa-card-back-stats">
-            <div class="fifa-back-row"><span class="fifa-back-label">Rating médio</span><span class="fifa-back-val ${rClass(parseFloat(avgRating))}">${avgRating}</span></div>
-            <div class="fifa-back-row"><span class="fifa-back-label">WinRate</span><span class="fifa-back-val" style="color:${wr>=50?'var(--green)':'var(--red)'}">${wr}%</span></div>
-            <div class="fifa-back-row"><span class="fifa-back-label">Partidas</span><span class="fifa-back-val">${matchCount}</span></div>
-            <div class="fifa-back-row"><span class="fifa-back-label">Clutches</span><span class="fifa-back-val" style="color:var(--purple)">${totalClutches}</span></div>
-            <div class="fifa-back-row"><span class="fifa-back-label">ADR médio</span><span class="fifa-back-val">${adr.toFixed(1)}</span></div>
-            <div class="fifa-back-row"><span class="fifa-back-label">Nível GC</span><span class="fifa-back-val">${p.level||cfg.level||'?'}</span></div>
-          </div>
-          <div style="font-size:10px;color:var(--text-faint);margin-top:4px">Clique para voltar</div>
-        </div>
       </div>
-    </div>`;
+    `;
   }).join('');
 }
-window.flipFifaCard=function(nick){
-  document.getElementById('fifa-'+nick)?.classList.toggle('flipped');
-};
-window.shareFifaCard=function(nick,e){
-  e.stopPropagation();
-  const el=document.getElementById('fifa-'+nick);
-  if(!el||!window.html2canvas)return;
-  const wasFlipped=el.classList.contains('flipped');
-  if(wasFlipped)el.classList.remove('flipped');
-  setTimeout(()=>{
-    html2canvas(el,{scale:3,useCORS:true,backgroundColor:null}).then(canvas=>{
-      if(wasFlipped)el.classList.add('flipped');
-      canvas.toBlob(blob=>{
-        const file=new File([blob],`${nick}-cs-velharada.png`,{type:'image/png'});
-        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-          navigator.share({files:[file],title:`${nick} — CS Velharada`});
-        }else{
-          const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${nick}-cs-velharada.png`;a.click();
-        }
-      });
-    });
-  },350);
-};
 
-/* ===== HALL DA FAMA ===== */
-function renderHallOfFame(history){
-  if(!history||!history.length)return;
-  const allNicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
-  const entries=[];
-  const best=(arr,key,label,trophy,fmt,ctx)=>{
-    const top=arr.filter(x=>x.val!=null&&x.val>0).sort((a,b)=>b.val-a.val)[0];
-    if(top)entries.push({...top,label,trophy,fmt,ctx});
-  };
-  best(history.flatMap(m=>Object.entries(m.players||{}).map(([nick,s])=>({nick,val:s.rating||0,ctx:`${MAP_EMOJIS[m.map]||''} ${m.map} · ${new Date(m.date).toLocaleDateString('pt-BR')}`}))),'Melhor Rating','🔥',v=>v.toFixed(2));
-  best(history.flatMap(m=>Object.entries(m.players||{}).map(([nick,s])=>({nick,val:s.adr||0,ctx:`${MAP_EMOJIS[m.map]||''} ${m.map} · ${new Date(m.date).toLocaleDateString('pt-BR')}`}))),'Melhor ADR','💥',v=>v.toFixed(1));
-  best(history.flatMap(m=>Object.entries(m.players||{}).map(([nick,s])=>({nick,val:s.kd||0,ctx:`${MAP_EMOJIS[m.map]||''} ${m.map} · ${new Date(m.date).toLocaleDateString('pt-BR')}`}))),'Melhor K/D','⚔️',v=>v.toFixed(2));
-  best(history.flatMap(m=>Object.entries(m.players||{}).map(([nick,s])=>({nick,val:s.hs||0,ctx:`${MAP_EMOJIS[m.map]||''} ${m.map} · ${new Date(m.date).toLocaleDateString('pt-BR')}`}))),'Melhor HS%','🎯',v=>v.toFixed(0)+'%');
-  const winStreaks={};
-  allNicks.forEach(nick=>{
-    const sorted=[...history].filter(m=>m.players[nick]).sort((a,b)=>new Date(a.date)-new Date(b.date));
-    let cur=0,max=0,lastMap='';
-    sorted.forEach(m=>{if(m.result==='W'){cur++;if(cur>max){max=cur;lastMap=m.map;}}else cur=0;});
-    if(max>0)winStreaks[nick]={val:max,ctx:`Melhor sequência · ${MAP_EMOJIS[lastMap]||''} ${lastMap}`};
-  });
-  const topStreak=Object.entries(winStreaks).sort((a,b)=>b[1].val-a[1].val)[0];
-  if(topStreak)entries.push({nick:topStreak[0],val:topStreak[1].val,label:'Maior Sequência',trophy:'🔥',fmt:v=>v+'x Vitórias',ctx:topStreak[1].ctx});
-  const clutchTotals={};
-  history.forEach(m=>Object.entries(m.clutches||{}).forEach(([nick,c])=>{clutchTotals[nick]=(clutchTotals[nick]||0)+Object.values(c).reduce((a,b)=>a+b,0);}));
-  const topClutch=Object.entries(clutchTotals).sort((a,b)=>b[1]-a[1])[0];
-  if(topClutch&&topClutch[1]>0)entries.push({nick:topClutch[0],val:topClutch[1],label:'Rei dos Clutches',trophy:'💜',fmt:v=>v+' clutches',ctx:'Total histórico'});
-  if(!entries.length)return;
-  document.getElementById('halloffame-section').style.display='';
-  document.getElementById('hof-grid').innerHTML=entries.map(e=>`
-    <div class="hof-card">
-      <div class="hof-badge">All-Time</div>
-      <div class="hof-trophy">${e.trophy}</div>
-      <div class="hof-title">${e.label}</div>
-      <div class="hof-value">${e.fmt(e.val)}</div>
-      <div class="hof-nick">${avatarHtml(e.nick,24,'rank-avatar')} ${e.nick}</div>
-      <div class="hof-context">${e.ctx||''}</div>
-    </div>`).join('');
-}
-
-/* ===== IA ANÁLISE ===== */
-function generateAIAnalysis(match){
-  if(!match)return'';
-  const isWin=match.result==='W';
-  const players=match.players||{};
-  const entries=Object.entries(players).map(([nick,s])=>({nick,r:s.rating||0,kd:s.kd||0,adr:s.adr||0,hs:s.hs||0}));
-  if(!entries.length)return'<p>Sem dados de jogadores para esta partida.</p>';
-  entries.sort((a,b)=>b.r-a.r);
-  const mvp=entries[0],worst=entries[entries.length-1];
-  const avgRating=(entries.reduce((a,b)=>a+b.r,0)/entries.length).toFixed(2);
-  const highADR=entries.filter(p=>p.adr>=90);
-  const mapEmoji=MAP_EMOJIS[match.map]||'🗺️';
-  const clutchInfo=match.clutches?Object.entries(match.clutches).filter(([,c])=>Object.values(c).reduce((a,b)=>a+b,0)>0):'';
-  let txt='';
-  txt+=`<div class="ai-paragraph">${isWin?`O squad <span class="ai-good">venceu</span>`:`O squad <span class="ai-bad">perdeu</span>`} em ${mapEmoji} <span class="ai-highlight">${match.map}</span> com placar <strong>${match.score||'—'}</strong>. Rating médio do squad foi <strong>${avgRating}</strong> — ${parseFloat(avgRating)>=1.1?'uma performance sólida 💪':'tem espaço para melhora 📈'}.</div>`;
-  txt+=`<div class="ai-paragraph"><span class="ai-gold">👑 ${mvp.nick}</span> foi o destaque com rating <span class="ai-gold">${mvp.r.toFixed(2)}</span>${mvp.kd>=1.5?`, dominando com K/D <strong>${mvp.kd.toFixed(2)}</strong>`:''}${mvp.hs>=50?` e ${mvp.hs.toFixed(0)}% de headshots 🎯`:''}.</div>`;
-  if(highADR.length)txt+=`<div class="ai-paragraph">${highADR.map(p=>`<span class="ai-highlight">${p.nick}</span>`).join(' e ')} ${highADR.length===1?'teve':'tiveram'} ADR acima de 90 — excelente pressão durante os rounds. 💥</div>`;
-  if(clutchInfo&&clutchInfo.length)txt+=`<div class="ai-paragraph">🎯 Clutches decisivos: ${clutchInfo.map(([nick,c])=>`<span class="ai-highlight">${nick}</span> (${Object.entries(c).filter(([,v])=>v>0).map(([k,v])=>`${v}x ${k}`).join(', ')})`).join(', ')}.</div>`;
-  if(worst.kd<0.85)txt+=`<div class="ai-paragraph"><span class="ai-bad">${worst.nick}</span> teve dificuldades no ${match.map} com K/D de <span class="ai-bad">${worst.kd.toFixed(2)}</span>. ${isWin?'Apesar disso, o time segurou o resultado. 👏':'Pode ter sido fator decisivo na derrota.'}</div>`;
-  const tips=[`Foco em utilitário e flash-play pode elevar a consistência em ${match.map}.`,`Coordenação nos retakes foi chave — manter essa comunicação.`,`Entradas mais rápidas nos sites podem aumentar o aproveitamento.`,`Trabalhar o mid-control em ${match.map} pode abrir mais rotas.`];
-  txt+=`<div class="ai-paragraph">💡 <em>${tips[Math.abs((match.map?.length||0)+(entries.length||0))%tips.length]}</em></div>`;
-  txt+=`<div class="ai-badge-row"><span class="ai-badge ${isWin?'ai-badge-win':'ai-badge-loss'}">${isWin?'✅ Vitória':'❌ Derrota'}</span><span class="ai-badge ai-badge-neutral">${mapEmoji} ${match.map}</span><span class="ai-badge ai-badge-neutral">👑 MVP: ${mvp.nick}</span><span class="ai-badge ai-badge-neutral">⭐ Rating médio: ${avgRating}</span></div>`;
-  return txt;
-}
-function renderAISection(history){
-  if(!history||!history.length)return;
-  document.getElementById('ai-section').style.display='';
-  const sorted=[...history].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const sel=document.getElementById('ai-match-select');
-  sel.innerHTML=sorted.map((m,i)=>{
-    const d=new Date(m.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-    return`<option value="${i}">${m.result==='W'?'✅':'❌'} ${m.map} · ${m.score||'—'} · ${d}</option>`;
-  }).join('');
-  window._aiHistory=sorted;
-  document.getElementById('ai-analysis').innerHTML=generateAIAnalysis(sorted[0]);
-}
-window.onAISelectChange=function(sel){
-  const idx=parseInt(sel.value);
-  if(window._aiHistory&&window._aiHistory[idx])document.getElementById('ai-analysis').innerHTML=generateAIAnalysis(window._aiHistory[idx]);
-};
-
-async function loadData(){
-  const grid=document.getElementById('squad-grid'),badge=document.getElementById('status-badge');
-  const msg=document.getElementById('status-msg'),upd=document.getElementById('last-update-text');
-  try{
-    const res=await fetch('./data.json?t='+Date.now());
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
-    _allData=data;
-    const history=data.history||[];
-    const allEmpty=data.players.every(p=>!p.stats||!Object.keys(p.stats).length);
-    const hasHistory=Array.isArray(history)&&history.length>0;
-    if(allEmpty&&!hasHistory){
-      grid.innerHTML=`<div class="empty-state"><div class="ei">📭</div><h3>Aguardando primeira partida</h3><p>Após cada jogo, o dono do squad envia o print e os dados são atualizados aqui.</p></div>`;
-      badge.className='badge badge-muted';badge.textContent='● Aguardando dados';
-      msg.textContent='Nenhuma partida registrada ainda.';return;
-    }
-    if(hasHistory){
-      document.getElementById('global-filters').style.display='';
-      buildMapFilters(history);
-      const recs=calcRecords(history);
-      checkRecords(history);
-      if(!allEmpty){
-        const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
-        const maxR=Math.max(...ratings.filter(r=>r!==null));
-        grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,recs,i*60)).join('');
-        renderRanking(data.players);
-        animateBars();
-      }else{grid.innerHTML='';}
-      renderMeta(history);
-      renderMvpHistory(history);
-      renderClutch(history);
-      renderMapWinrate(history);
-      renderChart(history);
-      renderFavMaps(history);
-      renderMapRating(history);
-      renderHistory(history);
-      renderAchievements(history);
-      renderHallOfFame(history);
-      renderHeatmap(history);
-      renderAISection(history);
-      renderFifaCards(data.players,history);
-      const cmpA=document.getElementById('cmp-a'),cmpB=document.getElementById('cmp-b');
-      if(cmpA&&!cmpA.innerHTML){
-        const nicks=[...new Set(history.flatMap(m=>Object.keys(m.players||{})))];
-        const opts=nicks.map(n=>`<option value="${n}">${n}</option>`).join('');
-        cmpA.innerHTML=opts;cmpB.innerHTML=opts;
-        if(nicks.length>1)cmpB.selectedIndex=1;
-        document.getElementById('compare-section').style.display='';
-        renderComparator();
-      }
-    }else if(!allEmpty){
-      const ratings=data.players.map(p=>calcGCRating(p.stats||{}));
-      const maxR=Math.max(...ratings.filter(r=>r!==null));
-      grid.innerHTML=data.players.map((p,i)=>renderCard(p,ratings[i]===maxR&&maxR!==null,{},i*60)).join('');
-      renderRanking(data.players);
-      animateBars();
-      renderFifaCards(data.players,history);
-    }
-    badge.className='badge badge-green';badge.textContent='● Ao vivo';
-    if(data.lastUpdate){
-      const d=new Date(data.lastUpdate);
-      upd.textContent='Atualizado: '+d.toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-      const total=data.players.reduce((acc,p)=>acc+(p.matches||0),0);
-      msg.textContent=`${data.players.length} jogadores · ${total} partidas · GC Rating ativo`;
-    }
-  }catch(e){
-    badge.className='badge badge-muted';badge.textContent='● Erro';
-    msg.textContent='Erro ao carregar data.json';
-    grid.innerHTML=`<div class="empty-state"><div class="ei">⚠️</div><h3>Erro</h3><p>${e.message}</p></div>`;
+function renderHistory() {
+  const container = document.getElementById('history');
+  if (historyData.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div>📋</div><h3>Aguardando partidas</h3><p>Mande o print!</p></div>';
+    return;
   }
+  
+  container.innerHTML = `
+    <h3>📋 Histórico (${historyData.length} partidas)</h3>
+    <div class="history-list">
+      ${historyData.slice(-10).reverse().map(h => {
+        const nick = playerMap[h.playerId] || 'Desconhecido';
+        const win = h.result === 'win';
+        const mvp = h.mvp;
+        return `
+          <div class="history-item">
+            <div>
+              <div class="history-result ${win ? 'history-win' : 'history-loss'}">${win ? '✅' : '❌'} ${h.score} ${h.map}</div>
+              <div style="font-size:0.9rem;color:var(--text-secondary)">${nick} ${mvp ? '👑 MVP' : ''} • ${new Date(h.date).toLocaleString('pt-BR')}</div>
+            </div>
+            <div style="font-weight:700">${h.rating || '-'}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
 }
+
+function renderEvolution() {
+  const container = document.getElementById('evolution');
+  if (historyData.length < 2) {
+    container.innerHTML = '<div class="empty-state"><div>📈</div><h3>Aguardando evolução</h3><p>2+ partidas</p></div>';
+    return;
+  }
+  
+  // Gráfico simples de rating ao longo do tempo
+  const ctx = container.querySelector('canvas') || document.createElement('canvas');
+  ctx.className = 'chart-container';
+  container.innerHTML = '<h3>📈 Evolução Rating</h3><canvas></canvas>';
+  container.appendChild(ctx);
+  
+  new Chart(ctx.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: historyData.slice(-10).map(h => new Date(h.date).toLocaleDateString()),
+      datasets: [{
+        label: 'GC Rating',
+        data: historyData.slice(-10).map(h => h.rating || 0),
+        borderColor: '#00ff88',
+        backgroundColor: 'rgba(0,255,136,0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+  });
+}
+
+function renderCoach() {
+  const container = document.getElementById('coach');
+  if (historyData.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div>🤖</div><h3>Coach IA</h3><p>Aguardando análise</p></div>';
+    return;
+  }
+  
+  const wins = historyData.filter(h => h.result === 'win').length;
+  const wr = ((wins / historyData.length) * 100).toFixed(1);
+  const avgRating = historyData.reduce((sum, h) => sum + (h.rating || 0), 0) / historyData.length;
+  
+  container.innerHTML = `
+    <h3>🤖 Coach IA</h3>
+    <div class="coach-analysis">
+WinRate: ${wr}% (${wins}/${historyData.length})
+Rating médio: ${avgRating.toFixed(2)}
+${wr > 60 ? '✅ Squad forte! Foquem em clutches.' : '⚠️ Treinem aim e smokes.'}
+    </div>
+  `;
+}
+
+function renderComparator() {
+  const container = document.getElementById('comparator');
+  if (playersData.length < 2) {
+    container.innerHTML = '<div class="empty-state"><div>⚖️</div><h3>Comparador</h3><p>2+ jogadores</p></div>';
+    return;
+  }
+  
+  const p1 = playersData[0], p2 = playersData[1];
+  container.innerHTML = `
+    <h3>⚖️ Comparador</h3>
+    <div class="comparator">
+      <div class="comparator-player">${playerMap[p1.playerId] || p1.playerNick}</div>
+      <div class="comparator-vs">VS</div>
+      <div class="comparator-player">${playerMap[p2.playerId] || p2.playerNick}</div>
+      <div class="comparator-stat" style="grid-column:1/-1"><span>GC Rating</span><span>${p1.stats.rating || '-'} vs ${p2.stats.rating || '-'}</span></div>
+      <div class="comparator-stat"><span>K/D</span><span>${p1.stats.kdr || '-'} vs ${p2.stats.kdr || '-'}</span></div>
+      <div class="comparator-stat"><span>ADR</span><span>${p1.stats.adr || '-'} vs ${p2.stats.adr || '-'}</span></div>
+    </div>
+  `;
+}
+
+function renderMaps() {
+  const container = document.getElementById('maps');
+  if (historyData.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div>🗺️</div><h3>Mapas</h3><p>Aguardando dados</p></div>';
+    return;
+  }
+  
+  const mapCount = {};
+  historyData.forEach(h => mapCount[h.map] = (mapCount[h.map] || 0) + 1);
+  const topMap = Object.entries(mapCount).sort((a,b) => b[1] - a[1])[0];
+  
+  container.innerHTML = `
+    <h3>🗺️ Mapa Favorito</h3>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-value">${topMap[0]}</div>
+        <div class="stat-label">${topMap[1]} partidas</div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleTheme() {
+  document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
 loadData();
-setInterval(loadData,30000);
+setInterval(loadData, 30000);
 </script>
 </body>
 </html>
