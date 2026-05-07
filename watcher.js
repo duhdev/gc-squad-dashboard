@@ -11,7 +11,35 @@ const git        = simpleGit(__dirname);
 
 if (!fs.existsSync(PRINTS_DIR)) fs.mkdirSync(PRINTS_DIR);
 
-const KNOWN_NICKS = ["Cq", "DU", "Flavinho", "Will", "Chavera", "Dukka", "Fluyr", "Chara"];
+const NICK_ALIASES = {
+  "Cq":      ["TREMBOLIZADO", "TREMBA", "TREMBA R4ST4F4RI", "TREMB4 R4ST4F4RI", "TREMB4", "CQ", "Cq"],
+  "DU":      ["H34D5H07M4CH1N3", "HEADSHOTMACHINE", "JOGADOR CARO", "DU"],
+  "Flavinho": ["dEM0N666", "DEMON666", "FLAVINHO", "Flavinho"],
+  "Chara":   ["apEX paulista", "APEX PAULISTA", "CHARA", "Chara"],
+  "Chavera": ["SKILLZ-", "CHAVERA", "Chavera"],
+  "Dukka":   ["ROTTWAGNER", "CLEITON RRASTAARI", "Y4SMIN 4SBOLA", "DUKKA", "Dukka"],
+  "Fluyr":   ["fluyr", "FLUYR", "Fluyr"],
+  "Will":    ["WILL mira adulta", "WILL", "Will"],
+};
+
+function normalizeNick(rawNick) {
+  const raw = rawNick.trim().toLowerCase();
+  for (const [canonical, aliases] of Object.entries(NICK_ALIASES)) {
+    for (const alias of aliases) {
+      if (alias.toLowerCase() === raw) return canonical;
+    }
+  }
+  return null;
+}
+
+function normalizePlayers(rawPlayers) {
+  const normalized = {};
+  for (const [nick, stats] of Object.entries(rawPlayers || {})) {
+    const canonical = normalizeNick(nick);
+    if (canonical) normalized[canonical] = stats;
+  }2222222222222222222222
+  return normalized;
+}
 
 // ── Fila de processamento (evita push simultâneo) ──
 let queue       = [];
@@ -75,7 +103,16 @@ async function extractMatchFromImage(imgPath) {
   const prompt = `Você é um extrator de dados de scoreboards do CS2 e GamersClub.
 Analise esta imagem e retorne SOMENTE um JSON válido (sem markdown).
 Extraia APENAS jogadores desta lista: ${KNOWN_NICKS.join(', ')} (case-insensitive).
-Use nick exato da lista. Se não aparecer na imagem, não inclua.
+Cada jogador pode aparecer com nicks alternativos no scoreboard:
+- Cq: TREMBOLIZADO, TREMBA, TREMB4 R4ST4F4RI, CQ
+- DU: H34D5H07M4CH1N3, HEADSHOTMACHINE, JOGADOR CARO
+- Flavinho: dEM0N666, DEMON666
+- Chara: apEX paulista, APEX PAULISTA
+- Chavera: SKILLZ-
+- Dukka: ROTTWAGNER, CLEITON RRASTAARI, Y4SMIN 4SBOLA
+- Fluyr: fluyr
+- Will: WILL mira adulta
+Se encontrar qualquer um desses nicks alternativos, use o nick canônico da lista (ex: ROTTWAGNER → "Dukka").
 
 {
   "map": "nome_em_minusculas",
@@ -90,7 +127,9 @@ result = "win" se o time dos jogadores da lista ganhou, "loss" se perdeu.
 date = data visível ou hoje. Retorne APENAS o JSON.`;
 
   const raw = await geminiVision(base64, mimeType, prompt);
-  return JSON.parse(raw.replace(/```json\\n?/g,'').replace(/```\\n?/g,'').trim());
+  const match = JSON.parse(raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim());
+  match.players = normalizePlayers(match.players);
+  return match;
 }
 
 // ── Recalcula médias ──
@@ -234,3 +273,8 @@ console.log(`║   Grupo: ${KNOWN_NICKS.join(', ').padEnd(44)}║`);
 console.log('║   Monitorando: ./prints                              ║');
 console.log('║   Para parar: Ctrl+C                                 ║');
 console.log('╚══════════════════════════════════════════════════════╝\\n');
+
+
+
+
+
