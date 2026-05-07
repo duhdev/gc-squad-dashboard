@@ -11,6 +11,8 @@ const git        = simpleGit(__dirname);
 
 if (!fs.existsSync(PRINTS_DIR)) fs.mkdirSync(PRINTS_DIR);
 
+const KNOWN_NICKS = ["Cq", "DU", "Flavinho", "Will", "Chavera", "Dukka", "Fluyr", "Chara"];
+
 const NICK_ALIASES = {
   "Cq":      ["TREMBOLIZADO", "TREMBA", "TREMBA R4ST4F4RI", "TREMB4 R4ST4F4RI", "TREMB4", "CQ", "Cq"],
   "DU":      ["H34D5H07M4CH1N3", "HEADSHOTMACHINE", "JOGADOR CARO", "DU"],
@@ -37,13 +39,13 @@ function normalizePlayers(rawPlayers) {
   for (const [nick, stats] of Object.entries(rawPlayers || {})) {
     const canonical = normalizeNick(nick);
     if (canonical) normalized[canonical] = stats;
-  }2222222222222222222222
+  }
   return normalized;
 }
 
 // ── Fila de processamento (evita push simultâneo) ──
-let queue       = [];
-let isRunning   = false;
+let queue     = [];
+let isRunning = false;
 
 async function enqueue(task) {
   queue.push(task);
@@ -112,7 +114,7 @@ Cada jogador pode aparecer com nicks alternativos no scoreboard:
 - Dukka: ROTTWAGNER, CLEITON RRASTAARI, Y4SMIN 4SBOLA
 - Fluyr: fluyr
 - Will: WILL mira adulta
-Se encontrar qualquer um desses nicks alternativos, use o nick canônico da lista (ex: ROTTWAGNER → "Dukka").
+Se encontrar qualquer um desses nicks alternativos, use o nick canônico da lista (ex: ROTTWAGNER -> "Dukka").
 
 {
   "map": "nome_em_minusculas",
@@ -199,7 +201,7 @@ async function gitSync(files, message) {
 // ── Processa print nova ──
 async function processImage(imgPath) {
   const imgName = path.basename(imgPath);
-  console.log(`\\n📸 Nova print: ${imgName}`);
+  console.log(`\n📸 Nova print: ${imgName}`);
   console.log('🔍 Enviando para Gemini Vision...');
   try {
     await new Promise(r => setTimeout(r, 1500));
@@ -227,7 +229,7 @@ async function processImage(imgPath) {
       console.log(`  ${p.playerNick.padEnd(12)} KDR:${s.KDR} ADR:${s.ADR} KAST:${s.KAST}% W:${s.wins} L:${s.losses}`);
     }
 
-    console.log('\\n📤 Push para o GitHub...');
+    console.log('\n📤 Push para o GitHub...');
     await gitSync(['data.json', `prints/${imgName}`],
       `🎮 Auto: ${match.map} ${match.score} (${imgName}) [${new Date().toLocaleString('pt-BR')}]`);
   } catch (err) {
@@ -238,7 +240,7 @@ async function processImage(imgPath) {
 // ── Remove partida ao deletar print ──
 async function removeMatch(filePath) {
   const imgName = path.basename(filePath);
-  console.log(`\\n🗑️  Print deletada: ${imgName}`);
+  console.log(`\n🗑️  Print deletada: ${imgName}`);
   const data = readData();
   const idx = data.history.findIndex(m => m.printFile === imgName);
   if (idx === -1) { console.log('⚠️  Nenhuma partida vinculada. Nada alterado.'); return; }
@@ -250,7 +252,7 @@ async function removeMatch(filePath) {
   saveData(data);
   console.log(`💾 data.json: ${data.history.length} partidas restantes`);
 
-  console.log('\\n📤 Push para o GitHub...');
+  console.log('\n📤 Push para o GitHub...');
   const filesToAdd = ['data.json'];
   try { await git.rm([`prints/${imgName}`]); } catch {}
   await gitSync(filesToAdd,
@@ -272,9 +274,4 @@ console.log('║   CS Velharada — Watcher de Prints ativo! (Gemini) ║');
 console.log(`║   Grupo: ${KNOWN_NICKS.join(', ').padEnd(44)}║`);
 console.log('║   Monitorando: ./prints                              ║');
 console.log('║   Para parar: Ctrl+C                                 ║');
-console.log('╚══════════════════════════════════════════════════════╝\\n');
-
-
-
-
-
+console.log('╚══════════════════════════════════════════════════════╝\n');
