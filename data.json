@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:17:47.442Z",
+  "updatedAt": "2026-05-07T19:18:01.333Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -29,21 +29,21 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 1,
+      "matches": 2,
       "updatedAt": "2026-05-07T16:29:28.751Z",
       "stats": {
-        "KDR": 0.79,
-        "ADR": 79.9,
-        "HS": 0,
-        "KAST": 71,
-        "kills": 16,
-        "assists": 10,
-        "MK": 2,
-        "FK": 0,
-        "FA": 0,
-        "DIFF": -4,
+        "KDR": 1.4,
+        "ADR": 85.17,
+        "HS": 1.5,
+        "KAST": 76.5,
+        "kills": 15,
+        "assists": 6.5,
+        "MK": 6,
+        "FK": 1,
+        "FA": 3,
+        "DIFF": 1.5,
         "rating": 0,
-        "wins": 1,
+        "wins": 2,
         "losses": 0
       }
     },
@@ -67,21 +67,21 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 1,
+      "matches": 2,
       "updatedAt": "2026-05-07T16:29:33.253Z",
       "stats": {
-        "KDR": 0.88,
-        "ADR": 79.9,
-        "HS": 1,
-        "KAST": 83,
-        "kills": 13,
-        "assists": 10,
-        "MK": 2,
-        "FK": 0,
-        "FA": 0,
-        "DIFF": -4,
+        "KDR": 0.94,
+        "ADR": 85.86,
+        "HS": 1.5,
+        "KAST": 82.5,
+        "kills": 12,
+        "assists": 7.5,
+        "MK": 6,
+        "FK": 1,
+        "FA": 3,
+        "DIFF": -2,
         "rating": 0,
-        "wins": 1,
+        "wins": 2,
         "losses": 0
       }
     },
@@ -131,6 +131,43 @@
         }
       },
       "printFile": "1.png"
+    },
+    {
+      "map": "de_nuke",
+      "result": "win",
+      "score": "13-3",
+      "date": "2020-05-08",
+      "players": {
+        "Will": {
+          "kills": 14,
+          "deaths": 7,
+          "assists": 3,
+          "kdr": 2,
+          "adr": 90.44,
+          "kast": 82,
+          "hs": 3,
+          "mk": 4,
+          "fk": 1,
+          "fa": 3,
+          "diff": 7,
+          "rating": 0
+        },
+        "Fluyr": {
+          "kills": 11,
+          "deaths": 11,
+          "assists": 5,
+          "kdr": 1,
+          "adr": 91.81,
+          "kast": 82,
+          "hs": 2,
+          "mk": 4,
+          "fk": 1,
+          "fa": 3,
+          "diff": 0,
+          "rating": 0
+        }
+      },
+      "printFile": "2.png"
     }
   ]
 }
