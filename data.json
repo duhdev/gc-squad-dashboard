@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:10:58.030Z",
+  "updatedAt": "2026-05-07T19:10:58.718Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -65,9 +65,23 @@
       "playerNick": "Chavera",
       "playerId": "13547",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:31.126Z",
-      "stats": {}
+      "stats": {
+        "KDR": 1.1,
+        "ADR": 82,
+        "HS": 0,
+        "KAST": 81,
+        "kills": 11,
+        "assists": 3,
+        "MK": 2,
+        "FK": 2,
+        "FA": 0,
+        "DIFF": 1,
+        "rating": 0,
+        "wins": 1,
+        "losses": 0
+      }
     },
     {
       "playerNick": "Dukka",
@@ -205,6 +219,29 @@
         }
       },
       "printFile": "1.png"
+    },
+    {
+      "map": "dust2",
+      "result": "win",
+      "score": "13-3",
+      "date": "2024-05-08",
+      "players": {
+        "Chavera": {
+          "kills": 11,
+          "deaths": 10,
+          "assists": 3,
+          "kdr": 1.1,
+          "adr": 82,
+          "kast": 81,
+          "hs": 0,
+          "mk": 2,
+          "fk": 2,
+          "fa": 0,
+          "diff": 1,
+          "rating": 0
+        }
+      },
+      "printFile": "6.png"
     }
   ]
 }
