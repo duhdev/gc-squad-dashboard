@@ -68,13 +68,13 @@ function geminiVision(base64Image, mimeType, prompt) {
         { text: prompt },
         { inline_data: { mime_type: mimeType, data: base64Image } }
       ]}],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 4096 }
+      generationConfig: { temperature: 0.1, maxOutputTokens: 4096, responseMimeType: "application/json" }
     });
 
     const apiKey = process.env.GEMINI_API_KEY;
     const options = {
       hostname: 'generativelanguage.googleapis.com',
-      path: `/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      path: `/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
     };
