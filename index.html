@@ -916,29 +916,66 @@ function saveMatch(){
     players,
     ...(Object.keys(clutches).length ? { clutches } : {})
   };
-  // Adiciona ao cache e re-renderiza
-  if(!window._historyCache) window._historyCache = [];
-  window._historyCache.push(match);
-  // Re-renderiza seções dinâmicas
-  renderClutch(window._historyCache);
-  renderMapRating(window._historyCache);
-  renderHallOfFame(window._historyCache);
-  renderHistory(window._historyCache);
-  renderFavMaps(window._historyCache);
-  renderChart(window._historyCache);
-  // Atualiza ranking com stats agregados
-  if(window._playersCache) renderRanking(window._playersCache);
-  setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
-  // Gera JSON para copiar
-  const jsonOut = JSON.stringify(match, null, 2);
-  document.getElementById('f-json-out').value = jsonOut;
-  document.getElementById('f-json-wrap').style.display = '';
+  // Salva no servidor e re-renderiza
+  const btn = document.querySelector('#add-form-screen button[onclick="saveMatch()"]');
+  if(btn){ btn.disabled=true; btn.textContent='Salvando...'; }
   const msg = document.getElementById('f-save-msg');
-  msg.textContent = 'Partida adicionada ao dashboard! Copie o JSON abaixo para salvar no data.json.';
-  msg.style.display = '';
-  // Limpa form
-  document.getElementById('f-players-list').innerHTML = '';
-  document.getElementById('f-score').value = '';
+  fetch('/api/match', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(match)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(res.ok){
+      // Adiciona ao cache e re-renderiza
+      if(!window._historyCache) window._historyCache = [];
+      window._historyCache.push(match);
+      renderClutch(window._historyCache);
+      renderMapRating(window._historyCache);
+      renderHallOfFame(window._historyCache);
+      renderHistory(window._historyCache);
+      renderFavMaps(window._historyCache);
+      renderChart(window._historyCache);
+      if(window._playersCache) renderRanking(window._playersCache);
+      setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+      msg.textContent = '✅ Partida salva no data.json automaticamente! (' + res.total + ' partidas no histórico)';
+      msg.style.background = 'var(--green-bg)';
+      msg.style.color = 'var(--green)';
+      msg.style.display = '';
+      document.getElementById('f-json-wrap').style.display = 'none';
+      // Limpa form
+      document.getElementById('f-players-list').innerHTML = '';
+      document.getElementById('f-score').value = '';
+    } else {
+      throw new Error(res.error || 'Erro desconhecido');
+    }
+  })
+  .catch(err => {
+    // Fallback: modo offline — gera JSON para copiar
+    if(!window._historyCache) window._historyCache = [];
+    window._historyCache.push(match);
+    renderClutch(window._historyCache);
+    renderMapRating(window._historyCache);
+    renderHallOfFame(window._historyCache);
+    renderHistory(window._historyCache);
+    renderFavMaps(window._historyCache);
+    renderChart(window._historyCache);
+    if(window._playersCache) renderRanking(window._playersCache);
+    setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+    const jsonOut = JSON.stringify(match, null, 2);
+    document.getElementById('f-json-out').value = jsonOut;
+    document.getElementById('f-json-wrap').style.display = '';
+    msg.textContent = '⚠️ Servidor offline — copie o JSON abaixo e cole no data.json manualmente.';
+    msg.style.background = 'var(--gold-bg)';
+    msg.style.color = 'var(--gold)';
+    msg.style.display = '';
+    document.getElementById('f-players-list').innerHTML = '';
+    document.getElementById('f-score').value = '';
+  })
+  .finally(() => {
+    if(btn){ btn.disabled=false; btn.textContent='Salvar Partida'; }
+  });
 }
 function copyJson(){
   const ta = document.getElementById('f-json-out');
@@ -962,22 +999,52 @@ window.runComparison=runComparison;
 
 /* ===== INIT ===== */
 function init(){
-  document.getElementById('status-msg').textContent='Dados demo carregados. Adicione partidas reais!';
-  document.getElementById('last-update-text').textContent='Atualizado '+new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-  window._historyCache=DEMO_HISTORY;
-  window._playersCache=DEMO_PLAYERS;
-  const mvpNick=DEMO_PLAYERS.reduce((a,b)=>(calcGCRating(b.stats||{})||0)>(calcGCRating(a.stats||{})||0)?b:a).playerNick;
-  document.getElementById('squad-grid').innerHTML=DEMO_PLAYERS.map(p=>renderCard(p,p.playerNick===mvpNick)).join('');
-  renderRanking(DEMO_PLAYERS);
-  renderFifaCards(DEMO_PLAYERS,DEMO_HISTORY);
-  renderClutch(DEMO_HISTORY);
-  renderMapRating(DEMO_HISTORY);
-  renderHallOfFame(DEMO_HISTORY);
-  renderHistory(DEMO_HISTORY);
-  renderFavMaps(DEMO_HISTORY);
-  renderChart(DEMO_HISTORY);
-  setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+  // Tenta buscar dados do servidor local
+  fetch('/api/data')
+    .then(r => { if(!r.ok) throw new Error('offline'); return r.json(); })
+    .then(data => {
+      // Servidor online
+      document.getElementById('server-badge').style.display = 'none';
+      const players = (data.players && data.players.length) ? data.players : DEMO_PLAYERS;
+      const history = (data.history && data.history.length) ? data.history : DEMO_HISTORY;
+      window._historyCache = history;
+      window._playersCache = players;
+      const ts = data.updatedAt ? new Date(data.updatedAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      document.getElementById('status-msg').textContent = history.length + ' partidas carregadas do servidor.';
+      document.getElementById('last-update-text').textContent = 'Atualizado ' + ts;
+      const mvpNick = players.reduce((a,b)=>(calcGCRating(b.stats||{})||0)>(calcGCRating(a.stats||{})||0)?b:a).playerNick;
+      document.getElementById('squad-grid').innerHTML = players.map(p=>renderCard(p,p.playerNick===mvpNick)).join('');
+      renderRanking(players);
+      renderFifaCards(players, history);
+      renderClutch(history);
+      renderMapRating(history);
+      renderHallOfFame(history);
+      renderHistory(history);
+      renderFavMaps(history);
+      renderChart(history);
+      setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+    })
+    .catch(() => {
+      // Modo offline — usa dados demo
+      document.getElementById('server-badge').style.display = '';
+      document.getElementById('status-msg').textContent = 'Modo offline — servidor não encontrado. Inicie o server.js no VSCode.';
+      document.getElementById('last-update-text').textContent = 'Atualizado '+new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      window._historyCache = DEMO_HISTORY;
+      window._playersCache = DEMO_PLAYERS;
+      const mvpNick = DEMO_PLAYERS.reduce((a,b)=>(calcGCRating(b.stats||{})||0)>(calcGCRating(a.stats||{})||0)?b:a).playerNick;
+      document.getElementById('squad-grid').innerHTML = DEMO_PLAYERS.map(p=>renderCard(p,p.playerNick===mvpNick)).join('');
+      renderRanking(DEMO_PLAYERS);
+      renderFifaCards(DEMO_PLAYERS,DEMO_HISTORY);
+      renderClutch(DEMO_HISTORY);
+      renderMapRating(DEMO_HISTORY);
+      renderHallOfFame(DEMO_HISTORY);
+      renderHistory(DEMO_HISTORY);
+      renderFavMaps(DEMO_HISTORY);
+      renderChart(DEMO_HISTORY);
+      setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+    });
 }
+
 document.addEventListener('DOMContentLoaded',init);
 </script>
 
