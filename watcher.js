@@ -241,6 +241,51 @@ async function processImage(imgPath) {
     processing.delete(imgPath);
   }
 }
+// ── Remove partida ao deletar print ──
+async function removeMatch(filePath) {
+  const imgName = path.basename(filePath);
+  console.log(`\n🗑️  Print deletada: ${imgName}`);
+
+  let data = { players: [], history: [] };
+  if (fs.existsSync(DATA_FILE)) {
+    try { data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); } catch {}
+  }
+
+  const idx = data.history.findIndex(m => m.printFile === imgName);
+  if (idx === -1) {
+    console.log('⚠️  Nenhuma partida vinculada a essa print. Nada alterado.');
+    return;
+  }
+
+  const removed = data.history.splice(idx, 1)[0];
+  console.log(`📋 Partida removida: ${removed.map} | ${removed.score} | ${removed.date}`);
+
+  data.players   = recalcPlayerStats(data.players, data.history);
+  data.updatedAt = new Date().toISOString();
+
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  console.log(`💾 data.json atualizado! (${data.history.length} partidas restantes)`);
+
+  if (data.history.length > 0) {
+    console.log('\n📊 Médias recalculadas:');
+    for (const p of data.players.filter(p => p.matches > 0)) {
+      const s = p.stats;
+      console.log(`  ${p.playerNick.padEnd(12)} | KDR: ${s.KDR} | ADR: ${s.ADR} | Rating: ${s.rating} | Partidas: ${p.matches}`);
+    }
+  }
+
+  // Push pro GitHub
+  console.log('\n📤 Fazendo push para o GitHub...');
+  try {
+    await git.add(['data.json']);
+    try { await git.rm([`prints/${imgName}`]); } catch {}
+    await git.commit(`🗑️  Remove partida: ${removed.map} (${imgName}) [${new Date().toLocaleString('pt-BR')}]`);
+    await git.push('origin', 'main');
+    console.log('✅ Push para o GitHub feito com sucesso!');
+  } catch (err) {
+    console.error('❌ Erro no git push:', err.message);
+  }
+}
 
 // ── Watcher ──
 const EXTS = ['.jpg', '.jpeg', '.png', '.bmp'];
@@ -253,6 +298,18 @@ const watcher = chokidar.watch(PRINTS_DIR, {
 watcher.on('add', filePath => {
   if (EXTS.includes(path.extname(filePath).toLowerCase())) {
     processImage(filePath);
+  }
+});
+
+watcher.on('add', filePath => {
+  if (EXTS.includes(path.extname(filePath).toLowerCase())) {
+    processImage(filePath);
+  }
+});
+
+watcher.on('unlink', filePath => {
+  if (EXTS.includes(path.extname(filePath).toLowerCase())) {
+    removeMatch(filePath);
   }
 });
 
