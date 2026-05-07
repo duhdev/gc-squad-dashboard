@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:18:31.303Z",
+  "updatedAt": "2026-05-07T19:18:44.956Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -49,9 +49,23 @@
       "playerNick": "Flavinho",
       "playerId": "822519",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:26.271Z",
-      "stats": {}
+      "stats": {
+        "KDR": 0.71,
+        "ADR": 59.91,
+        "HS": 0,
+        "KAST": 48,
+        "kills": 13,
+        "assists": 3,
+        "MK": 1,
+        "FK": 2,
+        "FA": 2,
+        "DIFF": -4,
+        "rating": 0,
+        "wins": 0,
+        "losses": 1
+      }
     },
     {
       "playerNick": "Will",
@@ -326,6 +340,29 @@
         }
       },
       "printFile": "3.png"
+    },
+    {
+      "map": "de_cache",
+      "result": "loss",
+      "score": "13-8",
+      "date": "2024-05-08",
+      "players": {
+        "Flavinho": {
+          "kills": 13,
+          "deaths": 17,
+          "assists": 3,
+          "kdr": 0.71,
+          "adr": 59.91,
+          "kast": 48,
+          "hs": 0,
+          "mk": 1,
+          "fk": 2,
+          "fa": 2,
+          "diff": -4,
+          "rating": 0
+        }
+      },
+      "printFile": "5.png"
     }
   ]
 }
