@@ -68,7 +68,7 @@ function geminiVision(base64Image, mimeType, prompt) {
         { text: prompt },
         { inline_data: { mime_type: mimeType, data: base64Image } }
       ]}],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 4096, responseMimeType: "application/json" }
+      generationConfig: { temperature: 0.1, maxOutputTokens: 4096 }
     });
 
     const apiKey = process.env.GEMINI_API_KEY;
