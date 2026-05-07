@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:10:56.662Z",
+  "updatedAt": "2026-05-07T19:10:57.732Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -43,9 +43,23 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:28.751Z",
-      "stats": {}
+      "stats": {
+        "KDR": 0.92,
+        "ADR": 89.05,
+        "HS": 0,
+        "KAST": 69,
+        "kills": 13,
+        "assists": 9,
+        "MK": 2,
+        "FK": 2,
+        "FA": 0,
+        "DIFF": -4,
+        "rating": -18,
+        "wins": 0,
+        "losses": 1
+      }
     },
     {
       "playerNick": "Chavera",
@@ -67,9 +81,23 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:33.253Z",
-      "stats": {}
+      "stats": {
+        "KDR": 0.44,
+        "ADR": 64.14,
+        "HS": 0,
+        "KAST": 62,
+        "kills": 7,
+        "assists": 9,
+        "MK": 1,
+        "FK": 0,
+        "FA": 1,
+        "DIFF": -9,
+        "rating": -17,
+        "wins": 0,
+        "losses": 1
+      }
     },
     {
       "playerNick": "Chara",
@@ -103,6 +131,43 @@
         }
       },
       "printFile": "5.png"
+    },
+    {
+      "map": "cache",
+      "result": "loss",
+      "score": "13-9",
+      "date": "2024-05-08",
+      "players": {
+        "Will": {
+          "kills": 13,
+          "deaths": 12,
+          "assists": 9,
+          "kdr": 0.92,
+          "adr": 89.05,
+          "kast": 69,
+          "hs": 0,
+          "mk": 2,
+          "fk": 2,
+          "fa": 0,
+          "diff": -4,
+          "rating": -18
+        },
+        "Fluyr": {
+          "kills": 7,
+          "deaths": 16,
+          "assists": 9,
+          "kdr": 0.44,
+          "adr": 64.14,
+          "kast": 62,
+          "hs": 0,
+          "mk": 1,
+          "fk": 0,
+          "fa": 1,
+          "diff": -9,
+          "rating": -17
+        }
+      },
+      "printFile": "3.png"
     }
   ]
 }
