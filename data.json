@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:15:36.366Z",
+  "updatedAt": "2026-05-07T19:15:38.901Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -13,23 +13,9 @@
       "playerNick": "DU",
       "playerId": "1311055",
       "level": "?",
-      "matches": 1,
+      "matches": 0,
       "updatedAt": "2026-05-07T16:29:23.970Z",
-      "stats": {
-        "KDR": 0.56,
-        "ADR": 67.38,
-        "HS": 0,
-        "KAST": 44,
-        "kills": 9,
-        "assists": 2,
-        "MK": 2,
-        "FK": 1,
-        "FA": 0,
-        "DIFF": -7,
-        "rating": -14,
-        "wins": 1,
-        "losses": 0
-      }
+      "stats": {}
     },
     {
       "playerNick": "Flavinho",
@@ -57,21 +43,21 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 3,
+      "matches": 2,
       "updatedAt": "2026-05-07T16:29:28.751Z",
       "stats": {
-        "KDR": 1.12,
-        "ADR": 74,
+        "KDR": 0.68,
+        "ADR": 65.78,
         "HS": 0,
-        "KAST": 61,
-        "kills": 11.33,
-        "assists": 4.67,
-        "MK": 7,
-        "FK": 3,
+        "KAST": 45.5,
+        "kills": 10,
+        "assists": 5.5,
+        "MK": 4,
+        "FK": 2,
         "FA": 1,
-        "DIFF": -2.67,
-        "rating": -1.67,
-        "wins": 2,
+        "DIFF": -7.5,
+        "rating": -9,
+        "wins": 1,
         "losses": 1
       }
     },
@@ -109,21 +95,21 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 3,
+      "matches": 2,
       "updatedAt": "2026-05-07T16:29:33.253Z",
       "stats": {
-        "KDR": 1.04,
-        "ADR": 75.42,
+        "KDR": 1.05,
+        "ADR": 67.23,
         "HS": 0,
-        "KAST": 73.33,
+        "KAST": 68.5,
         "kills": 11,
-        "assists": 5.67,
-        "MK": 5,
-        "FK": 6,
+        "assists": 6,
+        "MK": 3,
+        "FK": 2,
         "FA": 1,
-        "DIFF": -1,
-        "rating": -2,
-        "wins": 2,
+        "DIFF": -1.5,
+        "rating": -8.5,
+        "wins": 1,
         "losses": 1
       }
     },
@@ -256,57 +242,6 @@
         }
       },
       "printFile": "4.png"
-    },
-    {
-      "map": "nuke",
-      "result": "win",
-      "score": "13-3",
-      "date": "2020-05-08",
-      "players": {
-        "DU": {
-          "kills": 9,
-          "deaths": 16,
-          "assists": 2,
-          "kdr": 0.56,
-          "adr": 67.38,
-          "kast": 44,
-          "hs": 0,
-          "mk": 2,
-          "fk": 1,
-          "fa": 0,
-          "diff": -7,
-          "rating": -14
-        },
-        "Fluyr": {
-          "kills": 11,
-          "deaths": 11,
-          "assists": 5,
-          "kdr": 1,
-          "adr": 91.81,
-          "kast": 83,
-          "hs": 0,
-          "mk": 2,
-          "fk": 4,
-          "fa": 0,
-          "diff": 0,
-          "rating": 11
-        },
-        "Will": {
-          "kills": 14,
-          "deaths": 7,
-          "assists": 3,
-          "kdr": 2,
-          "adr": 90.44,
-          "kast": 92,
-          "hs": 0,
-          "mk": 3,
-          "fk": 1,
-          "fa": 0,
-          "diff": 7,
-          "rating": 13
-        }
-      },
-      "printFile": "2.png"
     }
   ]
 }
