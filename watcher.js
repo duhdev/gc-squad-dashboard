@@ -128,10 +128,20 @@ Se encontrar qualquer um desses nicks alternativos, use o nick canônico da list
 result = "win" se o time dos jogadores da lista ganhou, "loss" se perdeu.
 date = data visível ou hoje. Retorne APENAS o JSON.`;
 
-  const raw = await geminiVision(base64, mimeType, prompt);
-  const match = JSON.parse(raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim());
-  match.players = normalizePlayers(match.players);
-  return match;
+    // tenta até 3 vezes com delay crescente
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const raw = await geminiVision(base64, mimeType, prompt);
+      const cleaned = raw.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+      const match = JSON.parse(cleaned);
+      match.players = normalizePlayers(match.players);
+      return match;
+    } catch (err) {
+      console.warn(`⚠️  Tentativa ${attempt}/3 falhou: ${err.message}`);
+      if (attempt === 3) throw err;
+      await new Promise(r => setTimeout(r, 15000 * attempt));
+    }
+  }
 }
 
 // ── Recalcula médias ──
@@ -204,7 +214,7 @@ async function processImage(imgPath) {
   console.log(`\n📸 Nova print: ${imgName}`);
   console.log('🔍 Enviando para Gemini Vision...');
   try {
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 5000));
     const match = await extractMatchFromImage(imgPath);
     match.printFile = imgName;
     if (!match.date) match.date = new Date().toISOString().split('T')[0];
