@@ -1,0 +1,8 @@
+# Dependências
+node_modules/
+
+# Variáveis de ambiente — NUNCA sobe para o GitHub!
+.env
+
+# Logs
+*.log

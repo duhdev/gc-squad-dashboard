@@ -215,6 +215,7 @@ a,button{transition:color var(--transition),background var(--transition),border-
   <div class="header-inner">
     <div class="logo"><div class="logo-icon">🎯</div><span class="logo-text">CS <span>Velharada</span></span></div>
     <div class="header-meta">
+      <button class="cmp-btn" onclick="openComparator()">⚔️ Comparar</button>
       <span class="badge badge-green" id="status-badge">● Ao vivo</span>
       <span class="last-update" id="last-update-text">Carregando...</span>
       <button class="theme-toggle" data-theme-toggle aria-label="Alternar tema"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
@@ -323,10 +324,15 @@ function renderCard(p,isMvp){
   if(!hasStats)return`<div class="no-data-card">${avatarHtml(nick,64,'nd-avatar')}<div class="nd-nick">${nick}</div><div class="nd-msg">Aguardando dados da primeira partida</div></div>`;
   const kd=fmtV(s.KDR||s.KD),adr=fmtV(s.ADR),hs=fmtV(s.HS||s['HS%']);
   const kast=fmtV(s.KAST),kills=fmtV(s.kills||s.Kills),mk=fmtV(s.MK||s['MULTI KILLS']);
-  const fk=fmtV(s.FK||s['FIRST KILLS']),assists=fmtV(s.assists||s.A),rp=fmtV(s.RP);
+  const fk=fmtV(s.FK||s['FIRST KILLS']||s.fk),assists=fmtV(s.assists||s.A||s.a),rp=fmtV(s.RP);
+  const sK=fmtV(s.kills||s.Kills||s.k),sA=fmtV(s.assists||s.A||s.a),sD=fmtV(s.deaths||s.D||s.d);
+  const sDiff=s.diff!==undefined?s.diff:(s.DIFF!==undefined?s.DIFF:'—');
+  const sFA=fmtV(s.fa||s.FA||s['FLASH ASSISTS']);
+  const sMK=fmtV(s.MK||s.mk||s['MULTI KILLS']||s['Multi-K']);
   const kdN=parseFloat(kd)||0,kdC=kdN>=1.2?'var(--green)':kdN>=0.9?'var(--blue)':'var(--red)';
   const adrN=parseFloat(adr)||0,adrC=adrN>=90?'var(--green)':adrN>=70?'var(--blue)':'var(--text)';
   const kastN=parseFloat(kast)||0,kastC=kastN>=65?'var(--green)':kastN>=50?'var(--blue)':'var(--text)';
+  const diffN=parseInt(sDiff)||0,diffC=diffN>0?'var(--green)':diffN<0?'var(--red)':'var(--text-muted)';
   return`<div class="player-card${isMvp?' mvp':''}">
     <div class="player-header">
       ${avatarHtml(nick,56,'player-avatar')}
@@ -339,16 +345,18 @@ function renderCard(p,isMvp){
     </div>
     <div class="kast-row">
       <div class="kast-item"><div class="kast-value" style="color:${kastC}">${kast==='—'?'—':kast+'%'}</div><div class="kast-label">KAST</div></div>
-      <div class="kast-item"><div class="kast-value">${kills}</div><div class="kast-label">Kills</div></div>
-      <div class="kast-item"><div class="kast-value">${rp}</div><div class="kast-label">RP</div></div>
+      <div class="kast-item"><div class="kast-value" style="color:${diffC}">${sDiff==='—'?'—':(diffN>0?'+':'')+sDiff}</div><div class="kast-label">DIFF</div></div>
+      <div class="kast-item"><div class="kast-value" style="color:${adrC}">${adr}</div><div class="kast-label">ADR</div></div>
     </div>
-    <div class="stats-grid">
+    <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat-item"><div class="stat-value" style="color:var(--green)">${sK}</div><div class="stat-label">K</div></div>
+      <div class="stat-item"><div class="stat-value">${sA}</div><div class="stat-label">A</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--red)">${sD}</div><div class="stat-label">D</div></div>
       <div class="stat-item"><div class="stat-value" style="color:${kdC}">${kd}</div><div class="stat-label">K/D</div></div>
-      <div class="stat-item"><div class="stat-value" style="color:${adrC}">${adr}</div><div class="stat-label">ADR</div></div>
       <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${hs==='—'?'—':hs+'%'}</div><div class="stat-label">HS%</div></div>
-      <div class="stat-item"><div class="stat-value" style="color:var(--purple)">${mk}</div><div class="stat-label">Multi-K</div></div>
-      <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${fk}</div><div class="stat-label">First K</div></div>
-      <div class="stat-item"><div class="stat-value">${assists}</div><div class="stat-label">Assists</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--purple)">${sMK}</div><div class="stat-label">MK</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--gold)">${fk}</div><div class="stat-label">FK</div></div>
+      <div class="stat-item"><div class="stat-value" style="color:var(--blue)">${sFA}</div><div class="stat-label">FA</div></div>
     </div>
     <div class="rating-bar-wrap">
       <div class="rating-bar-header"><span>GC Rating ${rEmoji(r)}</span><strong style="color:var(--text)">${rD}</strong></div>
@@ -665,11 +673,11 @@ function renderFavMaps(history){
 
 /* ===== DADOS DEMO ===== */
 const DEMO_HISTORY=[
-  {date:'2026-05-01T20:00:00Z',map:'Mirage',result:'W',score:'16-11',players:{Cq:{rating:1.55,adr:98,kd:1.8,hs:52},DU:{rating:1.20,adr:82,kd:1.3,hs:44},Flavinho:{rating:1.05,adr:75,kd:1.1,hs:60},Chara:{rating:0.88,adr:63,kd:0.9,hs:35},Chavera:{rating:1.10,adr:78,kd:1.2,hs:48}},clutches:{Cq:{'1v1':2,'1v2':1},DU:{'1v1':1}}},
-  {date:'2026-05-02T21:00:00Z',map:'Inferno',result:'L',score:'13-16',players:{Cq:{rating:1.10,adr:80,kd:1.2,hs:48},DU:{rating:0.72,adr:58,kd:0.7,hs:38},Flavinho:{rating:1.38,adr:95,kd:1.6,hs:62},Dukka:{rating:0.82,adr:65,kd:0.8,hs:40},Fluyr:{rating:0.95,adr:70,kd:1.0,hs:45}},clutches:{Flavinho:{'1v1':1,'1v3':1}}},
-  {date:'2026-05-03T20:30:00Z',map:'Nuke',result:'W',score:'16-8',players:{Cq:{rating:1.62,adr:105,kd:2.0,hs:55},DU:{rating:1.30,adr:87,kd:1.4,hs:42},Chara:{rating:1.15,adr:80,kd:1.2,hs:38},Will:{rating:0.90,adr:68,kd:0.9,hs:50},Dukka:{rating:1.08,adr:75,kd:1.1,hs:46}},clutches:{Cq:{'1v1':1,'1v2':2},Dukka:{'1v1':1}}},
-  {date:'2026-05-04T19:00:00Z',map:'Ancient',result:'W',score:'16-14',players:{Cq:{rating:1.28,adr:88,kd:1.4,hs:50},Flavinho:{rating:1.44,adr:99,kd:1.7,hs:65},DU:{rating:1.01,adr:72,kd:1.0,hs:40},Fluyr:{rating:1.18,adr:82,kd:1.3,hs:47},Chavera:{rating:0.85,adr:62,kd:0.8,hs:36}},clutches:{Flavinho:{'1v1':2,'1v2':1},Fluyr:{'1v1':1}}},
-  {date:'2026-05-05T22:00:00Z',map:'Anubis',result:'L',score:'12-16',players:{Cq:{rating:0.92,adr:68,kd:0.9,hs:45},DU:{rating:1.25,adr:86,kd:1.3,hs:46},Flavinho:{rating:0.80,adr:60,kd:0.8,hs:55},Dukka:{rating:1.05,adr:76,kd:1.1,hs:43},Will:{rating:0.70,adr:52,kd:0.7,hs:48}},clutches:{DU:{'1v1':1,'1v2':1}}},
+  {date:'2026-05-01T20:00:00Z',map:'Mirage',result:'W',score:'16-11',players:{Cq:{rating:1.55,k:26,a:6,d:15,diff:11,adr:109.29,kd:1.73,kast:79,fa:0,mk:7,fk:1,hs:52},DU:{rating:1.20,k:20,a:3,d:15,diff:5,adr:69.21,kd:1.33,kast:67,fa:0,mk:6,fk:3,hs:44},Flavinho:{rating:1.05,k:17,a:6,d:21,diff:-4,adr:80.17,kd:0.81,kast:54,fa:0,mk:5,fk:3,hs:60},Chara:{rating:0.88,k:10,a:5,d:18,diff:-8,adr:64.75,kd:0.56,kast:50,fa:1,mk:1,fk:2,hs:35},Chavera:{rating:1.10,k:13,a:5,d:20,diff:-7,adr:62.98,kd:0.65,kast:54,fa:1,mk:2,fk:2,hs:48}},clutches:{Cq:{'1v1':2,'1v2':1},DU:{'1v1':1}}},
+  {date:'2026-05-02T21:00:00Z',map:'Inferno',result:'L',score:'13-16',players:{Cq:{rating:1.10,k:18,a:4,d:16,diff:2,adr:80,kd:1.2,kast:68,fa:1,mk:4,fk:2,hs:48},DU:{rating:0.72,k:12,a:5,d:18,diff:-6,adr:58,kd:0.7,kast:52,fa:0,mk:3,fk:1,hs:38},Flavinho:{rating:1.38,k:22,a:3,d:14,diff:8,adr:95,kd:1.6,kast:72,fa:0,mk:6,fk:3,hs:62},Dukka:{rating:0.82,k:14,a:4,d:18,diff:-4,adr:65,kd:0.8,kast:58,fa:2,mk:2,fk:1,hs:40},Fluyr:{rating:0.95,k:16,a:5,d:16,diff:0,adr:70,kd:1.0,kast:62,fa:1,mk:3,fk:2,hs:45}},clutches:{Flavinho:{'1v1':1,'1v2':1}}},
+  {date:'2026-05-03T20:30:00Z',map:'Nuke',result:'W',score:'16-8',players:{Cq:{rating:1.62,k:28,a:4,d:14,diff:14,adr:105,kd:2.0,kast:83,fa:0,mk:8,fk:3,hs:55},DU:{rating:1.30,k:22,a:5,d:16,diff:6,adr:87,kd:1.4,kast:72,fa:1,mk:5,fk:2,hs:42},Chara:{rating:1.15,k:19,a:6,d:16,diff:3,adr:80,kd:1.2,kast:68,fa:2,mk:4,fk:2,hs:38},Will:{rating:0.90,k:14,a:4,d:16,diff:-2,adr:68,kd:0.9,kast:60,fa:0,mk:2,fk:1,hs:50},Dukka:{rating:1.08,k:18,a:5,d:17,diff:1,adr:75,kd:1.1,kast:65,fa:1,mk:3,fk:2,hs:46}},clutches:{Cq:{'1v1':1,'1v2':2},Dukka:{'1v1':1}}},
+  {date:'2026-05-04T19:00:00Z',map:'Ancient',result:'W',score:'16-14',players:{Cq:{rating:1.28,k:21,a:5,d:15,diff:6,adr:88,kd:1.4,kast:72,fa:0,mk:5,fk:2,hs:50},Flavinho:{rating:1.44,k:24,a:4,d:14,diff:10,adr:99,kd:1.7,kast:75,fa:0,mk:7,fk:3,hs:65},DU:{rating:1.01,k:17,a:6,d:17,diff:0,adr:72,kd:1.0,kast:64,fa:2,mk:4,fk:2,hs:40},Fluyr:{rating:1.18,k:20,a:5,d:15,diff:5,adr:82,kd:1.3,kast:69,fa:1,mk:4,fk:2,hs:47},Chavera:{rating:0.85,k:14,a:4,d:18,diff:-4,adr:62,kd:0.8,kast:58,fa:1,mk:2,fk:1,hs:36}},clutches:{Flavinho:{'1v1':2,'1v2':1},Fluyr:{'1v1':1}}},
+  {date:'2026-05-05T22:00:00Z',map:'Anubis',result:'L',score:'12-16',players:{Cq:{rating:0.92,k:15,a:5,d:17,diff:-2,adr:68,kd:0.9,kast:60,fa:0,mk:3,fk:1,hs:45},DU:{rating:1.25,k:21,a:5,d:16,diff:5,adr:86,kd:1.3,kast:70,fa:1,mk:5,fk:2,hs:46},Flavinho:{rating:0.80,k:13,a:4,d:17,diff:-4,adr:60,kd:0.8,kast:55,fa:0,mk:2,fk:1,hs:55},Dukka:{rating:1.05,k:17,a:5,d:16,diff:1,adr:76,kd:1.1,kast:63,fa:2,mk:3,fk:2,hs:43},Will:{rating:0.70,k:11,a:4,d:17,diff:-6,adr:52,kd:0.7,kast:52,fa:0,mk:1,fk:1,hs:48}},clutches:{DU:{'1v1':1,'1v2':1}}},
 ];
 
 const DEMO_PLAYERS=[
@@ -683,11 +691,281 @@ const DEMO_PLAYERS=[
   {playerNick:'Will',  level:'20',matches:2, updatedAt:'2026-05-05T22:30:00Z', stats:{KDR:'0.80',ADR:'60.0',HS:'49%',KAST:'59%','Multi-K':5,'FIRST KILLS':8,assists:12,RP:900,kills:85}},
 ];
 
+/* ===== COMPARADOR ===== */
+function openComparator(){
+  document.getElementById('comparator-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+  buildComparatorSelects();
+}
+function closeComparator(){
+  document.getElementById('comparator-modal').style.display='none';
+  document.body.style.overflow='';
+}
+function buildComparatorSelects(){
+  const nicks=window._playersCache.map(p=>p.playerNick||p.nick).filter(Boolean);
+  ['cmp-sel-a','cmp-sel-b'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    const cur=sel.value;
+    sel.innerHTML=nicks.map(n=>`<option value="${n}" ${(!cur&&i===0&&n===nicks[0])||(!cur&&i===1&&n===nicks[1])?'selected':''}>${n}</option>`).join('');
+    if(cur)sel.value=cur;
+  });
+  runComparison();
+}
+function runComparison(){
+  const nickA=document.getElementById('cmp-sel-a').value;
+  const nickB=document.getElementById('cmp-sel-b').value;
+  if(!nickA||!nickB||nickA===nickB){
+    document.getElementById('cmp-result').innerHTML='<p style="color:var(--text-muted);text-align:center;padding:2rem">Selecione dois jogadores diferentes.</p>';
+    return;
+  }
+  const pA=window._playersCache.find(p=>(p.playerNick||p.nick)===nickA);
+  const pB=window._playersCache.find(p=>(p.playerNick||p.nick)===nickB);
+  if(!pA||!pB)return;
+  const hist=window._historyCache||[];
+  function enriched(p,nick){
+    const s=p.stats||{};
+    const matches=hist.filter(m=>m.players&&m.players[nick]);
+    const wins=matches.filter(m=>m.result==='W').length;
+    const wr=matches.length?Math.round((wins/matches.length)*100):0;
+    const avgRatings=matches.map(m=>m.players[nick].rating||0);
+    const avgR=avgRatings.length?(avgRatings.reduce((a,b)=>a+b,0)/avgRatings.length):calcGCRating(s)||0;
+    const clutches=hist.reduce((a,m)=>{const c=m.clutches?.[nick]||{};return a+Object.values(c).reduce((x,y)=>x+y,0);},0);
+    const mapCount={};
+    matches.forEach(m=>{mapCount[m.map]=(mapCount[m.map]||0)+1;});
+    const favMap=Object.entries(mapCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+    // Agrega K, A, D, DIFF, FA de todo o histórico
+    const totK=matches.reduce((a,m)=>a+(m.players[nick].k||0),0);
+    const totA=matches.reduce((a,m)=>a+(m.players[nick].a||0),0);
+    const totD=matches.reduce((a,m)=>a+(m.players[nick].d||0),0);
+    const totFA=matches.reduce((a,m)=>a+(m.players[nick].fa||0),0);
+    const totMK=matches.reduce((a,m)=>a+(m.players[nick].mk||0),0);
+    const totFK=matches.reduce((a,m)=>a+(m.players[nick].fk||0),0);
+    return{
+      nick,kd:parseFloat(s.KDR||s.KD||0)||0,adr:parseFloat(s.ADR||0)||0,
+      hs:parseFloat((s.HS||s['HS%']||'0').toString().replace('%',''))||0,
+      kast:parseFloat((s.KAST||'0').toString().replace('%',''))||0,
+      kills:totK||parseInt(s.kills||s.Kills||0)||0,
+      assists:totA||parseInt(s.assists||s.A||0)||0,
+      deaths:totD,diffVal:totK-totD,fa:totFA,mk:totMK,fk:totFK,
+      rp:parseInt(s.RP||0)||0,level:p.level||'?',matches:matches.length,wr,avgR,clutches,favMap,
+      gcRating:calcGCRating(s)
+    };
+  }
+  const A=enriched(pA,nickA),B=enriched(pB,nickB);
+  const rows=[
+    {label:'GC Rating',kA:'gcRating',kB:'gcRating',fmt:v=>v!=null?v.toFixed(2):'—',higher:true},
+    {label:'K/D Ratio',kA:'kd',kB:'kd',fmt:v=>v.toFixed(2),higher:true},
+    {label:'ADR',kA:'adr',kB:'adr',fmt:v=>v.toFixed(1),higher:true},
+    {label:'KAST%',kA:'kast',kB:'kast',fmt:v=>v.toFixed(0)+'%',higher:true},
+    {label:'HS%',kA:'hs',kB:'hs',fmt:v=>v.toFixed(0)+'%',higher:true},
+    {label:'Kills (K)',kA:'kills',kB:'kills',fmt:v=>v,higher:true},
+    {label:'Assists (A)',kA:'assists',kB:'assists',fmt:v=>v,higher:true},
+    {label:'Deaths (D)',kA:'deaths',kB:'deaths',fmt:v=>v,higher:false},
+    {label:'DIFF',kA:'diffVal',kB:'diffVal',fmt:v=>(v>0?'+':'')+v,higher:true},
+    {label:'Flash Assists (FA)',kA:'fa',kB:'fa',fmt:v=>v,higher:true},
+    {label:'Multi-Kills (MK)',kA:'mk',kB:'mk',fmt:v=>v,higher:true},
+    {label:'First Kills (FK)',kA:'fk',kB:'fk',fmt:v=>v,higher:true},
+    {label:'Clutches',kA:'clutches',kB:'clutches',fmt:v=>v,higher:true},
+    {label:'WinRate',kA:'wr',kB:'wr',fmt:v=>v+'%',higher:true},
+    {label:'Partidas (hist.)',kA:'matches',kB:'matches',fmt:v=>v,higher:false},
+    {label:'Mapa Favorito',kA:'favMap',kB:'favMap',fmt:v=>v,higher:false},
+    {label:'Nível GC',kA:'level',kB:'level',fmt:v=>v,higher:false},
+  ];
+  const cfgA=PLAYER_CONFIG[nickA]||{color:'#ff6b35'};
+  const cfgB=PLAYER_CONFIG[nickB]||{color:'#60a5fa'};
+  const winsA=rows.filter(r=>r.higher&&typeof A[r.kA]==='number'&&typeof B[r.kB]==='number'&&A[r.kA]>B[r.kB]).length;
+  const winsB=rows.filter(r=>r.higher&&typeof A[r.kA]==='number'&&typeof B[r.kB]==='number'&&B[r.kB]>A[r.kA]).length;
+  const rowsHtml=rows.map(r=>{
+    const vA=A[r.kA],vB=B[r.kB];
+    let winA=false,winB=false;
+    if(r.higher&&typeof vA==='number'&&typeof vB==='number'){winA=vA>vB;winB=vB>vA;}
+    return`<tr>
+      <td class="cmp-val ${winA?'cmp-win':''}" style="${winA?'color:'+cfgA.color:''}">${r.fmt(vA)}</td>
+      <td class="cmp-label">${r.label}</td>
+      <td class="cmp-val ${winB?'cmp-win':''}" style="${winB?'color:'+cfgB.color:''}">${r.fmt(vB)}</td>
+    </tr>`;
+  }).join('');
+  const overallWinner=winsA>winsB?nickA:winsB>winsA?nickB:null;
+  document.getElementById('cmp-result').innerHTML=`
+    <div class="cmp-header-row">
+      <div class="cmp-player-head" style="border-color:${cfgA.color}20;background:${cfgA.color}10">
+        ${avatarHtml(nickA,52,'rank-avatar')}
+        <div class="cmp-pname" style="color:${cfgA.color}">${nickA}</div>
+        <div class="cmp-score" style="background:${cfgA.color}20;color:${cfgA.color}">${winsA} vitorias</div>
+      </div>
+      <div class="cmp-vs">VS</div>
+      <div class="cmp-player-head" style="border-color:${cfgB.color}20;background:${cfgB.color}10">
+        ${avatarHtml(nickB,52,'rank-avatar')}
+        <div class="cmp-pname" style="color:${cfgB.color}">${nickB}</div>
+        <div class="cmp-score" style="background:${cfgB.color}20;color:${cfgB.color}">${winsB} vitorias</div>
+      </div>
+    </div>
+    ${overallWinner?`<div class="cmp-winner-banner">🏆 <strong>${overallWinner}</strong> vence o comparativo!</div>`:'<div class="cmp-winner-banner" style="background:var(--surface-2);color:var(--text-muted)">🤝 Empate técnico!</div>'}
+    <table class="cmp-table">${rowsHtml}</table>`;
+}
+
+/* ===== MODAL ADD PARTIDA ===== */
+const ADD_PW = btoa('12344'); // senha: velha2024 — troque aqui (encode em base64)
+let addAuthenticated = false;
+
+function openAddModal(){
+  const m = document.getElementById('add-modal');
+  m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  if(!addAuthenticated){
+    document.getElementById('add-auth-screen').style.display = '';
+    document.getElementById('add-form-screen').style.display = 'none';
+    document.getElementById('add-pw-error').style.display = 'none';
+    setTimeout(()=>document.getElementById('add-pw-input').focus(), 100);
+  } else {
+    showAddForm();
+  }
+}
+function closeAddModal(){
+  document.getElementById('add-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function checkAddPw(){
+  const val = document.getElementById('add-pw-input').value;
+  if(btoa(val) === ADD_PW){
+    addAuthenticated = true;
+    document.getElementById('add-pw-input').value = '';
+    showAddForm();
+  } else {
+    const err = document.getElementById('add-pw-error');
+    err.style.display = '';
+    document.getElementById('add-pw-input').value = '';
+    document.getElementById('add-pw-input').focus();
+    setTimeout(()=>err.style.display='none', 3000);
+  }
+}
+function showAddForm(){
+  document.getElementById('add-auth-screen').style.display = 'none';
+  document.getElementById('add-form-screen').style.display = '';
+  document.getElementById('f-save-msg').style.display = 'none';
+  document.getElementById('f-json-wrap').style.display = 'none';
+  // Data atual
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('f-date').value = now.toISOString().slice(0,16);
+  // Popula jogadores default
+  const list = document.getElementById('f-players-list');
+  if(!list.children.length){
+    const defaults = ['Cq','DU','Flavinho','Chara','Chavera'];
+    defaults.forEach(n => addPlayerRow(n));
+  }
+}
+function addPlayerRow(nick=''){
+  const allNicks = Object.keys(PLAYER_CONFIG);
+  const id = 'fpr_' + Date.now() + Math.random().toString(36).slice(2,6);
+  const opts = allNicks.map(n => `<option value="${n}" ${n===nick?'selected':''}>${n}</option>`).join('');
+  const row = document.createElement('div');
+  row.className = 'fpr';
+  row.id = id;
+  row.innerHTML = `
+    <select class="fpr-nick">${opts}</select>
+    <input type="number" class="fpr-k"      placeholder="20"   step="1"    min="0" title="Kills">
+    <input type="number" class="fpr-a"      placeholder="5"    step="1"    min="0" title="Assistencias">
+    <input type="number" class="fpr-d"      placeholder="15"   step="1"    min="0" title="Deaths">
+    <input type="number" class="fpr-diff"   placeholder="5"    step="1"    title="DIFF (K-D)">
+    <input type="number" class="fpr-adr"    placeholder="85"   step="0.1"  min="0" max="300" title="ADR">
+    <input type="number" class="fpr-kd"     placeholder="1.33" step="0.01" min="0" max="5"   title="KDR">
+    <input type="number" class="fpr-kast"   placeholder="72"   step="1"    min="0" max="100" title="KAST%">
+    <input type="number" class="fpr-fa"     placeholder="0"    step="1"    min="0" title="Flash Assists">
+    <input type="number" class="fpr-mk"     placeholder="0"    step="1"    min="0" title="Multi Kills">
+    <input type="number" class="fpr-fk"     placeholder="0"    step="1"    min="0" title="First Kills">
+    <input type="number" class="fpr-hs"     placeholder="45"   step="1"    min="0" max="100" title="HS%">
+    <input type="number" class="fpr-c1v1"   placeholder="0"    step="1"    min="0" title="Clutch 1v1">
+    <input type="number" class="fpr-c1v2"   placeholder="0"    step="1"    min="0" title="Clutch 1v2+">
+    <button onclick="document.getElementById('${id}').remove()" style="background:var(--red-bg);color:var(--red);border:1px solid transparent;border-radius:.375rem;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;font-size:14px;padding:0;">X</button>`;
+  document.getElementById('f-players-list').appendChild(row);
+}
+function saveMatch(){
+  const map    = document.getElementById('f-map').value;
+  const result = document.getElementById('f-result').value;
+  const score  = document.getElementById('f-score').value.trim();
+  const dateV  = document.getElementById('f-date').value;
+  if(!dateV){ alert('Informe a data/hora da partida.'); return; }
+  const rows = document.querySelectorAll('#f-players-list .fpr');
+  if(!rows.length){ alert('Adicione pelo menos 1 jogador.'); return; }
+  const players = {};
+  const clutches = {};
+  rows.forEach(row => {
+    const nick   = row.querySelector('.fpr-nick').value;
+    const k      = parseInt(row.querySelector('.fpr-k').value)        || 0;
+    const a      = parseInt(row.querySelector('.fpr-a').value)        || 0;
+    const d      = parseInt(row.querySelector('.fpr-d').value)        || 0;
+    const diff   = parseInt(row.querySelector('.fpr-diff').value)     || (k - d);
+    const adr    = parseFloat(row.querySelector('.fpr-adr').value)    || 0;
+    const kd     = parseFloat(row.querySelector('.fpr-kd').value)     || (d ? parseFloat((k/d).toFixed(2)) : 0);
+    const kast   = parseFloat(row.querySelector('.fpr-kast').value)   || 0;
+    const fa     = parseInt(row.querySelector('.fpr-fa').value)       || 0;
+    const mk     = parseInt(row.querySelector('.fpr-mk').value)       || 0;
+    const fk     = parseInt(row.querySelector('.fpr-fk').value)       || 0;
+    const hs     = parseFloat(row.querySelector('.fpr-hs').value)     || 0;
+    const c1v1   = parseInt(row.querySelector('.fpr-c1v1').value)     || 0;
+    const c1v2   = parseInt(row.querySelector('.fpr-c1v2').value)     || 0;
+    // Rating GC = KDR 35% + ADR 30% + KAST 20% + HS% 15%
+    const rating = parseFloat((Math.round(((kd*0.35)+(Math.min(adr/100,2.5)*0.30)+((kast/100)*0.20)+((hs/100)*0.15))*100)/100).toFixed(2));
+    players[nick] = { rating, k, a, d, diff, kd, adr, kast, fa, mk, fk, hs };
+    if(c1v1 || c1v2) clutches[nick] = { '1v1': c1v1, '1v2': c1v2 };
+  });
+  const match = {
+    date: new Date(dateV).toISOString(),
+    map, result, score,
+    players,
+    ...(Object.keys(clutches).length ? { clutches } : {})
+  };
+  // Adiciona ao cache e re-renderiza
+  if(!window._historyCache) window._historyCache = [];
+  window._historyCache.push(match);
+  // Re-renderiza seções dinâmicas
+  renderClutch(window._historyCache);
+  renderMapRating(window._historyCache);
+  renderHallOfFame(window._historyCache);
+  renderHistory(window._historyCache);
+  renderFavMaps(window._historyCache);
+  renderChart(window._historyCache);
+  // Atualiza ranking com stats agregados
+  if(window._playersCache) renderRanking(window._playersCache);
+  setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
+  // Gera JSON para copiar
+  const jsonOut = JSON.stringify(match, null, 2);
+  document.getElementById('f-json-out').value = jsonOut;
+  document.getElementById('f-json-wrap').style.display = '';
+  const msg = document.getElementById('f-save-msg');
+  msg.textContent = 'Partida adicionada ao dashboard! Copie o JSON abaixo para salvar no data.json.';
+  msg.style.display = '';
+  // Limpa form
+  document.getElementById('f-players-list').innerHTML = '';
+  document.getElementById('f-score').value = '';
+}
+function copyJson(){
+  const ta = document.getElementById('f-json-out');
+  ta.select();
+  document.execCommand('copy');
+  const btn = event.target;
+  btn.textContent = 'Copiado!';
+  setTimeout(()=>btn.textContent='Copiar JSON',2000);
+}
+window.openAddModal=openAddModal;
+window.closeAddModal=closeAddModal;
+window.checkAddPw=checkAddPw;
+window.addPlayerRow=addPlayerRow;
+window.saveMatch=saveMatch;
+window.copyJson=copyJson;
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeAddModal(); });
+
+window.openComparator=openComparator;
+window.closeComparator=closeComparator;
+window.runComparison=runComparison;
+
 /* ===== INIT ===== */
 function init(){
   document.getElementById('status-msg').textContent='Dados demo carregados. Adicione partidas reais!';
   document.getElementById('last-update-text').textContent='Atualizado '+new Date().toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
   window._historyCache=DEMO_HISTORY;
+  window._playersCache=DEMO_PLAYERS;
   const mvpNick=DEMO_PLAYERS.reduce((a,b)=>(calcGCRating(b.stats||{})||0)>(calcGCRating(a.stats||{})||0)?b:a).playerNick;
   document.getElementById('squad-grid').innerHTML=DEMO_PLAYERS.map(p=>renderCard(p,p.playerNick===mvpNick)).join('');
   renderRanking(DEMO_PLAYERS);
@@ -698,12 +976,126 @@ function init(){
   renderHistory(DEMO_HISTORY);
   renderFavMaps(DEMO_HISTORY);
   renderChart(DEMO_HISTORY);
-  // Animate rating bars
-  setTimeout(()=>{
-    document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});
-  },200);
+  setTimeout(()=>{document.querySelectorAll('.rating-bar-fill').forEach(el=>{el.style.width=el.dataset.target+'%';});},200);
 }
 document.addEventListener('DOMContentLoaded',init);
 </script>
+
+<!-- MODAL COMPARADOR -->
+<div id="comparator-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:var(--space-4);" onclick="if(event.target===this)closeComparator()">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-5) var(--space-6);border-bottom:1px solid var(--divider);">
+      <h2 style="font-size:var(--text-lg);font-weight:700">⚔️ Comparador de Jogadores</h2>
+      <button onclick="closeComparator()" style="width:32px;height:32px;border-radius:var(--radius-md);border:1px solid var(--border);display:grid;place-items:center;color:var(--text-muted)" aria-label="Fechar">✕</button>
+    </div>
+    <div style="padding:var(--space-5) var(--space-6);">
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:var(--space-3);align-items:center;margin-bottom:var(--space-5);">
+        <select id="cmp-sel-a" onchange="runComparison()" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);color:var(--text);font-size:var(--text-sm);font-family:var(--font-body)"></select>
+        <span style="font-weight:900;font-size:var(--text-base);color:var(--text-muted)">VS</span>
+        <select id="cmp-sel-b" onchange="runComparison()" style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);color:var(--text);font-size:var(--text-sm);font-family:var(--font-body)"></select>
+      </div>
+      <div id="cmp-result"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.cmp-header-row{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--space-4);align-items:center;margin-bottom:var(--space-4);}
+.cmp-player-head{display:flex;flex-direction:column;align-items:center;gap:var(--space-2);padding:var(--space-4);border-radius:var(--radius-xl);border:2px solid;}
+.cmp-pname{font-weight:900;font-size:var(--text-base);}
+.cmp-score{padding:2px var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:700;}
+.cmp-vs{font-weight:900;font-size:var(--text-xl);color:var(--text-muted);text-align:center;}
+.cmp-winner-banner{text-align:center;background:var(--gold-bg);color:var(--gold);border-radius:var(--radius-lg);padding:var(--space-3);font-size:var(--text-sm);margin-bottom:var(--space-4);}
+.cmp-table{width:100%;border-collapse:collapse;}
+.cmp-table tr{border-bottom:1px solid var(--divider);}
+.cmp-table tr:last-child{border-bottom:none;}
+.cmp-val{padding:var(--space-3) var(--space-2);font-variant-numeric:tabular-nums;font-weight:600;font-size:var(--text-sm);text-align:center;color:var(--text-muted);}
+.cmp-val.cmp-win{font-weight:800;font-size:var(--text-base);}
+.cmp-label{padding:var(--space-2);font-size:var(--text-xs);color:var(--text-muted);text-align:center;white-space:nowrap;}
+.cmp-btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);background:var(--accent);color:#fff;border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:700;cursor:pointer;border:none;transition:background var(--transition);}
+.cmp-btn:hover{background:var(--accent-h);}
+</style>
+
+<!-- FAB ADD -->
+<button id="fab-add" onclick="openAddModal()" aria-label="Adicionar partida" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:150;width:56px;height:56px;border-radius:9999px;background:var(--accent);color:#fff;font-size:26px;box-shadow:var(--shadow-lg);border:none;cursor:pointer;display:grid;place-items:center;">+</button>
+
+<!-- MODAL ADD PARTIDA -->
+<div id="add-modal" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:1rem;width:100%;max-width:760px;box-shadow:var(--shadow-lg);margin:2rem auto;">
+    <!-- AUTH -->
+    <div id="add-auth-screen" style="padding:2.5rem;text-align:center;">
+      <div style="font-size:44px;margin-bottom:1rem">&#128274;</div>
+      <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem">Area Restrita</h2>
+      <p style="font-size:.875rem;color:var(--text-muted);margin-bottom:1.5rem">So o admin pode adicionar partidas</p>
+      <div style="display:flex;gap:.75rem;max-width:320px;margin:0 auto 1rem;">
+        <input id="add-pw-input" type="password" placeholder="Senha..." style="flex:1;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem 1rem;color:var(--text);font-size:.875rem;font-family:var(--font-body);outline:none;">
+        <button onclick="checkAddPw()" style="background:var(--accent);color:#fff;border:none;border-radius:.5rem;padding:.75rem 1.25rem;font-weight:700;font-size:.875rem;cursor:pointer;">Entrar</button>
+      </div>
+      <div id="add-pw-error" style="color:var(--red);font-size:.75rem;display:none;">Senha incorreta</div>
+      <button onclick="closeAddModal()" style="margin-top:1rem;font-size:.75rem;color:var(--text-muted);text-decoration:underline;background:none;border:none;cursor:pointer;">Cancelar</button>
+    </div>
+    <!-- FORM -->
+    <div id="add-form-screen" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--divider);">
+        <h2 style="font-size:1.125rem;font-weight:700">Adicionar Partida</h2>
+        <button onclick="closeAddModal()" style="width:32px;height:32px;border-radius:.5rem;border:1px solid var(--border);display:grid;place-items:center;color:var(--text-muted);cursor:pointer;">X</button>
+      </div>
+      <div style="padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+        <!-- MATCH INFO -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;">
+          <div>
+            <label style="font-size:.6875rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase">Mapa</label>
+            <select id="f-map" style="width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.5rem .75rem;color:var(--text);font-size:.875rem;font-family:var(--font-body)">
+              <option>Mirage</option><option>Inferno</option><option>Nuke</option><option>Ancient</option><option>Anubis</option><option>Dust2</option><option>Vertigo</option><option>Train</option><option>Overpass</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:.6875rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase">Resultado</label>
+            <select id="f-result" style="width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.5rem .75rem;color:var(--text);font-size:.875rem;font-family:var(--font-body)">
+              <option value="W">Vitoria</option><option value="L">Derrota</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:.6875rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase">Placar</label>
+            <input id="f-score" type="text" placeholder="16-11" style="width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.5rem .75rem;color:var(--text);font-size:.875rem;font-family:var(--font-body)">
+          </div>
+          <div>
+            <label style="font-size:.6875rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase">Data/Hora</label>
+            <input id="f-date" type="datetime-local" style="width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.5rem .75rem;color:var(--text);font-size:.875rem;font-family:var(--font-body)">
+          </div>
+        </div>
+        <!-- JOGADORES -->
+        <div>
+          <div style="font-size:.6875rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem">Jogadores da partida</div>
+          <!-- HEADER -->
+          <div style="display:grid;grid-template-columns:120px 44px 44px 44px 46px 60px 58px 54px 40px 40px 40px 46px 40px 40px 28px;gap:.3rem;padding:0 .75rem .375rem;font-size:.58rem;font-weight:700;color:var(--text-faint);text-transform:uppercase;letter-spacing:.04em;">
+            <span>Nick</span><span>K</span><span>A</span><span>D</span><span>DIFF</span><span>ADR</span><span>KDR</span><span>KAST%</span><span>FA</span><span>MK</span><span>FK</span><span>HS%</span><span>1v1</span><span>1v2+</span><span></span>
+          </div>
+          <div id="f-players-list" style="display:flex;flex-direction:column;gap:.375rem;"></div>
+          <button onclick="addPlayerRow()" style="margin-top:.75rem;font-size:.75rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:1px dashed var(--accent);border-radius:.5rem;padding:.5rem 1rem;cursor:pointer;width:100%">+ Adicionar Jogador</button>
+        </div>
+        <!-- SALVAR -->
+        <div style="display:flex;gap:.75rem;justify-content:flex-end;padding-top:1rem;border-top:1px solid var(--divider);">
+          <button onclick="closeAddModal()" style="padding:.75rem 1.5rem;border:1px solid var(--border);border-radius:.5rem;font-size:.875rem;font-weight:600;color:var(--text-muted);cursor:pointer;background:none;">Cancelar</button>
+          <button onclick="saveMatch()" style="padding:.75rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:.5rem;font-size:.875rem;font-weight:700;cursor:pointer;">Salvar Partida</button>
+        </div>
+        <div id="f-save-msg" style="display:none;text-align:center;padding:.75rem;background:var(--green-bg);color:var(--green);border-radius:.5rem;font-weight:700;font-size:.875rem;"></div>
+        <div id="f-json-wrap" style="display:none;">
+          <div style="font-size:.6875rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin-bottom:.5rem">JSON gerado — copie para o data.json:</div>
+          <textarea id="f-json-out" readonly style="width:100%;height:160px;background:var(--surface-2);border:1px solid var(--border);border-radius:.5rem;padding:.75rem;color:var(--text);font-size:.6875rem;font-family:monospace;resize:vertical;"></textarea>
+          <button onclick="copyJson()" style="margin-top:.5rem;font-size:.75rem;color:var(--accent);font-weight:700;background:var(--accent-bg);border:1px solid var(--accent);border-radius:.5rem;padding:.375rem 1rem;cursor:pointer;">Copiar JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.fpr{display:grid;grid-template-columns:120px 44px 44px 44px 46px 60px 58px 54px 40px 40px 40px 46px 40px 40px 28px;gap:.3rem;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:.625rem;padding:.5rem .75rem;overflow-x:auto;}
+.fpr input,.fpr select{background:var(--surface);border:1px solid var(--border);border-radius:.375rem;padding:4px 6px;color:var(--text);font-size:.75rem;font-family:var(--font-body);width:100%;}
+.fpr input:focus,.fpr select:focus{outline:2px solid var(--accent);border-color:transparent;}
+@media(max-width:640px){.fpr{grid-template-columns:repeat(3,1fr);} #add-modal > div > div:first-child > div:first-child{grid-template-columns:1fr 1fr;}}
+</style>
+
 </body>
 </html>
