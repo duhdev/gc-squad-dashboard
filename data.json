@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:11:08.932Z",
+  "updatedAt": "2026-05-07T19:15:36.366Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -57,21 +57,21 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 4,
+      "matches": 3,
       "updatedAt": "2026-05-07T16:29:28.751Z",
       "stats": {
-        "KDR": 1.04,
-        "ADR": 75.49,
+        "KDR": 1.12,
+        "ADR": 74,
         "HS": 0,
-        "KAST": 63.5,
-        "kills": 12.5,
-        "assists": 5.75,
-        "MK": 9,
-        "FK": 8,
+        "KAST": 61,
+        "kills": 11.33,
+        "assists": 4.67,
+        "MK": 7,
+        "FK": 3,
         "FA": 1,
-        "DIFF": -2.75,
-        "rating": -1.25,
-        "wins": 3,
+        "DIFF": -2.67,
+        "rating": -1.67,
+        "wins": 2,
         "losses": 1
       }
     },
@@ -109,21 +109,21 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 4,
+      "matches": 3,
       "updatedAt": "2026-05-07T16:29:33.253Z",
       "stats": {
-        "KDR": 0.95,
-        "ADR": 76.56,
+        "KDR": 1.04,
+        "ADR": 75.42,
         "HS": 0,
-        "KAST": 70.75,
-        "kills": 11.5,
-        "assists": 6,
-        "MK": 7,
+        "KAST": 73.33,
+        "kills": 11,
+        "assists": 5.67,
+        "MK": 5,
         "FK": 6,
-        "FA": 2,
-        "DIFF": -2.25,
-        "rating": -1.5,
-        "wins": 3,
+        "FA": 1,
+        "DIFF": -1,
+        "rating": -2,
+        "wins": 2,
         "losses": 1
       }
     },
@@ -196,43 +196,6 @@
         }
       },
       "printFile": "3.png"
-    },
-    {
-      "map": "ancient",
-      "result": "win",
-      "score": "13-11",
-      "date": "2024-05-27",
-      "players": {
-        "Fluyr": {
-          "kills": 13,
-          "deaths": 19,
-          "assists": 7,
-          "kdr": 0.68,
-          "adr": 79.98,
-          "kast": 63,
-          "hs": 0,
-          "mk": 2,
-          "fk": 0,
-          "fa": 1,
-          "diff": -6,
-          "rating": 0
-        },
-        "Will": {
-          "kills": 16,
-          "deaths": 19,
-          "assists": 9,
-          "kdr": 0.79,
-          "adr": 79.98,
-          "kast": 71,
-          "hs": 0,
-          "mk": 2,
-          "fk": 5,
-          "fa": 0,
-          "diff": -3,
-          "rating": 0
-        }
-      },
-      "printFile": "1.png"
     },
     {
       "map": "dust2",
