@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:15:41.083Z",
+  "updatedAt": "2026-05-07T19:15:43.548Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -43,23 +43,9 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 1,
+      "matches": 0,
       "updatedAt": "2026-05-07T16:29:28.751Z",
-      "stats": {
-        "KDR": 0.44,
-        "ADR": 42.5,
-        "HS": 0,
-        "KAST": 22,
-        "kills": 7,
-        "assists": 2,
-        "MK": 2,
-        "FK": 0,
-        "FA": 1,
-        "DIFF": -11,
-        "rating": 0,
-        "wins": 1,
-        "losses": 0
-      }
+      "stats": {}
     },
     {
       "playerNick": "Chavera",
@@ -95,23 +81,9 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 1,
+      "matches": 0,
       "updatedAt": "2026-05-07T16:29:33.253Z",
-      "stats": {
-        "KDR": 1.67,
-        "ADR": 70.32,
-        "HS": 0,
-        "KAST": 75,
-        "kills": 15,
-        "assists": 3,
-        "MK": 2,
-        "FK": 2,
-        "FA": 0,
-        "DIFF": 6,
-        "rating": 0,
-        "wins": 1,
-        "losses": 0
-      }
+      "stats": {}
     },
     {
       "playerNick": "Chara",
@@ -168,43 +140,6 @@
         }
       },
       "printFile": "6.png"
-    },
-    {
-      "map": "nuke",
-      "result": "win",
-      "score": "13-5",
-      "date": "2023-02-08",
-      "players": {
-        "Fluyr": {
-          "kills": 15,
-          "deaths": 9,
-          "assists": 3,
-          "kdr": 1.67,
-          "adr": 70.32,
-          "kast": 75,
-          "hs": 0,
-          "mk": 2,
-          "fk": 2,
-          "fa": 0,
-          "diff": 6,
-          "rating": 0
-        },
-        "Will": {
-          "kills": 7,
-          "deaths": 18,
-          "assists": 2,
-          "kdr": 0.44,
-          "adr": 42.5,
-          "kast": 22,
-          "hs": 0,
-          "mk": 2,
-          "fk": 0,
-          "fa": 1,
-          "diff": -11,
-          "rating": 0
-        }
-      },
-      "printFile": "4.png"
     }
   ]
 }
