@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-07T19:15:48.303Z",
+  "updatedAt": "2026-05-07T19:17:47.442Z",
   "players": [
     {
       "playerNick": "Cq",
@@ -29,9 +29,23 @@
       "playerNick": "Will",
       "playerId": "805025",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:28.751Z",
-      "stats": {}
+      "stats": {
+        "KDR": 0.79,
+        "ADR": 79.9,
+        "HS": 0,
+        "KAST": 71,
+        "kills": 16,
+        "assists": 10,
+        "MK": 2,
+        "FK": 0,
+        "FA": 0,
+        "DIFF": -4,
+        "rating": 0,
+        "wins": 1,
+        "losses": 0
+      }
     },
     {
       "playerNick": "Chavera",
@@ -53,9 +67,23 @@
       "playerNick": "Fluyr",
       "playerId": "",
       "level": "?",
-      "matches": 0,
+      "matches": 1,
       "updatedAt": "2026-05-07T16:29:33.253Z",
-      "stats": {}
+      "stats": {
+        "KDR": 0.88,
+        "ADR": 79.9,
+        "HS": 1,
+        "KAST": 83,
+        "kills": 13,
+        "assists": 10,
+        "MK": 2,
+        "FK": 0,
+        "FA": 0,
+        "DIFF": -4,
+        "rating": 0,
+        "wins": 1,
+        "losses": 0
+      }
     },
     {
       "playerNick": "Chara",
@@ -66,5 +94,43 @@
       "stats": {}
     }
   ],
-  "history": []
+  "history": [
+    {
+      "map": "de_ancient",
+      "result": "win",
+      "score": "11-13",
+      "date": "2024-05-27",
+      "players": {
+        "Fluyr": {
+          "kills": 13,
+          "deaths": 7,
+          "assists": 10,
+          "kdr": 0.88,
+          "adr": 79.9,
+          "kast": 83,
+          "hs": 1,
+          "mk": 2,
+          "fk": 0,
+          "fa": 0,
+          "diff": -4,
+          "rating": 0
+        },
+        "Will": {
+          "kills": 16,
+          "deaths": 9,
+          "assists": 10,
+          "kdr": 0.79,
+          "adr": 79.9,
+          "kast": 71,
+          "hs": 0,
+          "mk": 2,
+          "fk": 0,
+          "fa": 0,
+          "diff": -4,
+          "rating": 0
+        }
+      },
+      "printFile": "1.png"
+    }
+  ]
 }
